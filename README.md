@@ -1,4 +1,7 @@
 # minishell
+## Description
+Minishell is a minimalist UNIX shell written in C that replicates core bash features and 
+provides an in-depth exploration of UNIX process management, pipes, signals, file descriptors, and parsing logic
 
 ## Features 
 ### Goals
@@ -13,6 +16,8 @@
 ## Usage
 - how to compile etc.
 
+## File Structure
+- List and explanation of files (e.g., main.c, utils.h, README.md).
 ## Bash command examples
 - what are pipes, how does heredoc work etc.
   
