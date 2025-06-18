@@ -31,6 +31,15 @@ provides an in-depth exploration of UNIX process management, pipes, signals, fil
 This modular flow ensures predictable behavior and makes debugging easier.
 
 ⚙️ Instalación
+**Clone the repo**:
+```
+   git clone https://github.com/yourusername/minishell.git
+   cd minishell
+```
+**Built the project**:
+```make```
+**Run the shell**
+```./minishell```
 
 💡 Uso
 
