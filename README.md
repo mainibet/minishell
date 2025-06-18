@@ -30,9 +30,11 @@ provides an in-depth exploration of UNIX process management, pipes, signals, fil
 
 This modular flow ensures predictable behavior and makes debugging easier.
 
-## ⚙️ Usage
+## 💡 Usage
 
-### Installation
+Supported operations include piping, redirections, environment management, and built-in command execution.
+
+### ⚙️ Installation
 
 **Clone the repo**:
 ```
@@ -46,8 +48,6 @@ This modular flow ensures predictable behavior and makes debugging easier.
 **Run the shell**
 ```./minishell```
 
-💡 Supported operations include piping, redirections, environment management, and built-in command execution.
-
 ### Dependencies
 
 ## 🗂️ File Structure
@@ -57,6 +57,7 @@ minishell/
 ├── Makefile                 # Main build script (targets: NAME, all, clean, fclean, re)
 ├── README.md                # Public documentation: description, installation, usage
 ├── DEVELOPMENT.md           # Internal notes: features, progress tracking, decisions
+├── TEST.md                  # Detailed test cases, results, and testing instructions.
 │
 ├── include/                 # Header files
 │   └── minishell.h          # Main project header
@@ -95,34 +96,7 @@ minishell/
 
 ```
 
-## Bash command examples
-- what are pipes, how does heredoc work etc.
-  
-## Limitations
-- things to work on in the future
-
-## Resources
-- links or books that helped you
-
-## Git
-
-### Commit messages
-- git add only the file that you have edited (add file.c)
-- commit messages
-    - feat -> feature
-    - fix -> bug fix
-    - docs -> documentation
-    - style -> formatting, lint stuff
-- commit message example:
-    "fix(main.c): fixed x initialization in the main function"
-- Git Graph for visualization
-
-
-
 👤 Autor
-
-### Action plan
-[x] create main.c (Alice)
-[ ]
-
+- Alicia Betancourt ([mainibet](https://github.com/mainibet))
+- Joshua Barratt ([pendinf](https://github.com/PENDING))
 
