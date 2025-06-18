@@ -10,9 +10,15 @@ provides an in-depth exploration of UNIX process management, pipes, signals, fil
 - Use at most one global variable to indicate a received signal.
 
 ## 🚀 Features 
-- feature x <br/>
-- feature x
-- feature
+- Tokenization and parsing of input to handle quotes, pipes, and redirections.
+- Execute commands with PATH, relative, and absolute paths
+- Command history via 'readline'
+- Handle quotes: ' (literal), " (allows variable expansion)
+- Expand environment variables ($VAR, $?)
+- Support redirections: <, >, >>, << (heredoc)
+- Support pipes (|)
+- Built-in commands: echo -n, cd, pwd, export, unset, env, exit
+- Signal handling for Ctrl+C, Ctrl+D, and Ctrl+\ like Bash
 
 ## 🧱 Input Processing Flow
 1. **Lexing** – Raw input is split into tokens (commands, symbols, strings), preserving quotes and metacharacters.
