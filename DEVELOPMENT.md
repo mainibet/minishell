@@ -11,69 +11,6 @@
     "fix(main.c): fixed x initialization in the main function"
 - Git Graph for visualization
 
-## Core Components Requirementes
-
-### 1. Lexing (tokenization)
-- Split raw input into tokens (words, operators, quoted strings).
-
-- Preserve quoting (single and double quotes) for correct parsing later.
-
-- Identify metacharacters (|, <, >, >>, <<, etc.).
-
-- Handle special characters carefully (e.g., do not split inside quotes).
-
-### 2. Parsing (syntax analysis)
-- Build a structured command representation (AST or similar).
-
-- Group tokens into commands, arguments, redirections, and pipelines.
-
-- Recognize and properly nest pipes and redirections.
-
-- Detect syntax errors early (e.g., unclosed quotes).
-
-### 3. Execution
-- Search and launch executables using PATH or absolute/relative paths.
-
-- Handle command chaining through pipes (|).
-
-- Manage redirections (<, >, >>, <<) as specified.
-
-- Wait for child processes and return proper exit statuses.
-
-### 4. Built-in commands
-- Implement mandatory built-ins: echo [-n], cd, pwd, export, unset, env, exit.
-
-- Built-ins run inside the shell process without fork unless required.
-
-- Correctly handle built-in command options and edge cases.
-
-### 5. Signal handling
-- Handle Ctrl-C to interrupt current input and print new prompt.
-
-- Handle Ctrl-D to exit shell.
-
-- Ignore Ctrl-\ signals as Bash does.
-
-- Use at most one global variable to indicate signal number.
-
-### 6. Environment management
-- Handle Ctrl-C to interrupt current input and print new prompt.
-
-- Handle Ctrl-D to exit shell.
-
-- Ignore Ctrl-\ signals as Bash does.
-
-- Use at most one global variable to indicate signal number.
-
-### 7. Redirections & Pipes
-- Implement input (<) and output (>) redirections.
-
-- Implement append output (>>) redirection.
-
-- Support heredoc (<<) with delimiter input.
-
-- Connect commands with pipes (|) passing output to input of next.
-
 ## 🛠️ Features
 
 ### In process
@@ -139,6 +76,68 @@
 |                                 | - Submission and defense preparation                         |
 
 ```
+## Core Components Requirementes
+
+### 1. Lexing (tokenization)
+- Split raw input into tokens (words, operators, quoted strings).
+
+- Preserve quoting (single and double quotes) for correct parsing later.
+
+- Identify metacharacters (|, <, >, >>, <<, etc.).
+
+- Handle special characters carefully (e.g., do not split inside quotes).
+
+### 2. Parsing (syntax analysis)
+- Build a structured command representation (AST or similar).
+
+- Group tokens into commands, arguments, redirections, and pipelines.
+
+- Recognize and properly nest pipes and redirections.
+
+- Detect syntax errors early (e.g., unclosed quotes).
+
+### 3. Execution
+- Search and launch executables using PATH or absolute/relative paths.
+
+- Handle command chaining through pipes (|).
+
+- Manage redirections (<, >, >>, <<) as specified.
+
+- Wait for child processes and return proper exit statuses.
+
+### 4. Built-in commands
+- Implement mandatory built-ins: echo [-n], cd, pwd, export, unset, env, exit.
+
+- Built-ins run inside the shell process without fork unless required.
+
+- Correctly handle built-in command options and edge cases.
+
+### 5. Signal handling
+- Handle Ctrl-C to interrupt current input and print new prompt.
+
+- Handle Ctrl-D to exit shell.
+
+- Ignore Ctrl-\ signals as Bash does.
+
+- Use at most one global variable to indicate signal number.
+
+### 6. Environment management
+- Handle Ctrl-C to interrupt current input and print new prompt.
+
+- Handle Ctrl-D to exit shell.
+
+- Ignore Ctrl-\ signals as Bash does.
+
+- Use at most one global variable to indicate signal number.
+
+### 7. Redirections & Pipes
+- Implement input (<) and output (>) redirections.
+
+- Implement append output (>>) redirection.
+
+- Support heredoc (<<) with delimiter input.
+
+- Connect commands with pipes (|) passing output to input of next.
 
 ## Bash command examples
 - what are pipes, how does heredoc work etc.
