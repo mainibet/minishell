@@ -98,5 +98,5 @@ minishell/
 
 👤 Autor
 - Alicia Betancourt ([mainibet](https://github.com/mainibet))
-- Joshua Barratt ([pendinf](https://github.com/PENDING))
+- Joshua Barratt ([jbarrat42](https://github.com/jbarrat42))
 
