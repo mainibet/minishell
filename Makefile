@@ -1,14 +1,15 @@
 
 CC = cc
 # -g is to debug
-CFLAGS = -Wall -Wextra -Werror -g
+# -lreadline to link with the readline library
+CFLAGS = -Wall -Wextra -Werror -lreadline -g
 
 LIBFT_DIR = ./libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
 
 NAME = minishell
 
-SRC = # Add here other source files
+SRC = main.c # Add here other source files
 
 OBJ_DIR = ./obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
