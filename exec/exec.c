@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/06/23 08:33:46 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/06/23 09:05:29 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,3 +27,7 @@
 //V5: support heredoc & redirections     //
 //---------------------------------------//
 
+// Read a full line as raw input.
+// Use fork() and execvp() to execute the input line as-is.
+// Wait for the child process (waitpid).
+// Exit command ends the shell.
