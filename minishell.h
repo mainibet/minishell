@@ -26,9 +26,9 @@
 //STDLIB.H FOR: malloc, free, exit, getenv
 //UNISTD.H FOR: read, write, access and others
 //may be here also later: sys/wait, sys/types: size_t, pid_t, strings.h
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <sys/wait.h>
 
 // -----------------------------------------//
