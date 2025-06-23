@@ -61,6 +61,7 @@ minishell/
 │
 ├── include/                 # Header files
 │   └── minishell.h          # Main header, includes other specific headers and common standard libraries
+│   ├── structs.h
 │   ├── lexer.h
 │   ├── parser.h
 │   ├── executor.h
