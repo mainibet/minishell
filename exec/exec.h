@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/06/21 11:27:15 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/06/23 08:32:04 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 # define EXEC_H
 
 // --- STANDARD HEADERS ---
-
+#include <readline/readline.h>
+#include <readline/history.h>
 
 // -----------------------------------------//
 //                 STRUCTS                  //

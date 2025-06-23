@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/06/21 11:19:39 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/06/23 08:41:05 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,18 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <sys/wait.h>
+
+// -------Readline specific headers
+#include <readline/readline.h>
+#include <readline/history.h>
 
 // -----------------------------------------//
 //             MODULE HEADERS               //
 // -----------------------------------------//
-
-# include "libft.h"
-# include "exec.h"
+//The modular headers include the prototypes from the 
+//functions for that part of the program
+# include "libft/libft.h"
+# include "exec/exec.h"
 
 #endif
