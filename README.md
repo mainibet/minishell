@@ -60,7 +60,14 @@ minishell/
 ├── TEST.md                  # Detailed test cases, results, and testing instructions.
 │
 ├── include/                 # Header files
-│   └── minishell.h          # Main project header
+│   └── minishell.h          # Main header, includes other specific headers and common standard libraries
+│   ├── structs.h
+│   ├── lexer.h
+│   ├── parser.h
+│   ├── executor.h
+│   ├── builtins.h
+│   ├── signals.h
+│   └── utils.h
 │
 ├── libft/                   # Custom libft copy (mandatory if allowed)
 │   ├── Makefile             # Builds libft separately before minishell
