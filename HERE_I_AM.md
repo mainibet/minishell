@@ -5,7 +5,7 @@ check pikoshellgit add
 Basic main.c
 Compile con readline library
 Test my branch and push
-Check what I pull request to not have rubish in github
+Check what I pull request to not have rubish in githubMap handling error
 
 ## Upcoming
 
@@ -28,6 +28,7 @@ teste makefile
 11. Keep reading the man per function and update documentation according to the version
 - include valgrind -q check in the main makefile
 - do i have to have my ount makefile for my tests?
+- Check if all needed frees are made when malloc error or any other errors
 
 ## Done
 
