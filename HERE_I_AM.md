@@ -4,7 +4,7 @@
 ## Upcoming
 
 - CHeck function understanding with gemini
-- Organize plan to read man according to the functions needed in each version
+- Organize plan to read man according to the functions needed in each version exec.c and/or exec.h
 - Include my understanding of each funciton in obsidian (in each function)
 - connect the questions with each function in obsidian
 1. V0 for execution
@@ -17,6 +17,7 @@ teste makefile
 7. Detect handling errors
 8. Detect edge cases and when to handle it.
 9. Check my protocol for new projects
+- begin basic execution
 10. Understand behavior and testing, normal and edge cases of built-ins
 11. Keep reading the man per function and update documentation according to the version
 

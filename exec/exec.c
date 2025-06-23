@@ -6,17 +6,19 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/06/21 16:40:04 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/06/23 07:07:46 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "exec.h"
+#include "exec.h"
 
 //---------------------------------------//
 //V0:Execute single commands directly,   //
-//   no parsing/lexing yet               //
+//   from readline                       //
 //                                       //
-//V2:support '' and "", single command   //
+//V1:supports basic parsing              //
+//                                       //
+//V2:support parsing refinement          //
 //                                       //
 //V3:execution with pipes & child pcs    //
 //                                       //
