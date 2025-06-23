@@ -1,8 +1,8 @@
 // #include <unistd.h>//included in minishell.h
 // #include <stdlib.h>//included in minishell.h
 // #include <stdio.h>//included in minishell.h
+// #include <sys/wait.h>//included in minishell.h
 #include "minishell.h"
-#include <sys/wait.h>
 
 void close_pipe(int pipefd[2])
 {
