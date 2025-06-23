@@ -2,7 +2,7 @@
 CC = cc
 # -g is to debug
 # -lreadline to link with the readline library
-CFLAGS = -Wall -Wextra -Werror -lreadline -g
+CFLAGS = -Wall -Wextra -Werror -g
 
 LIBFT_DIR = ./libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
