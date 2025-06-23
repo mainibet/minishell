@@ -1,5 +1,11 @@
 ## In process
+basic execution
+check pikoshell
 1. Validate my understandingn of external functions
+Basic main.c
+Compile con readline library
+Test my branch and push
+Check what I pull request to not have rubish in github
 
 ## Upcoming
 
