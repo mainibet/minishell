@@ -6,11 +6,11 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/06/23 07:07:46 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/06/23 08:33:46 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "exec.h"
+#include "minishell.h"
 
 //---------------------------------------//
 //V0:Execute single commands directly,   //
@@ -27,8 +27,3 @@
 //V5: support heredoc & redirections     //
 //---------------------------------------//
 
-//main to test execution
-int	main(void)//testing
-{
-	return (0);
-}
