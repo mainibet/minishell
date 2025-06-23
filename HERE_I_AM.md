@@ -1,6 +1,6 @@
 ## In process
 basic execution
-check pikoshell
+check pikoshellgit add
 1. Validate my understandingn of external functions
 Basic main.c
 Compile con readline library
