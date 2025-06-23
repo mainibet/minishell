@@ -17,7 +17,6 @@ all: $(NAME)
 
 # Link object files and libft to create the executable
 $(NAME): $(OBJ) $(LIBFT_LIB)
-# 	 $(CC) $(CFLAGS) $(OBJ) -o $@
 	$(CC) $(CFLAGS) $(OBJ) -o $@ -L$(LIBFT_DIR) -lft
 
 # Rule to build libft if it doesn't exist
