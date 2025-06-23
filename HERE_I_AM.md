@@ -20,6 +20,8 @@ teste makefile
 - begin basic execution
 10. Understand behavior and testing, normal and edge cases of built-ins
 11. Keep reading the man per function and update documentation according to the version
+- include valgrind -q check in the main makefile
+- do i have to have my ount makefile for my tests?
 
 ## Done
 

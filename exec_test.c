@@ -2,6 +2,7 @@
 
 #include "minishell.h"
 
+//readline needs this flag to compile -lreadline
 int	main(void)
 {
 	char	*line;
@@ -14,7 +15,7 @@ int	main(void)
 		if (line == NULL)
 		{
 			printf("exit\n");
-			break;
+			break ;
 		}
 		if (*line)
 			add_history(line);    
