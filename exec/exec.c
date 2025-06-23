@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/06/23 16:35:59 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/06/23 17:21:36 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,20 @@
 // Exit command ends the shell.
 // Should check for builtins commands if not, look for external commands ($PATH)
 
-char	**dup_new_cmd(char **cmd)
+// need to duplicate the arguments (char **argv) before passing them to the child process 
+//duplicating the arguments gives the child process its own isolated and safe copy of the command-line arguments. 
+//  This prevents unintended side effects and memory issues between the parent and child processes, 
+//  particularly crucial when execve() is about to replace the child's entire memory space.
+
+//VALORACION TMP PARA EMPEZAR
+//  For each external command in that list, you will:
+// Fork a new child process.
+// Set up redirections (using adapted setup_redir and redir_input/output).
+// Execute the command using execve (similar to your execution function).
+// In the parent, wait for that child (using wait_child). This generic, looped approach is what allows Minishell to handle N commands.
+
+//POSSIBLE FILES:
+char	**dup_new_cmd(char **cmd)//YES
 {
 	size_t	len;
 	size_t	i;
@@ -60,24 +73,8 @@ char	**dup_new_cmd(char **cmd)
 	return (new_arg);
 }
 
-char	**exec_arg(t_pipe_data *data, int child_num)
-{
-	char	**new_arg;
-
-	new_arg = new_arr_cmd(data, child_num);
-	if (!new_arg)
-		return (NULL);
-	new_arg = dup_new_cmd(new_arg);
-	if (!new_arg)
-	{
-		free_memory(new_arg, 0);
-		free(new_arg);
-		return (NULL);
-	}
-	return (new_arg);
-}
-
-static void	free_nargv(char **nargv)
+//to free dynamically allocated char ** array
+static void	free_nargv(char **nargv)//chang name  YES
 {
 	size_t	count;
 
@@ -88,7 +85,8 @@ static void	free_nargv(char **nargv)
 	free(nargv);
 }
 //For external command execution
-void	execution(char	**nargv, char **const envp)
+//pending to connect with envp
+void	execution(char	**nargv, char **const envp)//yes
 {
 	char	*cmd_name;
 	char	*cmd_path;
@@ -110,4 +108,147 @@ void	execution(char	**nargv, char **const envp)
 	exit (EXIT_FAILURE);
 }
 
+int	wait_child(pid_t pid, int *status)//yes
+{
+	if (waitpid(pid, status, 0) == -1)
+	{
+		perror ("Error waiting for child");
+		return (-1);
+	}
+	return (0);
+}
 
+int	fork_handle(pid_t *pid, t_pipe_data *data, int child_num)
+{
+	*pid = fork();
+	// if (*pid == -1)//THIS CONDITIONAL EXEUTION WILL CHANGE
+	// {
+	// 	perror ("Fork failed");
+	// 	return (fork_error(data->fd_in, data->pipefd));
+	// }
+	// if (*pid == 0)
+	// {
+	// 	if (child_num == 1)
+	// 		child1(data);
+	// 	else if (child_num == 2)
+	// 		child2(data);
+	// 	return (1);
+	// }
+	return (0);
+}
+
+int	check_fork(int result, pid_t pid1, int *status)//NEED TO BE HANDLED DIFFERENT THAN 2 PIPES
+{
+	if (result != 0)
+	{
+		if (result == 1)
+			return (0);
+		else
+		{
+			if (pid1 != 0)
+				wait_child(pid1, status);
+			return (result);
+		}
+	}
+	return (0);
+}
+
+static int	parent(struct s_pipe_data *data)//make it work with 1 child first and then with any
+{//check how the logic changes handling external and internal commands
+	pid_t	pid1;//this function needed when pips not before
+	pid_t	pid2;
+	int		status;
+	int		result;
+
+	result = fork_handle(&pid1, data, 1);
+	if (check_fork(result, 0, &status))
+		return (result);
+	result = fork_handle(&pid2, data, 2);
+	if (check_fork(result, pid1, &status))
+		return (result);
+	close_fd(data -> fd_in);
+	close_fd(data -> pipefd[0]);
+	close_fd(data -> pipefd[1]);
+	if (wait_child(pid1, &status) == -1 || wait_child(pid2, &status) == -1)
+	{
+		perror ("error waiting child");
+		return (-1);
+	}
+	return (0);
+}
+
+int	redir_input(int fd)//YES
+{
+	int	fd_dup;
+
+	fd_dup = dup2(fd, STDIN_FILENO);
+	if (fd_dup == -1)
+	{
+		perror ("Dup2 in redir_input");
+		close_fd (fd);
+		return (1);
+	}
+	close_fd(fd);
+	return (0);
+}
+
+int	redir_output(int fd)//YES
+{
+	int	fd_dup;
+
+	fd_dup = dup2(fd, STDOUT_FILENO);
+	if (fd_dup == -1)
+	{
+		perror ("Dup2 in redir_output");
+		close_fd(fd);
+		return (1);
+	}
+	close_fd(fd);
+	return (0);
+}
+
+int	setup_redir(int input_fd, int output_fd, t_fd_dup *dup)//MANY CHANGES NOT 2 CMD PROCESS 
+{
+	int	fd_in_dup;
+	int	fd_out_dup;
+
+	fd_in_dup = redir_input(input_fd);
+	if (fd_in_dup < 0)
+	{
+		perror("Failed redir_input");
+		return (-1);
+	}
+	fd_out_dup = redir_output(output_fd);
+	if (fd_out_dup < 0)
+	{
+		close_fd(fd_in_dup);
+		perror("Failed redirection OUTPUT");
+		return (-1);
+	}
+	dup -> input_dup = fd_in_dup;
+	dup -> output_dup = fd_out_dup;
+	return (0);
+}
+
+void	child_process(t_pipe_data *data, t_initial_fd *fd, int child_num)//yes
+{
+	t_fd_dup	dup;
+	char		**nargv;
+
+	if (setup_redir(fd -> input_fd, fd -> output_fd, &dup) != 0)
+		exit(1);
+	nargv = exec_arg(data, child_num);
+	if (!nargv)
+	{
+		perror ("nargv before execution");
+		close_fd(dup.input_dup);
+		close_fd(dup.output_dup);
+		exit(1);
+	}
+	execution(nargv, data -> envp);
+	perror ("Execution failed in child 1");
+	free(nargv);
+	close_fd(dup.input_dup);
+	close_fd(dup.output_dup);
+	exit(1);
+}

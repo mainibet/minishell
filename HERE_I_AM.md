@@ -1,6 +1,7 @@
 ## In process
 basic execution
 check pikoshellgit add
+identificar datos necesarios en execution, proponer structs
 1. Validate my understandingn of external functions
 Basic main.c
 Compile con readline library
