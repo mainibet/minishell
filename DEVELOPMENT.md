@@ -11,6 +11,10 @@
     "fix(main.c): fixed x initialization in the main function"
 - Git Graph for visualization
 
+### Git Workflow Guide
+
+📄 See [GIT_WORKFLOW_GUIDE.md](./GIT_WORKFLOW_GUIDE.md) for detailed steps on syncing branches.
+
 ## 🛠️ Features
 
 ### In process
