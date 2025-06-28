@@ -1,6 +1,29 @@
 ## In process
+watching videos:
+- Understanding tokenization ✅
+- Understangin parsing ✅
+- Understanding basic command cat ✅
+- Understanding recursion tree and the implementation ✅
+- Union type ✅
+- Execution command
+- Learn to gdb a tree structure
+Understanding Here_doc ✅
+Understanding basic command echo ✅
+Understanding tokens I need for execution: command 
+List possible needs for execution inputs
+
+Include make debug rule in makefile
+Create run_all scripts for rule make debug
+Update make
+Test all_scripts
+write first version of basic echo
+write first version of cat
+Basic version for execution external
+Basic version for execution internal
+
 basic execution
 check pikoshellgit add
+Document git workflow guide
 identificar datos necesarios en execution, proponer structs
 1. Validate my understandingn of external functions
 Basic main.c
@@ -9,7 +32,7 @@ Test my branch and push
 Check what I pull request to not have rubish in githubMap handling error
 
 ## Upcoming
-
+- Test make debug
 - CHeck function understanding with gemini
 - Organize plan to read man according to the functions needed in each version exec.c and/or exec.h
 - Include my understanding of each funciton in obsidian (in each function)
