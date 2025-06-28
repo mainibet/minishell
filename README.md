@@ -98,7 +98,7 @@ minishell/
 │       └── string_utils.c, error.c, memory.c
 │
 └── tests/                   # Optional: Shell test scripts
-    ├── test_pipeline.sh
+    ├── run_all_test.sh      #executes all listed scripts when 'make debug'
     ├── test_redirects.sh
     └── test_builtins.sh
 
