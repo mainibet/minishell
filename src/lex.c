@@ -22,7 +22,7 @@ t_token *extract_token(char *s, size_t size)
 		free(token);
 		return (NULL);
 	}
-	memcpy(token->txt, s, size);
+	memcpy(token->txt, s, size);//change later for ft_memcpy
 	token->txt[size] = 0;
 	return (token);
 }
