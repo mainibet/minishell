@@ -20,6 +20,7 @@
 //include them here if needed 
 //#define MAX_ARGS 256 //checkif needed
 #define BUFFER_SIZE 1024//to read from command line, from fd or from here_doc
+                          //check if the buffer size is ok or if we want to chang it
 
 // -----------------------------------------//
 //        STANDARD HEADERS (COMMON)         //
