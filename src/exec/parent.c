@@ -77,18 +77,36 @@ void	child2(t_pipe_data *data)
 	child_process(data, &fd, child_num);
 }
 
-static int	parent(struct s_pipe_data *data)
+/*
+  Used in pipes to count pipe nodes
+  1. loop in the nodes until match the type node chosen
+  2. count the nodes of that type
+  Return the count
+*/
+int count_node(t_node *node, t_node_type target_type)//NEW
 {
-	pid_t	pid1;
-	pid_t	pid2;
-	int		status;
-	int		result;
+	int	count;
 
-	result = fork_handle(&pid1, data, 1);
+    if (node == NULL) 
+        return 0; // Base case of the recursion
+    count = 0;
+    if (node->type == target_type)
+        count = 1;
+    count += count_node(node->left, target_type);
+    count += count_nodee(node->right, target_type);
+    return count;
+}
+
+int	parent(struct s_pipe_data *data)
+{
+	pid_t    *pid;//need malloc
+	int		status;//to check child
+	int		result;//to check fork
+    int     nb_child;//to count children
+	int		nb_nodes;//to count nodes
+	
+    result = fork_handle(&pid, data, 1);
 	if (check_fork(result, 0, &status))
-		return (result);
-	result = fork_handle(&pid2, data, 2);
-	if (check_fork(result, pid1, &status))
 		return (result);
 	close_fd(data -> fd_in);
 	close_fd(data -> pipefd[0]);
