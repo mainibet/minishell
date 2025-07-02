@@ -17,34 +17,66 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+// ---FORWARD DECLARATIONS--- //
+typedef struct s_tree_node t_node;
+
 // -----------------------------------------//
-//               TREE NODES                 //
+//           TREE NODES TYPES               //
 // -----------------------------------------//
 typedef enum e_node_type//CREATED FOR TESTING EXEC
 {
 	NODE_CMD,
 	NODE_PIPE,
-  NODE_REDIR_IN,
-  NODE_REDIR_OUT,
-  NODE_REDIR_APPEND,
-  NODE_HEREDOC,
-  NODE_FILE,
 }	t_node_type;
 
 // -----------------------------------------//
-//                 STRUCTS                  //
+//         REDIRECTION STRUCTS              //
 // -----------------------------------------//
-typedef struct s_node//CREATED FOR TESTING EXEC
+typedef enum e_redir_type
 {
-	  t_node_type type;
-    char **argv;
-    char *filename;
-    struct s_node *left;//to PIPE: left
-    struct s_node *right;//to PIPE right
-}	t_node;
+  REDIR_IN,
+  REDIR_OUT,
+  REDIR_APPEND,
+  HEREDOC,
+} t_redir_type;
 
-/*
-EXAMPLE: cat < input.txt >> output.log
+typedef struct s_redir
+{
+  t_redir_type  type;//in,out, append,heredoc
+  char          *filename;//file or delimiter
+} t_redir;
+
+// -----------------------------------------//
+//                 NODE CONTENT             //
+// -----------------------------------------//
+
+typedef struct s_cmd_content
+{
+  char          **argv; //command and arguments
+  t_list       *redir; //linkedlist of redirections
+  int           redir_count; //number of redirections
+} t_cmd_content;
+
+typedef struct s_pipe_data
+{
+  t_tree_node *left; //recursive dependency
+  t_tree_node *right; //recursive dependency
+} t_pipe_data;
+
+// // ---------------------------------------//
+//           MAIN UNION STRUCTS             //
+// -----------------------------------------//
+typedef struct s_tree_node
+{
+  t_node_type		type; //type of the node (command, pipe)
+  union
+  {
+    t_cmd_content	content; //content of the node (argv, redir, etc.)
+    t_pipe_data;
+}data;
+} t_tree_node;
+
+/*EXAMPLE: cat < input.txt >> output.log
 
 node->argv = ["cat", NULL];
 node->infile = strdup("input.txt");
