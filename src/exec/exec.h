@@ -22,8 +22,13 @@
 // -----------------------------------------//
 typedef enum e_node_type//CREATED FOR TESTING EXEC
 {
-	T_NODE_COMMAND,
-	T_NODE_PIPE,
+	NODE_CMD,
+	NODE_PIPE,
+  NODE_REDIR_IN,
+  NODE_REDIR_OUT,
+  NODE_REDIR_APPEND,
+  NODE_HEREDOC,
+  NODE_FILE,
 }	t_node_type;
 
 // -----------------------------------------//
@@ -31,10 +36,9 @@ typedef enum e_node_type//CREATED FOR TESTING EXEC
 // -----------------------------------------//
 typedef struct s_node//CREATED FOR TESTING EXEC
 {
-	char	**argv;// comand + args
-	char	*infile;//input fd for redirections, includes the "<"
-	char	*outfile;//output fd for redirections, includes ">" ">>"
-	int		append_flag;//to know if there is or not ">>" > can be 0 and >> can be 1
+	  t_node_type type;
+    char **argv;
+    char *filename;
     struct s_node *left;//to PIPE: left
     struct s_node *right;//to PIPE right
 }	t_node;
@@ -96,7 +100,10 @@ append = 0
 
 // --- ABSOLUTE PATH --- //
 
-char	*find_path(char *argv, char **envp);
+char	*find_path(char *argv);
 
+
+// --- ERRORS_CLEAN-UP --- //
+//centralized error messages
 
 #endif

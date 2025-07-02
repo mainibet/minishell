@@ -12,15 +12,20 @@
 
 #include "minishell.h"
 
+/*
+   To find the full path of a command.
+   Retrieves the PATH environment variable, splits it into directories,
+   and checks each directory for the command file.
+   Returns the full path; if not NULL.
+*/
 static char	**get_path(void)
 {
 	char	*path;
 	char	**dir;
-
 	path = getenv("PATH"); // new function allowed in minishell
 	if (!path)
 	{
-		perror("PATH not found");
+		perror("PATH not found");//centralized error messages later
 		return (NULL);
 	}
 	dir = ft_split(path, ':');
@@ -32,7 +37,6 @@ static char	*create_path(char *dir, char *argv)
 {
 	char	*each_path;
 	char	*file_path;
-
 	each_path = ft_strjoin(dir, "/");
 	if (!each_path)
 	{
@@ -78,14 +82,14 @@ static char	*free_prev_dir(char **dir, int i)
 }
 
 // Finds the full path of a command by searching directories in PATH.
-char	*find_path(char *argv, char **envp)
+char	*find_path(char *argv)
 {
 	char	*file_path;
 	char	**dir;
 	char	*final_path;
 	int		i;
 
-	dir = get_path(envp);
+	dir = get_path();
 	if (!dir)
 		return (NULL);
 	i = 0;

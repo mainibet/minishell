@@ -2,7 +2,8 @@
 CC = cc
 # -g is to debug
 # -lreadline to link with the readline library
-CFLAGS = -Wall -Wextra -Werror -g
+# -Iinclude to include the header files in the include directory
+CFLAGS = -Wall -Wextra -Werror -g -Iinclude
 
 LIBFT_DIR = ./libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
