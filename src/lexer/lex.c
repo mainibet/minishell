@@ -2,18 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-enum e_type
+enum e_toktype
 {
 	WORD = 1,
 	HEREDOC,
 	FILE_IN,
 	FILE_OUT,
+	OPEN,
+	CLOSE,
 	PIPE,
 	AND,
 	OR,
 	SEMICOLON,
-	OPEN,
-	CLOSE,
 	MAX_TYPE
 };
 
@@ -21,10 +21,10 @@ typedef struct s_token t_token;
 
 typedef struct s_token
 {
-	char 	*txt;
-	t_token	*next;
-	e_type	type;
-	char	delim;
+	char	 	*txt;
+	t_token		*next;
+	e_toktype	type;
+	char		delim;
 }	t_token;
 
 /* advance the token pointer to the beginning of the next token */
@@ -70,7 +70,7 @@ static int	size_word(char *s, t_token *token)
 
 void	process_token(t_token token)
 {
-	// expand variables, path commands, etc.
+	// expand variables, path commands, set type, etc.
 }
 
 /* take a pointer to the beginning of a token and extract the whole 
