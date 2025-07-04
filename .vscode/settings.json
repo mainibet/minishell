@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "exec.h": "c"
+        "exec.h": "c",
+        "MAIN_EXEC_TEST.C": "cpp"
     }
 }

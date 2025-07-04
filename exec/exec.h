@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/04 11:12:21 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/04 14:39:59 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,23 +61,22 @@ typedef enum e_cmdtype
 // -----------------------------------------//
 
 // --- possible future version --- //
-// typedef struct s_cmd_content
-// {
-// 	char			**argv; //command and arguments
-// 	t_list			*redir; //linkedlist of redirections
-// 	int				redir_count; //number of redirections
-// 	enum e_cmdtype	cmd_type;//cmd type
-// } t_cmd_content;
+typedef struct s_cmd_content
+{
+	char			**argv; //command and arguments
+	t_list			*redir; //linkedlist of redirections
+	int				redir_count; //number of redirections
+	enum e_cmdtype	cmd_type;//cmd type
+} t_cmd_content;
 
 // --- initial version --- //
 typedef struct s_command
 {
-	char		**argv;
-	char		**env;
-	e_cmdtype	type;
-	int			io[2];//may be in the future will be t_lilst redir
-	int			fdother[MAX_OPEN_FILES]; // open fds to close only in child process, -1 terminated
-}	t_command;
+        char	**argv;//this will be in reallity: t_token *tokens;
+        char    **env;
+        int     io[2];//fd in and fd out
+        // int     fdother[MAX_OPEN_FILES]; // open fds to close only in child process, -1 terminated
+}       t_command;
 
 typedef struct s_pipe_data
 {
@@ -127,7 +126,7 @@ append = 0
 */
 
 /*
-
+Left-associative
 EXAMPLE: cat file.txt | grep "foo" | sort >> sorted.txt
 
           PIPE (root)

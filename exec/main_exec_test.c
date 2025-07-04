@@ -62,7 +62,8 @@ int	main(int argc, char **argv, char **envp)
 			exit_error_program(BOLD RED "Failed to create command node" RESET, line, NULL, NULL);//TEST
 		if (fill_command_node(root, parsed_tokens) == -1)//TEST 
 			exit_error_program(BOLD RED "Failed to fill command node argv" RESET, line, NULL, root);//TEST
-		execution(root, envp);//V0
+		// execution_cmd(root, envp);//V0
+        execution_node(root);//v1
 		free(parsed_tokens);
 		free(line);
 	}

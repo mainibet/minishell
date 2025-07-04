@@ -1,40 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/06/23 08:44:50 by albetanc         ###   ########.fr       */
+/*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
+/*   Updated: 2025/07/04 12:59:46 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "exec.h"//temporary for testing
 
-//main v0:
-//set-ups the shell's core interactive loop: while(1)
-// display prompt and readline command lines with readline
-//until the user exits
-//includes add_history
-int	main(void)
+/*
+    Setup a pipe between commands.
+    Returns 0 on success, -1 on failure.
+    Closes the input file descriptor if pipe creation fails.
+*/
+int	setup_pipe(int pipefd[2], int fd_in)//check if static or not
 {
-	char	*line;
-	char	*prompt;
-
-	prompt = "🐶🥕 Milanshell >";
-	while (1)
+	if (pipe(pipefd) == -1)
 	{
-		line = readline(prompt);
-		if (line == NULL)
-		{
-			printf("exit\n");
-			break ;
-		}
-		if (*line)
-			add_history(line);
-		printf("Command received: %s\n", line);
-		free(line);
+		perror("pipe failed");
+		close_fd(fd_in);
+		return (-1);
 	}
 	return (0);
 }
