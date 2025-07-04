@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 14:29:17 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/04 16:18:49 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/04 16:19:54 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ void	my_echo(t_node *node)
 	}
 	while (node->u_data.cmd.argv[i])//loop to str per str
 	{
-		if(safe_write(node->u_data.cmd.io[1], node->u_data.cmd.argv[i], ft_strlen(node->u_data.cmd.argv[i])) == -1)//implement correctly
+		if(safe_write(node->u_data.cmd.io[1], node->u_data.cmd.argv[i], 
+			ft_strlen(node->u_data.cmd.argv[i])) == -1)//implement correctly
 			return (1);//1 means error
 		if (node->u_data.cmd.argv[i + 1])
 		{
