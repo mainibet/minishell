@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/06/30 17:16:13 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/04 11:12:21 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,47 +34,69 @@ typedef enum e_node_type//CREATED FOR TESTING EXEC
 // -----------------------------------------//
 typedef enum e_redir_type
 {
-  REDIR_IN,
-  REDIR_OUT,
-  REDIR_APPEND,
-  HEREDOC,
-} t_redir_type;
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_APPEND,
+	HEREDOC,
+}	t_redir_type;
 
 typedef struct s_redir
 {
-  t_redir_type  type;//in,out, append,heredoc
-  char          *filename;//file or delimiter
+	t_redir_type	type;//in,out, append,heredoc
+	char			*filename;//file or delimiter
 } t_redir;
+
+// -----------------------------------------//
+//               COMMAND TYPE               //
+// -----------------------------------------//
+typedef enum e_cmdtype
+{
+	EXECUTABLE,
+	BUILTIN,
+	MAX_CMDTYPE//what is this for?
+}	t_cmdtype;
 
 // -----------------------------------------//
 //                 NODE CONTENT             //
 // -----------------------------------------//
 
-typedef struct s_cmd_content
+// --- possible future version --- //
+// typedef struct s_cmd_content
+// {
+// 	char			**argv; //command and arguments
+// 	t_list			*redir; //linkedlist of redirections
+// 	int				redir_count; //number of redirections
+// 	enum e_cmdtype	cmd_type;//cmd type
+// } t_cmd_content;
+
+// --- initial version --- //
+typedef struct s_command
 {
-  char          **argv; //command and arguments
-  t_list       *redir; //linkedlist of redirections
-  int           redir_count; //number of redirections
-} t_cmd_content;
+	char		**argv;
+	char		**env;
+	e_cmdtype	type;
+	int			io[2];//may be in the future will be t_lilst redir
+	int			fdother[MAX_OPEN_FILES]; // open fds to close only in child process, -1 terminated
+}	t_command;
 
 typedef struct s_pipe_data
 {
-  t_tree_node *left; //recursive dependency
-  t_tree_node *right; //recursive dependency
-} t_pipe_data;
+	t_tree_node	*left; //recursive dependency
+	t_tree_node	*right; //recursive dependency
+}	t_pipe_data;
 
 // // ---------------------------------------//
 //           MAIN UNION STRUCTS             //
 // -----------------------------------------//
 typedef struct s_tree_node
 {
-  t_node_type		type; //type of the node (command, pipe)
-  union
-  {
-    t_cmd_content	content; //content of the node (argv, redir, etc.)
-    t_pipe_data;
-}data;
-} t_tree_node;
+	t_node_type	type; //type of the node (command, pipe)
+	union
+	{
+		t_cmd_content	cmd; //content of the node (argv, redir, etc.)
+		t_pipe_data		pipe;
+	} u_data;
+}	t_tree_node;
 
 /*EXAMPLE: cat < input.txt >> output.log
 
@@ -133,7 +155,6 @@ append = 0
 // --- ABSOLUTE PATH --- //
 
 char	*find_path(char *argv);
-
 
 // --- ERRORS_CLEAN-UP --- //
 //centralized error messages
