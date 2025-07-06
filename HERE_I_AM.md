@@ -1,5 +1,7 @@
 ## In process ✅
 
+Siguiente paso: organizar archivos para execute single cmd y organizar parametros
+
 - v0 of execute_cmd_node
         - Skecth structure ✅
         - Adapt structure ✅
@@ -14,6 +16,9 @@
         - Create new structures if needed only for execution
         - Organize files
         - Adapt parameters and variables to AST
+- function to identify if is a built-in or not.
+        - if is built-in execute directly the cmd
+        - if is not execute_cmd_node
 - function to identify types of nodes and executes accordingly
 - include colores.h in libft.h
 - write first version of basic echo

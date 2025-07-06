@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/06 12:11:05 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/06 13:39:53 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	redir_input(int fd)
 	fd_dup = dup2(fd, STDIN_FILENO);
 	if (fd_dup == -1)
 	{
-		perror ("Dup2 in redir_input");
+		perror (BOLD RED "Dup2 in redir_input: Bad file descriptor" RESET);
 		close_fd (fd);
 		return (1);
 	}
@@ -35,15 +35,15 @@ int	redir_output(int fd)
 	fd_dup = dup2(fd, STDOUT_FILENO);
 	if (fd_dup == -1)
 	{
-		perror ("Dup2 in redir_output");
+		perror (BOLD RED "Dup2 in redir_output: Bad file descriptor" RESET);
 		close_fd(fd);
 		return (1);
 	}
 	close_fd(fd);
 	return (0);
 }
-
-int	setup_redir(t_node *node)
+//int	setup_redir(int input_fd, int output_fd, t_fd_dup *dup)
+int	setup_redir(t_node *node, t_fd_dup *fd)
 {
 	int	fd_in_dup;
 	int	fd_out_dup;
@@ -61,7 +61,7 @@ int	setup_redir(t_node *node)
 		perror(BOLD RED "Failed redirection OUTPUT" RESET);
 		return (-1);
 	}
-	dup -> input_dup = fd_in_dup;
-	dup -> output_dup = fd_out_dup;
+	dup->input_dup = fd_in_dup;
+	dup->output_dup = fd_out_dup;
 	return (0);
 }

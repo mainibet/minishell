@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:13:58 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/04 11:13:47 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/06 13:40:06 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static char	**get_path(void)
 	path = getenv("PATH"); // new function allowed in minishell
 	if (!path)
 	{
-		perror("PATH not found");//centralized error messages later
+		perror(BOLD RED "Error PATH: cmd not found" RESET);//centralized error messages later
 		return (NULL);
 	}
 	dir = ft_split(path, ':');
@@ -37,6 +37,7 @@ static char	*create_path(char *dir, char *argv)
 {
 	char	*each_path;
 	char	*file_path;
+
 	each_path = ft_strjoin(dir, "/");
 	if (!each_path)
 	{

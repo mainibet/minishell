@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/06 12:59:39 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/06 14:08:25 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,34 +63,7 @@
 */
 
 
-/*
-*   Forks a new process
-*   1. Handles fork errors
-*   2. Executes child based on cmd position in a pipeline.
-*   3. Exit in case of non sucess in any function to end correctly child
-*/
-//i_cmd == 0 is first cmd
-//i_cmd == nb_cmd -1 last cmd
-int	fork_handle(pid_t *pid, t_node *node, t_node_type *type, int i_cmd, int nb_cmd)
-{
-	*pid = fork();
-	if (*pid == -1)
-	{
-		perror (BOLD RED "Fork failed" RESET);
-		return (cleanup_fd(node, type));
-	}
-	if (*pid == 0)
-	{
-		if (i_cmd == 0)
-			child_first(node, type);//execute rule for first child
-		else if (i_cmd == (nb_cmd -1))
-			child_last(node, type);//execute rule for second child
-		else
-			child_middle(node, type);
-		exit (EXIT_FAILURE);
-	}
-	return (0);
-}
+
 
 //-------------------------------//
 //         EXECUTION   		     //
@@ -153,9 +126,9 @@ void	execute_cmd_node(t_node *root, t_node_type *type)
 *	1. Handle cmd node
 *	2. Handle pipe node
 */
-void	execute_node(t_node *root)
+void	execution(t_node *root)
 {
-	if (!root)
+	if (!root)    //node checker? if (!root || !*root)?
 		return; // Base case for recursion
 	if (root->type == NODE_CMD) 
 		execute_cmd_node(root);

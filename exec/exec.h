@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/06 12:49:53 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/06 14:06:10 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,9 @@ int	setup_redir(t_node *node);
 
 // --- EXECUTION --- //
 int	fork_handle(t_node *node, t_node_type *type, int i_cmd, int nb_cmd);
+void	child_first(t_node *node, t_node_type *type);
+void    child_middle(t_node *node, t_node_type *type);
+void	child_last(t_node *node, t_node_type *type);
 
 // --- ERRORS_CLEAN-UP --- //
 int cleanup_fd(t_node *node, t_node_type *type);
