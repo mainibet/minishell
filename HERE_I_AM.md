@@ -1,7 +1,19 @@
 ## In process ✅
 
 - v0 of execute_cmd_node
+        - Skecth structure ✅
+        - Adapt structure ✅
+        - Organize files
+        - Adapt parameters and variables to AST
+        - Create new structures if needed only for execution
+        - Test
+        - Push to main origin
 - v0 multi pipe execution
+        - Skecth structure ✅
+        - Adapt structure
+        - Create new structures if needed only for execution
+        - Organize files
+        - Adapt parameters and variables to AST
 - function to identify types of nodes and executes accordingly
 - include colores.h in libft.h
 - write first version of basic echo
