@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/04 14:39:59 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/06 12:49:53 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,19 @@ typedef enum e_node_type//CREATED FOR TESTING EXEC
 	NODE_CMD,
 	NODE_PIPE,
 }	t_node_type;
+
+// // ---------------------------------------//
+//           MAIN UNION STRUCTS             //
+// -----------------------------------------//
+typedef struct s_tree_node
+{
+	t_node_type	type; //type of the node (command, pipe)
+	union
+	{
+		t_cmd_content	cmd; //content of the node (argv, redir, etc.)
+		t_pipe_data		pipe;
+	} u_data;
+}	t_tree_node;
 
 // -----------------------------------------//
 //         REDIRECTION STRUCTS              //
@@ -69,6 +82,10 @@ typedef struct s_cmd_content
 	enum e_cmdtype	cmd_type;//cmd type
 } t_cmd_content;
 
+// -----------------------------------------//
+//             EXECUTION STRUCTS            //
+// -----------------------------------------//
+
 // --- initial version --- //
 typedef struct s_command
 {
@@ -76,26 +93,25 @@ typedef struct s_command
         char    **env;
         int     io[2];//fd in and fd out
         // int     fdother[MAX_OPEN_FILES]; // open fds to close only in child process, -1 terminated
+        //include the struct of pipes
 }       t_command;
 
 typedef struct s_pipe_data
 {
 	t_tree_node	*left; //recursive dependency
 	t_tree_node	*right; //recursive dependency
+	int			input_fd;
+	int			output_fd;
+    //include the struct of cmd
 }	t_pipe_data;
 
-// // ---------------------------------------//
-//           MAIN UNION STRUCTS             //
-// -----------------------------------------//
-typedef struct s_tree_node
+typedef struct s_fd_dup
 {
-	t_node_type	type; //type of the node (command, pipe)
-	union
-	{
-		t_cmd_content	cmd; //content of the node (argv, redir, etc.)
-		t_pipe_data		pipe;
-	} u_data;
-}	t_tree_node;
+	int	input_dup;
+	int	output_dup;
+}t_fd_dup;
+
+
 
 /*EXAMPLE: cat < input.txt >> output.log
 
@@ -155,7 +171,15 @@ append = 0
 
 char	*find_path(char *argv);
 
+// --- REDIRECTIONS --- //
+int	setup_redir(t_node *node);
+
+// --- EXECUTION --- //
+int	fork_handle(t_node *node, t_node_type *type, int i_cmd, int nb_cmd);
+
 // --- ERRORS_CLEAN-UP --- //
+int cleanup_fd(t_node *node, t_node_type *type);
+
 //centralized error messages
 
 #endif

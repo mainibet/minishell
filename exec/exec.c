@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/04 14:51:54 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/06 12:59:39 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,35 +53,95 @@
 //WHat tokenzation did: char *argv[] = {"ls", "-l", "/home", NULL};
 //argv[0] is command name
 
+/*
+*   Executes single external cmd
+*   1. 0 elements in argv is cmd
+*   2. Find absolut cmd path
+*   3. Fork
+*   4. Waitpit
+*   5. Executes cmd
+*/
 
+
+/*
+*   Forks a new process
+*   1. Handles fork errors
+*   2. Executes child based on cmd position in a pipeline.
+*   3. Exit in case of non sucess in any function to end correctly child
+*/
+//i_cmd == 0 is first cmd
+//i_cmd == nb_cmd -1 last cmd
+int	fork_handle(pid_t *pid, t_node *node, t_node_type *type, int i_cmd, int nb_cmd)
+{
+	*pid = fork();
+	if (*pid == -1)
+	{
+		perror (BOLD RED "Fork failed" RESET);
+		return (cleanup_fd(node, type));
+	}
+	if (*pid == 0)
+	{
+		if (i_cmd == 0)
+			child_first(node, type);//execute rule for first child
+		else if (i_cmd == (nb_cmd -1))
+			child_last(node, type);//execute rule for second child
+		else
+			child_middle(node, type);
+		exit (EXIT_FAILURE);
+	}
+	return (0);
+}
 
 //-------------------------------//
 //         EXECUTION   		     //
 //-------------------------------//
-void	execution_cmd (t_node *root, char **envp)
-{
-	char	*cmd_path;
 
-	cmd_path = find_path (root->argv[0]);//I will received this from parsing
-	if (!cmd_path)//this needs to be done in the parsing
+/*
+*   Execute single external cmd
+*   1. find absolut path
+*   2. 
+*/
+void	execute_cmd_node(t_node *root, t_node_type *type)
+{
+	pid_t	pid;
+	char	*cmd_path;
+	int		child_status;
+	int		fork_res;
+	int		type;//1 is single cmd and 2 is pipe define in macro?
+
+	cmd_path = find_path (root->argv[0]);
+	if (!cmd_path)
 	{
-		perror ("command_path not found");//TODO: include general celan-up and check were to call t for free root_node
+		perror (BOLD RED "command_path not found" RESET);
+		//TODO
 		exit(EXIT_FAILURE);
 	}
-	execve(cmd_path, root->argv, envp);
-	perror ("execve failed");
-	free (cmd_path);//freed here 'cause was created here and used here
-	//TODO: include general celan-up and check were to call t for free root_node
-	exit (EXIT_FAILURE);//later in the program a general celan-up to free all nodes
+	fork_res = fork_handle(pid, root->pipe, nb_cmd);
+	if (check_fork(fork_res, 0, &child_status))
+		return (fork_res);
+	if (cleanup_cmd_node(root))
+		exit(EXIT_FAILURE);//check how to handle better error
+	cleanup_fd(root, type);
+	if (wait_child_status(pid, &child_status) == -1)
+	{
+		perror (BOLD RED "Waitpid failed for child" RESET);
+		return (-1);
+	}
+	free (cmd_path);
+    cleanup_fd(root, type);//probably needs to be a different one to clean al nodes
+	//TODO
+	exit (EXIT_FAILURE);
 }
-
+//TODO: include needed free in the general clean-up or may be another clean_up memory
 
 
 //---------------------------------------//
 //                                       //
 //          EXECUTE_NODE                 //
 //                                       //
-//V0:supports cmd_node                   //
+//V0:support external cmd                //
+//                                       //
+//V1: supports cmd_node                  //
 //                                       //
 //V1:supports pipe_node                  //
 //                                       //
@@ -98,7 +158,7 @@ void	execute_node(t_node *root)
 	if (!root)
 		return; // Base case for recursion
 	if (root->type == NODE_CMD) 
-		execute_command(root);
+		execute_cmd_node(root);
 	// else if (root->type == NODE_PIPE)
 	// 	execute_pipe(root);
 }

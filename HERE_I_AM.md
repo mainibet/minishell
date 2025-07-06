@@ -1,43 +1,26 @@
-## In process
-watching videos:
-- Understanding tokenization ✅
-- Understangin parsing ✅
-- Understanding basic command cat ✅
-- Understanding recursion tree and the implementation ✅
-- Union type ✅
-- Execution command
-- Learn to gdb a tree structure
-Understanding Here_doc ✅
-Understanding basic command echo ✅
-Understanding tokens I need for execution: command 
-List possible needs for execution inputs
+## In process ✅
 
-Include make debug rule in makefile
-Create run_all scripts for rule make debug
-Update make
-Test all_scripts
-write first version of basic echo
-write first version of cat
-Basic version for execution external
-Basic version for execution internal
-
-basic execution
-check pikoshellgit add
-Document git workflow guide
-identificar datos necesarios en execution, proponer structs
-1. Validate my understandingn of external functions
-Basic main.c
-Compile con readline library
-Test my branch and push
-Check what I pull request to not have rubish in githubMap handling error
+- v0 of execute_cmd_node
+- v0 multi pipe execution
+- function to identify types of nodes and executes accordingly
+- include colores.h in libft.h
+- write first version of basic echo
+- write first version of cat (just for testing) not really required
+- Function to drive to one path or other if is built-in or not
+- Keep checking data need for execution
+- Keep studyin allowed functions
+- Identify edge case to handle
+    **Execution**
+        - single quotation in cmd name ✅
+        - double quotation in cmd name ✅
 
 ## Upcoming
 - Test make debug
+
 - CHeck function understanding with gemini
 - Organize plan to read man according to the functions needed in each version exec.c and/or exec.h
 - Include my understanding of each funciton in obsidian (in each function)
 - connect the questions with each function in obsidian
-1. V0 for execution
 2. Check Makefile requirements for the project
 teste makefile
 3. Push exec/ exec.h exec.c Makefile
@@ -53,6 +36,16 @@ teste makefile
 - include valgrind -q check in the main makefile
 - do i have to have my ount makefile for my tests?
 - Check if all needed frees are made when malloc error or any other errors
+12. Create a debug printin messages connected to make file for fd
+13. Organize directories and connect makefile correctly
+14. Create run_all scripts for rule make debug
+15. Update testing documentation with the files where the info is taken, etc
+16. Test all_scripts + makefile
+16. Improve echo
+17. Delete cat built-in
+18. Check norminette in libft
+19. Check handling error
+20. Check what I pull request to not have rubish in githubMap 
 
 ## Done
 
@@ -62,9 +55,31 @@ teste makefile
 4. Mind map of phases (versions)
 5. Read the man about readline
 6. Make questions about all the functions
-7. Organized the functions per workflow
-8. Include libft
-9. Include makefile with libft
+7. Basic main.c with personalized prompt
+8. Organized makefile: Compile con readline library
+8. Organized the functions per workflow
+9. Include libft
+10. Include makefile with libft
+11. check pikoshellgit add
+12. Practice git with branch
+12. watching videos:
+- Understanding tokenization 
+- Understangin parsing 
+- Understanding basic command cat 
+- Understanding recursion tree and the implementation 
+- Union type 
+- Execution command
+- Learn to gdb a tree structure
+13. Understanding Here_doc 
+14. Understanding basic command echo 
+15. Document git workflow guide
+15. Understanding tokens I need for execution: command 
+16. List possible needs for execution inputs
+17. Design debbug plan
+18. Identify main handling error cases (in miro)
+19. Improve close_fd to check that is not close before
+20. Test absolut path of external cmd in the program
+
 
 
 ## Include in gitignore before merge (check if something else)
