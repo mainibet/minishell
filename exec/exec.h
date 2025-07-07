@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/06 14:06:10 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/07 06:56:38 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef struct s_tree_node t_node;
 // -----------------------------------------//
 //           TREE NODES TYPES               //
 // -----------------------------------------//
+//here later we can include bonus
 typedef enum e_node_type//CREATED FOR TESTING EXEC
 {
 	NODE_CMD,
@@ -37,7 +38,7 @@ typedef struct s_tree_node
 	t_node_type	type; //type of the node (command, pipe)
 	union
 	{
-		t_cmd_content	cmd; //content of the node (argv, redir, etc.)
+		t_cmd_data	cmd; //content of the node (argv, redir, etc.)
 		t_pipe_data		pipe;
 	} u_data;
 }	t_tree_node;
@@ -74,27 +75,30 @@ typedef enum e_cmdtype
 // -----------------------------------------//
 
 // --- possible future version --- //
-typedef struct s_cmd_content
+// typedef struct s_cmd_data
+// {
+// 	char			**argv; //command and arguments
+// 	t_list			*redir; //linkedlist of redirections
+// 	int				redir_count; //number of redirections
+// 	enum e_cmdtype	cmd_type;//cmd type
+// } t_cmd_data;
+
+// --- initial version --- //
+typedef struct s_cmd_data
 {
-	char			**argv; //command and arguments
-	t_list			*redir; //linkedlist of redirections
-	int				redir_count; //number of redirections
-	enum e_cmdtype	cmd_type;//cmd type
-} t_cmd_content;
+        char	**argv;//this will be in reallity: t_token *tokens;
+        char	**env;
+		int		fd_in;
+		int		fd_out;
+        // int     io[2];//fd in and fd out
+        // int     fdother[MAX_OPEN_FILES]; // open fds to close only in child process, -1 terminated
+        //include the struct of pipes
+}       t_cmd_data;
 
 // -----------------------------------------//
 //             EXECUTION STRUCTS            //
 // -----------------------------------------//
 
-// --- initial version --- //
-typedef struct s_command
-{
-        char	**argv;//this will be in reallity: t_token *tokens;
-        char    **env;
-        int     io[2];//fd in and fd out
-        // int     fdother[MAX_OPEN_FILES]; // open fds to close only in child process, -1 terminated
-        //include the struct of pipes
-}       t_command;
 
 typedef struct s_pipe_data
 {
@@ -172,7 +176,7 @@ append = 0
 char	*find_path(char *argv);
 
 // --- REDIRECTIONS --- //
-int	setup_redir(t_node *node);
+int	setup_redir(int fd_in, int fd_out, t_fd_dup *fd);
 
 // --- EXECUTION --- //
 int	fork_handle(t_node *node, t_node_type *type, int i_cmd, int nb_cmd);
