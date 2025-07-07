@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:20:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/06 12:27:42 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/07 07:35:54 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,17 @@ void	free_memory(char **narg, int j)
 */
 int	cleanup_fd(t_node *node, t_node_type *type)
 {
+	if (!node)
+		return (-1);
 	if (type == NODE_CMD)
 	{
-		if (node->u_data.cmd.fd_in != -1)
-			close_fd(&node->u_data.cmd.io[0]);
+		close_fd(&node->u_data.cmd.fd_in);
+		close_fd(&node->u_data.cmd.fd_out);
 	}
 	if (type == NODE_PIPE)
 	{
-		close_fd(&node->u_data.pipe.pipefd[0]);
-		close_fd(&node->u_data.pipe.pipefd[1]);
+		close_fd(&node->u_data.pipe.input_fd);
+		close_fd(&node->u_data.pipe.output_fd);
 	}
 	return (-1);
 }
