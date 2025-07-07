@@ -47,7 +47,9 @@ int	check_fork(int result, pid_t pid1, int *status)//may be not needed with mult
 */
 //i_cmd == 0 is first cmd
 //i_cmd == nb_cmd -1 last cmd
-int	fork_handle(t_node *node, t_node_type *type, int i_cmd, int nb_cmd)
+//return pid to the parent
+//if pid fails not fd where inheritated, the parent handles them
+int	fork_handle(t_node *node, int i_cmd, int nb_cmd)
 {
 	pid_t pid;
 
@@ -55,16 +57,18 @@ int	fork_handle(t_node *node, t_node_type *type, int i_cmd, int nb_cmd)
 	if (pid == -1)
 	{
 		perror (BOLD RED "Fork failed" RESET);
-		return (cleanup_fd(node, type));//aca el fd_in lo trae el nodo cmd y el pipefd lo trae pipe node
+		return (-1);//check if smt should be free
 	}
 	if (pid == 0)
 	{
 		if (nb_cmd == 1)
-			child_process(node, type);//single cmd
+			child_process(node);//single cmd
 		else if (i_cmd == 0)
-			child_first(node, type);
+			child_first(node);
 		else if (i_cmd == nb_cmd -1)
-			child_last(node, type);
+			child_last(node);
+		else
+			child_middle(node);
 		exit(EXIT_FAILURE);
 	}
 	return (pid);
