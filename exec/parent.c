@@ -7,6 +7,8 @@
 */
 int	wait_child_status(pid_t pid, int *status)
 {
+	if (pid <= 0)//not wait if there is not valid pid
+		return (0);
 	if (waitpid(pid, status, 0) == -1)
 	{
 		perror (BOLD RED "Error waiting for child" RESET);
@@ -23,7 +25,7 @@ int	wait_child_status(pid_t pid, int *status)
 *   To managing the parent's flow after a fork attempt.
 */
 
-int	check_fork(int result, pid_t pid1, int *status)//may be not needed with multiple child
+int	check_fork(int result, pid_t pid, int *status)//may be not needed with multiple child
 {
 	if (result != 0)
 	{
@@ -31,7 +33,7 @@ int	check_fork(int result, pid_t pid1, int *status)//may be not needed with mult
 			return (0);
 		else
 		{
-			if (pid1 != 0)
+			if (pid != 0)
 				wait_child(pid1, status);
 			return (result);
 		}
