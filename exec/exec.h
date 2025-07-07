@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/07 06:56:38 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/07 07:46:08 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ typedef struct s_cmd_data
         char	**env;
 		int		fd_in;
 		int		fd_out;
+		enum	e_cmdtype;
         // int     io[2];//fd in and fd out
         // int     fdother[MAX_OPEN_FILES]; // open fds to close only in child process, -1 terminated
         //include the struct of pipes
