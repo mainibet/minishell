@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/06 13:39:53 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/07 06:38:35 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,20 @@ int	redir_output(int fd)
 	close_fd(fd);
 	return (0);
 }
+
 //int	setup_redir(int input_fd, int output_fd, t_fd_dup *dup)
-int	setup_redir(t_node *node, t_fd_dup *fd)
+int	setup_redir(int fd_in, int fd_out, t_fd_dup *dup)
 {
 	int	fd_in_dup;
 	int	fd_out_dup;
 
-	fd_in_dup = redir_input(input_fd);
+	fd_in_dup = redir_input(fd_in);
 	if (fd_in_dup < 0)
 	{
 		perror(BOLD RED "Failed redir_input" RESET);
 		return (-1);
 	}
-	fd_out_dup = redir_output(output_fd);
+	fd_out_dup = redir_output(fd_out);
 	if (fd_out_dup < 0)
 	{
 		close_fd(fd_in_dup);
