@@ -6,22 +6,24 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:07:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/06 14:22:54 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/07 07:03:05 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	child_process(t_node *node, t_node_type *type)
+void	child_process(t_node *node)
 {
-	t_fd_dup	dup;
+	t_fd_dup		dup;
+	t_cmd_data	*cmd;
 
-	if (setup_redir(fd -> input_fd, fd -> output_fd, &dup) != 0)
+	cmd = &node->u_data.cmd;
+	if (setup_redir(cmd->fd_in, cmd->fd_out, &dup) != 0)
 		exit(1);
-	execution(node);
-	perror (BOLD RED "Execution failed in child 1" RESET);
-	cleanup_fd(node, type);
-	exit(1);
+	execute_cmd_node(node);
+	perror (BOLD RED "Exec/Builtin failed" RESET);
+	cleanup_fd(node);
+	exit(EXIT_FAILURE);
 }
 
 /*
