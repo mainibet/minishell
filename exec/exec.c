@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/06 14:08:25 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/07 14:46:56 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,36 +74,50 @@
 *   1. find absolut path
 *   2. 
 */
-void	execute_cmd_node(t_node *root, t_node_type *type)
+void	select_cmd_execution(t_node *node)
+{
+	// if (&node->u_data.cmd == BUILTIN)
+	// {
+	// 	execute_builtin(&node->u_data.cmd);//PENDING THOURGH IF COND WITH STRNCMP
+	// 	return (0);//check the return
+	// }
+	// else
+		execute_external_cmd(node);
+}
+
+/*
+*   Execute single external cmd
+*   1. find absolut path
+*   2. 
+*/
+void	execute_external_cmd(t_node *node)
 {
 	pid_t	pid;
 	char	*cmd_path;
 	int		child_status;
-	int		fork_res;
-	int		type;//1 is single cmd and 2 is pipe define in macro?
+	int		fork_status;
 
-	cmd_path = find_path (root->argv[0]);
+	cmd_path = find_path (node->u_data.cmd.argv[0]);
 	if (!cmd_path)
 	{
 		perror (BOLD RED "command_path not found" RESET);
 		//TODO
 		exit(EXIT_FAILURE);
 	}
-	fork_res = fork_handle(pid, root->pipe, nb_cmd);
-	if (check_fork(fork_res, 0, &child_status))
-		return (fork_res);
-	if (cleanup_cmd_node(root))
-		exit(EXIT_FAILURE);//check how to handle better error
-	cleanup_fd(root, type);
-	if (wait_child_status(pid, &child_status) == -1)
+	node->u_data.cmd.argv[0] = cmd_path;//only filled if there is a valid path
+	// fork_status = fork_handle(pid, node->type, int i_cmd, int nb_cmd);//formultiple cmd?
+	fork_status = fork_handle(pid, node->type, 0, 1);//1 cmd v1
+	cleanup_fd(node, node->type);//close fd before child
+	execve(cmd_path, node->cmd.argv,node->cmd.envp);
+    if (wait_child_status(pid, &child_status) == -1)
 	{
 		perror (BOLD RED "Waitpid failed for child" RESET);
 		return (-1);
 	}
+	if (cleanup_cmd_node(node))
+		perror(MAGENTA "Failed to cleanup cmd node\n" RESET);
+	cleanup_fd(node, node->type);
 	free (cmd_path);
-    cleanup_fd(root, type);//probably needs to be a different one to clean al nodes
-	//TODO
-	exit (EXIT_FAILURE);
 }
 //TODO: include needed free in the general clean-up or may be another clean_up memory
 
@@ -128,10 +142,10 @@ void	execute_cmd_node(t_node *root, t_node_type *type)
 */
 void	execution(t_node *root)
 {
-	if (!root)    //node checker? if (!root || !*root)?
+	if (!root)
 		return; // Base case for recursion
 	if (root->type == NODE_CMD) 
-		execute_cmd_node(root);
+		select_cmd_execution(root);
 	// else if (root->type == NODE_PIPE)
-	// 	execute_pipe(root);
+	// 	execute_pipe_node(root);
 }

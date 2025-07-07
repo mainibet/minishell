@@ -5,7 +5,7 @@
 *   Parent waits for a specific child process to terminate, using waitpid()
 *   To clean up after a child and retrieve its exit status
 */
-int	wait_child_status(pid_t pid, int *status)
+int	wait_one_child(pid_t pid, int *status)
 {
 	if (pid <= 0)//not wait if there is not valid pid
 		return (0);
@@ -13,6 +13,22 @@ int	wait_child_status(pid_t pid, int *status)
 	{
 		perror (BOLD RED "Error waiting for child" RESET);
 		return (-1);
+	}
+	return (0);
+}
+
+int	wait_children(pid_t *pid, int nb_child, int *status)
+{
+	int	i;
+	int	res;
+
+	i = 0;
+	while (i < nb_child)
+	{
+		res = wait_one_child(pid[i], &status[i]);
+		if (res == -1)
+			return (-1);//check if smt else needed
+		i++;
 	}
 	return (0);
 }
@@ -34,7 +50,7 @@ int	check_fork(int result, pid_t pid, int *status)//may be not needed with multi
 		else
 		{
 			if (pid != 0)
-				wait_child(pid1, status);
+				wait_child(pid, status);
 			return (result);
 		}
 	}
@@ -51,6 +67,9 @@ int	check_fork(int result, pid_t pid, int *status)//may be not needed with multi
 //i_cmd == nb_cmd -1 last cmd
 //return pid to the parent
 //if pid fails not fd where inheritated, the parent handles them
+//pid > 0 we are in the parent process
+// pid == 0 we are in the child process
+// pid == -1 error creating child
 int	fork_handle(t_node *node, int i_cmd, int nb_cmd)
 {
 	pid_t pid;
@@ -59,6 +78,7 @@ int	fork_handle(t_node *node, int i_cmd, int nb_cmd)
 	if (pid == -1)
 	{
 		perror (BOLD RED "Fork failed" RESET);
+		cleanup_fd(node, node->type);//check if needed if smt came opened
 		return (-1);//check if smt should be free
 	}
 	if (pid == 0)

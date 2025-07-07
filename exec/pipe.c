@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/06 14:13:48 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/07 13:22:30 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int count_node(t_node *node, t_node_type target_type)//NEW
 	if (node->type == target_type)
 		count = 1;
 	count += count_node(node->left, target_type);
-	count += count_nodee(node->right, target_type);
+	count += count_node(node->right, target_type);
 	return (count);
 }
 
@@ -58,48 +58,53 @@ int	setup_pipe(int pipefd[2], int fd_in)//check if static or not
 //n cmds need n-1 pipes
 //create fork per each child
 // int	parent(struct s_pipe_data *data)
+// is_pipeline() helper? to mark the cmd?
 int	execute_pipe_node(t_node *root)//this used to be my parent
 {
 	pid_t    *pid;//save this in a parent struct
-	int		child_status;
-	int		fork_res;
+	int		*child_status;
 	int		nb_cmd;
 	int		nb_pipes;
 	int		i;
-	int		j;
+	// int		j;
 
 	i = 0;
-	j = 0;
+	// j = 0;
 	nb_cmd = count_node(root, NODE_CMD);
 	nb_pipes = count_node(root, NODE_PIPE);
 	if (setup_pipe(root) == -1)
 		return (-1);
-	pid = malloc(nb_cmd);//check
+	pid = malloc(sizeof(pid_t) * nb_cmd);//check
 	if (!pid)//check later when is good how we send the correct pid every time
+		return (malloc_error());//check to free all needed and return whats needed
+	// --- execute cmds in multiple pipes --- //CHECK IF WORK WITH AST
+	pid = NULL;//check
+	child_status = malloc(sizeof(int) * nb_cmd);//check
+	while (i < nb_cmd)
 	{
-		malloc_error();//check to free all needed and return whats needed
-		return (1);
+		pid[i] = fork_handle(pid, root, nb_cmd);//here instead of root will be current node
+		if (check_fork(pid[i], 0, &child_status))
+			return (pid[i]);//CHECK IF THIS RET IS OK
+		i++;
 	}
-	// --- execute pipe by pipe from root --- //
-	while (i < nb_pipes)
+	cleanup_fd(root, root->type);
+    // --wait all children --//
+    i = 0;//would be usefull with recursion?
+	while (i < nb_cmd)//is it possible to have active child check?
 	{
-		while (j < nb_cmd)
+		if (wait_child(pid[i], &child_status[i]) == -1)//change logic for multiples pipes
 		{
-			fork_res = fork_handle(pid, root->pipe, nb_cmd);
-			if (check_fork(fork_res, 0, &child_status))
-				return (fork_res);
-			j++;
+			perror ("error waiting child");
+			free_array(pid, i);
+			free (pid);
+			return (-1);
 		}
 		i++;
 	}
-	cleanup_fd(root, type);
-	while (active_child > 0)//call wait_child in recursion, possible? dynamically to the numb of cmd
+	if (pid)//NEW, check
 	{
-		if (wait_child(pid1, &status) == -1 || wait_child(pid2, &status) == -1)//change logic for multiples pipes
-		{
-			perror ("error waiting child");
-			return (-1);
-		}
+		free_array(pid, i);//check this function
+		free (pid);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:07:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/07 07:03:05 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/07 13:24:48 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,8 @@ void	child_process(t_node *node)
 *   3. Directs its standard output to the write-end of the pipe (data->pipefd[1])
 *   4. Calls child_process to execute the command
 */
-void	child_first(t_node *node, t_node_type *type)
+void	child_first(t_node *node)
 {
-	t_initial_fd	fd;//adapt to AST
-
 	close_fd(data -> pipefd[0]);
 	fd = (t_initial_fd){data->fd_in, data->pipefd[1]};
 	child_process(node, type);
@@ -44,7 +42,7 @@ void	child_first(t_node *node, t_node_type *type)
 /*
 *   set-up middle cmds in the execution pipeline
 */
-void    child_middle(t_node *node, t_node_type *type)
+void    child_middle(t_node *node)
 {
 	int	*fd;//if so need to check that but later (other version)
 
@@ -58,9 +56,8 @@ void    child_middle(t_node *node, t_node_type *type)
 *   Directs its standard output to the newly opened output file.
 *   Calls child_process to execute 
 */
-void	child_last(t_node *node, t_node_type *type)
+void	child_last(t_node *node)
 {
-	t_initial_fd	fd;//this comes in the node
 	int				fd_out;
 
 	close(data -> pipefd[1]);
@@ -72,6 +69,6 @@ void	child_last(t_node *node, t_node_type *type)
 		perror ("open output file");
 		exit (-1);
 	}
-	fd = (t_initial_fd){data -> pipefd[0], fd_out};
+	fd = data -> pipefd[0], fd_out;
 	child_process(node, type);
 }
