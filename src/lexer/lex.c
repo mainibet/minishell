@@ -5,9 +5,9 @@
 enum e_toktype
 {
 	WORD = 1,
-	HEREDOC,
-	FILE_IN,
-	FILE_OUT,
+	//HEREDOC,
+	//FILE_IN,
+	//FILE_OUT,
 	OPEN,
 	CLOSE,
 	PIPE,
@@ -21,13 +21,14 @@ typedef struct s_token t_token;
 
 typedef struct s_token
 {
-	char	 	*txt;
-	t_token		*next;
-	e_toktype	type;
-	char		delim;
+	char	 		*txt;
+	t_token			*next;
+	enum e_toktype	type;
+	char			delim;
 }	t_token;
 
 /* advance the token pointer to the beginning of the next token */
+/* 
 char *consume_token(char *s)
 {
 	if (*s == '"' || *s == '\'')
@@ -72,23 +73,36 @@ void	process_token(t_token token)
 {
 	// expand variables, path commands, set type, etc.
 }
+*/
 
-/* take a pointer to the beginning of a token and extract the whole 
+enum e_toktype token_type(t_token *token)
+{
+	if (*token->txt == '(' || *token->txt == '{')
+		return (OPEN);
+	if (*token->txt == ')' || *token->txt == '}')
+		return (CLOSE);
+	if (*token->txt == '|' && !*(token->txt + 1))
+		return (PIPE);
+	if (*token->txt == '&' && *(token->txt + 1) == '&')
+		return (AND);
+	if (*token->txt == '|' && *(token->txt + 1) == '|')
+		return (OR);
+	if (*token->txt == ';')
+		return (SEMICOLON);
+	return (WORD);
+}
+
+/* take a pointer to the beginning of a token in a string and extract the whole 
  * token.  If the first character is a quote, the whole quoted strding is 
  * the token, otherwise the _word_ is the token
  */
-t_token *extract_token(char *s, char **env)
+t_token *extract_token(char *s, size_t size)
 {
 	t_token *token;
-	int		size;
 
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
-	if (*s == '"' || *s == '\'')
-		size = size_quoted(s, token);
-	else
-		size = size_word(s, token);
 	token->txt = malloc(size + 1);
 	if (!token->txt)
 	{
@@ -97,7 +111,7 @@ t_token *extract_token(char *s, char **env)
 	}
 	strncpy(token->txt, s, size);
 	token->txt[size] = 0;
-	process_token(token, env);
+	token->type = token_type(token);
 	return (token);
 }
 
@@ -111,26 +125,21 @@ void free_token(t_token *token)
 
 char	*consume_whitespace(char *p)
 {
-	while (p == ' ' || p == "\t")
+	while (*p && (*p == ' ' || *p == '\t'))
 		p++;
 	return (p);
 }
 
-t_token *lex(char *s)
+t_token *lex(char *s, char delim)
 {
 	char	*p;
 	char	*q;
 	t_token *token;
 
 	p = s;
-	while (p && *p
-
-	p = s;
 	q = p;
 	// push q to the end of the token
 	while (*q && *q != delim)
-		q++;
-	if (delim != ' ')
 		q++;
 	if (!*q && delim != ' ')
 	{
@@ -138,12 +147,11 @@ t_token *lex(char *s)
 		exit(1);
 	}
 	token = extract_token(p, q - p);
-	// so we know whether to expand variables
-	token->delim = delim;
 	if (!token)
 		return (NULL);
-	if (delim == ' ')
-		q = consume_whitespace(q)
+	// so we know whether to expand variables
+	token->delim = delim;
+	q = consume_whitespace(q);
 	if (*q)
 		if (*q == '\'' || *q == '"')
 			token->next = lex(q + 1, *q);
