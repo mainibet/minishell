@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/08 16:18:01 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/08 18:17:47 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define EXEC_H
 
 // --- STANDARD HEADERS ---
-#include <readline/readline.h>
-#include <readline/history.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 // ---FORWARD DECLARATIONS--- //
 typedef struct s_tree_node t_node;
@@ -23,132 +23,25 @@ typedef struct s_tree_node t_node;
 // -----------------------------------------//
 //           TREE NODES TYPES               //
 // -----------------------------------------//
-//here later we can include bonus
+
+/**
+*   @brief defines types of nodes in AST
+*
+*   1. Categorizes the different structural elements
+*      a parsed cmd line can represent
+*   @usage for directing execution flow
+*   
+*   @note This enum was initially created 
+*   for testing the execution logic.
+*/
 typedef enum e_node_type//CREATED FOR TESTING EXEC
 {
 	NODE_CMD,
 	NODE_PIPE,
 }	t_node_type;
 
-// -----------------------------------------//
-//           MAIN UNION STRUCTS             //
-// -----------------------------------------//
-typedef struct s_tree_node
-{
-	t_node_type	type; //type of the node (command, pipe)
-	union
-	{
-		t_cmd_data	cmd; //content of the node (argv, redir, etc.)
-		t_pipe_data	pipe;
-	} u_data;
-	struct s_tree_node *left;//this is to make easier recursions like count node
-	struct s_tree_node *right;
-    }; t_tree_node;
 
-// -----------------------------------------//
-//            GENERAL STRUCTS               //
-// -----------------------------------------//
-
-// --- possible future version CMD NOD --- //
-// typedef struct s_cmd_data
-// {
-// 	char			**argv; //command and arguments
-// 	t_list			*redir; //linkedlist of redirections
-// 	int				redir_count; //number of redirections
-// 	enum e_cmdtype	cmd_type;//cmd type
-// } t_cmd_data;
-
-// --- initial version CMD NODE--- //
-typedef struct s_cmd_data
-{
-        char	**argv;//this will be in reallity: t_token *tokens; >> > < << *token
-        char	**env;
-        // int     io[2];//fd in and fd out from PIPE
-        // int     fd_other[MAX_OPEN_FILES]; // open fds to close only in child process, -1 terminated
-        int		fd_in;
-		int		fd_out;
-		t_cmdtype	cmd_type;
-
-
-        //include the struct of pipes
-}       t_cmd_data;
-
-// --- Pipes ---//
-typedef struct s_pipe_data//Joshua will handle this in parsing
-{
-	t_node	*left; //recursive dependency
-	t_node	*right; //recursive dependency
-    //include the struct of cmd
-}	t_pipe_data;
-
-// -----------------------------------------//
-//         REDIRECTION STRUCTS              //
-// -----------------------------------------//
-typedef enum e_redir_type
-{
-	REDIR_IN,
-	REDIR_OUT,
-	REDIR_APPEND,
-	HEREDOC,
-}	t_redir_type;
-
-typedef struct s_redir
-{
-	t_redir_type	type;//in,out, append,heredoc
-	char			*filename;//file or delimiter
-} t_redir;
-
-// -----------------------------------------//
-//               COMMAND TYPE               //
-// -----------------------------------------//
-typedef enum e_cmdtype
-{
-	EXECUTABLE,
-	BUILTIN,
-	MAX_CMDTYPE//what is this for?
-}	t_cmdtype;
-
-// -----------------------------------------//
-//             EXECUTION STRUCTS            //
-// -----------------------------------------//
-
-typedef struct s_fd_dup
-{
-	int	input_dup;
-	int	output_dup;
-}t_fd_dup;
-
-
-
-/*EXAMPLE: cat < input.txt >> output.log
-
-node->argv = ["cat", NULL];
-node->infile = strdup("input.txt");
-node->outfile = strdup("output.log");
-node->append_flag = 1;
-node->left = NULL;
-node->right = NULL;
-*/
-
-/*
-EXAMPLE: grep "foo" < input.txt | sort > output.txt
-        
-        PIPE (root)
-       /          \
-[COMMAND grep]   [COMMAND sort]
-argv = ["grep", "foo", NULL]
-infile = "input.txt"
-outfile = NULL
-append = 0
-
-argv = ["sort", NULL]
-infile = NULL
-outfile = "output.txt"
-append = 0
-
-*/
-
-/*
+/**
 Left-associative
 EXAMPLE: cat file.txt | grep "foo" | sort >> sorted.txt
 
@@ -169,6 +62,95 @@ outfile = NULL
 append = 0
 
 */
+// -----------------------------------------//
+//            GENERAL STRUCTS               //
+// -----------------------------------------//
+
+/**
+*   @brief represents a node in the AST
+*
+*   allows a node to hold data for cmd_node or
+*   pipe_node
+*
+*   @param type The type of the node (CMD, PIPE).
+*   @param u_data Union holding cmd or pipe data.
+*/
+
+typedef struct s_tree_node
+{
+	t_node_type	type;
+	union
+	{
+		t_cmd_data	cmd;
+        // t_pipe_data pipe;
+	} u_data;
+} t_tree_node;
+
+/**
+*   @brief stores data relevand in cmd_node AST:
+*   single external cmd
+*
+*   @note This struct intend to be part of `u_data' 
+*   union in AST
+*   @note `argv` will be later `t_token *tokens`
+*   @note future version might have io[2] instead of 
+*   @note future veresion might have int fd_other[MAX_OPEN_FDs]
+*   if so they will need to be closed before child 
+*   if not needed fd_in fd_out received
+*/
+typedef struct s_cmd_data
+{
+    char	**argv;
+    char	**env;
+    int		fd_in;
+	int		fd_out;
+	t_cmdtype	cmd_type;
+} t_cmd_data;
+
+/**
+*   @brief pipe operrations connecting 2 cmd branches 
+*   in AST
+*
+*   Pipe node will hold 2 pointers to left and right 
+*   child nodes
+*/
+typedef struct s_pipe_data
+{
+	t_tree_node  *left;
+	t_tree_node  *right;
+} t_pipe_data;
+
+// -----------------------------------------//
+//             EXECUTION STRUCTS            //
+// -----------------------------------------//
+
+//  --- COMMAND TYPE --- //
+
+/**
+ *  @brief Defines classification of a cmd
+ * 
+ * - Use: to recognize a external cmd froma builtin
+ * 
+ *  @note later might be use MAX_CMDTYPE to control
+ *  precedency
+*/
+typedef enum e_cmdtype
+{
+	EXECUTABLE,
+	BUILTIN,
+}	t_cmdtype;
+
+/**
+ *  @brief stores duplicated fd for tmp redirection
+ * 
+ *  -Use: to hold tmp compies of STDIN_FILENO/ STDOU_FILENO
+*/
+typedef struct s_fd_dup
+{
+	int	input_dup;
+	int	output_dup;
+}t_fd_dup;
+
 
 // -----------------------------------------//
 //                PROTOTYPES                //
@@ -178,21 +160,16 @@ append = 0
 
 char	*find_path(char *argv);
 
-// --- REDIRECTIONS --- //
-int	setup_redir(int fd_in, int fd_out, t_fd_dup *fd);
-
 // --- EXECUTION --- //
 //Parent
 int	fork_handle(t_node *node, t_node_type *type, int i_cmd, int nb_cmd);
+int	setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
+
 //child
-void	child_first(t_node *node);
-void    child_middle(t_node *node);
-void	child_last(t_node *node);
 void	execute_cmd(t_node *node);
 
 // --- ERRORS_CLEAN-UP --- //
 int cleanup_fd(t_node *node, t_node_type *type);
 
-//centralized error messages
 
 #endif

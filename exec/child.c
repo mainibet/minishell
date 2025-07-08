@@ -6,13 +6,13 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:07:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/08 16:50:36 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/08 18:13:11 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
+/**
 *   @brief sets up I/O redi and executes cmd
 *
 *   1. Call set-up redirections
@@ -20,7 +20,7 @@
 *   3. Handles if execution fails
 *   4. @return exit
 *
-*   @usage: only within forked childs
+*   - use: only within forked childs
 *
 *   @note v0: execute single external cmd: no pipes no builtins
 */

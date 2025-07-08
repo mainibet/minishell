@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/08 17:17:00 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/08 18:13:31 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@
 //    active                             //
 //---------------------------------------//
 
-/*
+/**
 *   @brief Execute single external cmd
 *
 *   1. Find absolut path
@@ -66,7 +66,7 @@
 *   3. Handle errors: cmd_pah and execve
 *   @return none. executes in success or
 *   EXIT_FAILURE if fails
-*   @usage called in the child_process
+*   -Use called in the child_process
 *
 *   @note:
 *   - handle error of execve only is
@@ -86,12 +86,12 @@ void	exec_external_cmd(t_node *node)
 		exit(EXIT_FAILURE);
 	}
 	node->u_data.cmd.argv[0] = cmd_path;
-	execve(cmd_path, node->u_data.cmd.argv,node->u_data.cmd.env);
+	execve(cmd_path, node->u_data.cmd.argv, node->u_data.cmd.env);
 	free(cmd_path);
 	exit(EXIT_FAILURE);
 }
 
-/*
+/**
 *	@brief Receives a node from AST and decides 
 *   type of execution based on the type node
 *
