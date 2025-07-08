@@ -157,7 +157,7 @@ t_node	*parse(t_token **token, int min_precedence)
 	{
 		op = *token;
 		*token = (*token)->next;
-		right = parse(token, precedence(op) + 1);
+		right = parse(token, precedence(op));
 		if (!right)
 		{
 			free_node(left);
