@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/07 14:46:56 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/08 16:16:42 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,28 +61,52 @@
 *   4. Waitpit
 *   5. Executes cmd
 */
+/*
+cmd_name
+maybe in parser: node->u_data.cmd.cmd_type = get_cmd_type(node->u_data.cmd.argv[0]);
+    BUILIN IDEAS
 
-
-
+    - child process will check if is builtin to execute
+    - if is builtin will find which is it
+    - Will execute it accordingly
+*/
 
 //-------------------------------//
 //         EXECUTION   		     //
 //-------------------------------//
 
 /*
+*   Parent
 *   Execute single external cmd
 *   1. find absolut path
 *   2. 
 */
-void	select_cmd_execution(t_node *node)
+void	execute_cmd(t_node *node)
 {
-	// if (&node->u_data.cmd == BUILTIN)
+	pid_t	pid;//use later w pipes
+    //char	*cmd_name; //when parsing args
+	int		child_status;
+	int		fork_status;
+
+	// if (&node->u_data.cmd == BUILTIN)//later this but if is not in pipe
 	// {
 	// 	execute_builtin(&node->u_data.cmd);//PENDING THOURGH IF COND WITH STRNCMP
-	// 	return (0);//check the return
+	// 	return ;//check the return
 	// }
-	// else
-		execute_external_cmd(node);
+	// fork_status = fork_handle(pid, node->type, int i_cmd, int nb_cmd);//formultiple cmd?
+	fork_status = fork_handle(pid, node->type, 0, 1);//1 cmd v1
+	if (check_fork(fork_status, pid, &child_status))
+		return (fork_status);
+	cleanup_fd(node, node->type);//to close fd_in, pipefd[0] and pipefd[1]
+	if (wait_child_status(pid, &child_status) == -1)//this eventually should wait all children
+	{
+		perror (BOLD RED "Waitpid failed for child" RESET);
+		return (-1);
+	}
+	if (cleanup_cmd_node(node))//check if here or in the child
+		perror(MAGENTA "Failed to cleanup cmd node\n" RESET);
+	cleanup_fd(node, node->type);//check if here or in other place 
+    // exec_external_cmd(node);//call this from child_process
 }
 
 /*
@@ -90,34 +114,22 @@ void	select_cmd_execution(t_node *node)
 *   1. find absolut path
 *   2. 
 */
-void	execute_external_cmd(t_node *node)
+void	exec_external_cmd(t_node *node)
 {
-	pid_t	pid;
 	char	*cmd_path;
-	int		child_status;
-	int		fork_status;
 
 	cmd_path = find_path (node->u_data.cmd.argv[0]);
 	if (!cmd_path)
 	{
 		perror (BOLD RED "command_path not found" RESET);
-		//TODO
+		//TODO: needed free if applies
 		exit(EXIT_FAILURE);
 	}
 	node->u_data.cmd.argv[0] = cmd_path;//only filled if there is a valid path
-	// fork_status = fork_handle(pid, node->type, int i_cmd, int nb_cmd);//formultiple cmd?
-	fork_status = fork_handle(pid, node->type, 0, 1);//1 cmd v1
-	cleanup_fd(node, node->type);//close fd before child
-	execve(cmd_path, node->cmd.argv,node->cmd.envp);
-    if (wait_child_status(pid, &child_status) == -1)
-	{
-		perror (BOLD RED "Waitpid failed for child" RESET);
-		return (-1);
-	}
-	if (cleanup_cmd_node(node))
-		perror(MAGENTA "Failed to cleanup cmd node\n" RESET);
-	cleanup_fd(node, node->type);
-	free (cmd_path);
+	execve(cmd_path, node->u_data.cmd.argv,node->u_data.cmd.env);
+	free(cmd_path);//this in case of execution fails.
+	//TODO check if free smt else
+	exit(EXIT_FAILURE);
 }
 //TODO: include needed free in the general clean-up or may be another clean_up memory
 
@@ -145,7 +157,7 @@ void	execution(t_node *root)
 	if (!root)
 		return; // Base case for recursion
 	if (root->type == NODE_CMD) 
-		select_cmd_execution(root);
+		execute_cmd(root);
 	// else if (root->type == NODE_PIPE)
 	// 	execute_pipe_node(root);
 }

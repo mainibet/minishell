@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parent.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/08 16:15:44 by albetanc          #+#    #+#             */
+/*   Updated: 2025/07/08 16:17:10 by albetanc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "exec.h"//temporary for testing
 
@@ -96,4 +108,37 @@ int	fork_handle(t_node *node, int i_cmd, int nb_cmd)
 	return (pid);
 }
 
+/*
+*   Parent
+*   Execute single external cmd
+*   1. find absolut path
+*   2. 
+*/
+void	execute_cmd(t_node *node)
+{
+	pid_t	pid;//use later w pipes
+    //char	*cmd_name; //when parsing args
+	int		child_status;
+	int		fork_status;
+
+	// if (&node->u_data.cmd == BUILTIN)//later this but if is not in pipe
+	// {
+	// 	execute_builtin(&node->u_data.cmd);//PENDING THOURGH IF COND WITH STRNCMP
+	// 	return ;//check the return
+	// }
+	// fork_status = fork_handle(pid, node->type, int i_cmd, int nb_cmd);//formultiple cmd?
+	fork_status = fork_handle(pid, node->type, 0, 1);//1 cmd v1
+	if (check_fork(fork_status, pid, &child_status))
+		return (fork_status);
+	cleanup_fd(node, node->type);//to close fd_in, pipefd[0] and pipefd[1]
+	if (wait_child_status(pid, &child_status) == -1)//this eventually should wait all children
+	{
+		perror (BOLD RED "Waitpid failed for child" RESET);
+		return (-1);
+	}
+	if (cleanup_cmd_node(node))//check if here or in the child
+		perror(MAGENTA "Failed to cleanup cmd node\n" RESET);
+	cleanup_fd(node, node->type);//check if here or in other place 
+    // exec_external_cmd(node);//call this from child_process
+}
 

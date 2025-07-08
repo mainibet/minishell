@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/07 14:14:28 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/08 16:18:01 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef enum e_node_type//CREATED FOR TESTING EXEC
 // -----------------------------------------//
 //           MAIN UNION STRUCTS             //
 // -----------------------------------------//
-typedef struct s_node
+typedef struct s_tree_node
 {
 	t_node_type	type; //type of the node (command, pipe)
 	union
@@ -43,7 +43,7 @@ typedef struct s_node
 	} u_data;
 	struct s_tree_node *left;//this is to make easier recursions like count node
 	struct s_tree_node *right;
-    } t_node;
+    }; t_tree_node;
 
 // -----------------------------------------//
 //            GENERAL STRUCTS               //
@@ -76,8 +76,8 @@ typedef struct s_cmd_data
 // --- Pipes ---//
 typedef struct s_pipe_data//Joshua will handle this in parsing
 {
-	t_tree_node	*left; //recursive dependency
-	t_tree_node	*right; //recursive dependency
+	t_node	*left; //recursive dependency
+	t_node	*right; //recursive dependency
     //include the struct of cmd
 }	t_pipe_data;
 
@@ -182,10 +182,13 @@ char	*find_path(char *argv);
 int	setup_redir(int fd_in, int fd_out, t_fd_dup *fd);
 
 // --- EXECUTION --- //
+//Parent
 int	fork_handle(t_node *node, t_node_type *type, int i_cmd, int nb_cmd);
-void	child_first(t_node *node, t_node_type *type);
-void    child_middle(t_node *node, t_node_type *type);
-void	child_last(t_node *node, t_node_type *type);
+//child
+void	child_first(t_node *node);
+void    child_middle(t_node *node);
+void	child_last(t_node *node);
+void	execute_cmd(t_node *node);
 
 // --- ERRORS_CLEAN-UP --- //
 int cleanup_fd(t_node *node, t_node_type *type);
