@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:07:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/08 16:34:12 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/08 16:50:36 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 *   2. Call exec_external_cmd
 *   3. Handles if execution fails
 *   4. @return exit
+*
+*   @usage: only within forked childs
 *
 *   @note v0: execute single external cmd: no pipes no builtins
 */

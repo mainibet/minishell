@@ -1,45 +1,53 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleanup.c                                          :+:      :+:    :+:   */
+/*   cleanup_full.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:20:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/08 16:48:29 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/08 16:42:47 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	free_memory(char **narg, int j)
+{
+	while (j > 0)
+	{
+		free (narg[j - 1]);
+		j--;
+	}
+	free (narg);
+}
 /*
-*   @brief Closes relevant file descriptors to safely 
-*   clean up after a fork failure.
-*
+*   Closes relevant file descriptors to safely clean up after a fork failure.
 *   1. Will identify if is cleaning a pipe_node or a single cmd
 *   2. Close_fd will check if there is something to close or not
-*   3. @return -1 if close fails
-*
-*   @usage e.g. in parent process after execution
-*   @note V0: to exectue single external cmd: no pipe no builtins
+*   3. Return -1 if close fails
 */
 int	cleanup_fd(t_node *node, t_node_type type)
 {
 	if (!node)
 		return (-1);
 	if (type == NODE_CMD)
-		cleanup_cmd_node(node);
+        cleanup_cmd_node(node);
+	// {
+	// 	close_fd(&node->u_data.cmd.fd_in);
+	// 	close_fd(&node->u_data.cmd.fd_out);
+	// }
+	if (type == NODE_PIPE)
+		cleanup_pipe_node(node);
+	// {
+	// 	close_fd(&node->u_data.pipe.input_fd);
+	// 	close_fd(&node->u_data.pipe.output_fd);
+	// }
 	return (-1);
 }
 
 /*
-*   @brief Closes tmp fd internal from cmd: fd_in and fd_out
-*   
-*   1. Checks node validity
-*   2. Access cmd data
-*   3. Closes fd 
-*
-*   @usage call as a part of a broader cleanup routine for cmd exec
+* Closes tmp fd internal from cmd: fd_in and fd_out
 */
 void	cleanup_cmd_node(t_node *node)
 {
@@ -52,3 +60,11 @@ void	cleanup_cmd_node(t_node *node)
 	close_fd(&node->u_data.cmd.fd_out);
 }
 
+void	cleanup_pipe_node(t_node *node)
+{
+	t_pipe_data	*pipe;
+
+	pipe = &node->u_data.pipe;
+	close_fd(&pipe->input_fd);
+	close_fd(&pipe->output_fd);
+}
