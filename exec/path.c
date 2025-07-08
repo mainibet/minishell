@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:13:58 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/06 13:40:06 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/08 18:36:09 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,11 @@ static char	**get_path(void)
 {
 	char	*path;
 	char	**dir;
-	path = getenv("PATH"); // new function allowed in minishell
+
+	path = getenv("PATH");
 	if (!path)
 	{
-		perror(BOLD RED "Error PATH: cmd not found" RESET);//centralized error messages later
+		perror(BOLD RED "Error PATH: cmd not found" RESET);
 		return (NULL);
 	}
 	dir = ft_split(path, ':');
@@ -54,7 +55,8 @@ static char	*create_path(char *dir, char *argv)
 	return (file_path);
 }
 
-// Checks if the file at file_path exists; frees memory and returns the path if found.
+// Checks if the file at file_path exists; frees memory 
+//and returns the path if found.
 static char	*check_path(char **dir, char *file_path, int i)
 {
 	if (access (file_path, F_OK) == 0)
@@ -70,7 +72,8 @@ static char	*check_path(char **dir, char *file_path, int i)
 	return (NULL);
 }
 
-// Frees all directory strings from index i onwards and returns NULL.
+// Frees all directory strings from index i onwards and 
+//returns NULL.
 static char	*free_prev_dir(char **dir, int i)
 {
 	while (dir[i])
@@ -82,7 +85,8 @@ static char	*free_prev_dir(char **dir, int i)
 	return (NULL);
 }
 
-// Finds the full path of a command by searching directories in PATH.
+// Finds the full path of a command by searching directories
+//in PATH.
 char	*find_path(char *argv)
 {
 	char	*file_path;

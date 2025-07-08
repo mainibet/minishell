@@ -6,13 +6,16 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/07 06:38:35 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/08 18:35:21 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "exec.h" //temporary for testing
 
+/**
+ * @brief Redirects STDIN_FILENO to a specified fd
+ */
 int	redir_input(int fd)
 {
 	int	fd_dup;
@@ -27,7 +30,9 @@ int	redir_input(int fd)
 	close_fd(fd);
 	return (0);
 }
-
+/**
+ * @brief Redirects STDOUT_FILENO to a specified fd
+ */
 int	redir_output(int fd)
 {
 	int	fd_dup;
@@ -43,7 +48,10 @@ int	redir_output(int fd)
 	return (0);
 }
 
-//int	setup_redir(int input_fd, int output_fd, t_fd_dup *dup)
+/**
+ * @brief Sets up both standard input and standard 
+ * output redirections for a command.
+ */
 int	setup_redir(int fd_in, int fd_out, t_fd_dup *dup)
 {
 	int	fd_in_dup;

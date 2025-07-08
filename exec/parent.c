@@ -6,14 +6,14 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:15:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/08 16:17:10 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/08 18:33:29 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "exec.h"//temporary for testing
 
-/*
+/**
 *   Parent waits for a specific child process to terminate, using waitpid()
 *   To clean up after a child and retrieve its exit status
 */
@@ -29,31 +29,15 @@ int	wait_one_child(pid_t pid, int *status)
 	return (0);
 }
 
-int	wait_children(pid_t *pid, int nb_child, int *status)
-{
-	int	i;
-	int	res;
-
-	i = 0;
-	while (i < nb_child)
-	{
-		res = wait_one_child(pid[i], &status[i]);
-		if (res == -1)
-			return (-1);//check if smt else needed
-		i++;
-	}
-	return (0);
-}
-
-/*
+/**
 *   [ERROR HANDLING]
-*   Checks the result of a fork_handle
+*   @brief Checks the result of a fork_handle
 *   If fork() failed, it might wait for a previously launched child 
 *   before returning an error status.
 *   To managing the parent's flow after a fork attempt.
 */
 
-int	check_fork(int result, pid_t pid, int *status)//may be not needed with multiple child
+int	check_fork(int result, pid_t pid, int *status)
 {
 	if (result != 0)
 	{
@@ -69,76 +53,73 @@ int	check_fork(int result, pid_t pid, int *status)//may be not needed with multi
 	return (0);
 }
 
-/*
-*   Forks a new process
-*   1. Handles fork errors
-*   2. Executes child based on cmd position in a pipeline.
-*   3. Exit in case of non sucess in any function to end correctly child
+/**
+*   @brief Forks a new process
+*   1. Calls fork()
+*   2. Handles fork errors
+*   3. Executes child based on cmd position in a pipeline.
+*   4. Exit in case of non sucess in any function to end 
+*      correctly child
+*   @note This function provides the `pid_t pid` value 
+*   by directly calling `fork()`.
+*   @note If `pid == -1`, it means fork failed, and 
+*   the parent handles the error.
+*   @note If `pid == 0`, we are in the child process.
+*   @note If `pid > 0`, we are in the parent process.
 */
-//i_cmd == 0 is first cmd
-//i_cmd == nb_cmd -1 last cmd
-//return pid to the parent
-//if pid fails not fd where inheritated, the parent handles them
-//pid > 0 we are in the parent process
-// pid == 0 we are in the child process
-// pid == -1 error creating child
+
 int	fork_handle(t_node *node, int i_cmd, int nb_cmd)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	pid = fork();
 	if (pid == -1)
 	{
 		perror (BOLD RED "Fork failed" RESET);
-		cleanup_fd(node, node->type);//check if needed if smt came opened
-		return (-1);//check if smt should be free
+		cleanup_fd(node, node->type);
+		return (-1);
 	}
 	if (pid == 0)
 	{
 		if (nb_cmd == 1)
-			child_process(node);//single cmd
-		else if (i_cmd == 0)
-			child_first(node);
-		else if (i_cmd == nb_cmd -1)
-			child_last(node);
-		else
-			child_middle(node);
+			child_process(node);
 		exit(EXIT_FAILURE);
 	}
 	return (pid);
 }
 
-/*
-*   Parent
+/**
+*   [PARENT]
+*   @brief handles the execution of a single external cmd
 *   Execute single external cmd
-*   1. find absolut path
-*   2. 
+*   1. Fork a child process
+*   2. Check fork status and handles the errors
+*   3. Parent cleanup
+*   4. Waits for child
+*
+*   @return an integer status indicating the child exit status
+*   returns -1 on specific parent errors: fork and waitpid
+*  
+*   @note cleanup_fd before to close fd to so that the child 
+*   receives it closed and has more control
 */
 void	execute_cmd(t_node *node)
 {
-	pid_t	pid;//use later w pipes
-    //char	*cmd_name; //when parsing args
+	pid_t	pid;
 	int		child_status;
 	int		fork_status;
 
-	// if (&node->u_data.cmd == BUILTIN)//later this but if is not in pipe
-	// {
-	// 	execute_builtin(&node->u_data.cmd);//PENDING THOURGH IF COND WITH STRNCMP
-	// 	return ;//check the return
-	// }
-	// fork_status = fork_handle(pid, node->type, int i_cmd, int nb_cmd);//formultiple cmd?
-	fork_status = fork_handle(pid, node->type, 0, 1);//1 cmd v1
+	fork_status = fork_handle(pid, node->type, 0, 1);
 	if (check_fork(fork_status, pid, &child_status))
 		return (fork_status);
-	cleanup_fd(node, node->type);//to close fd_in, pipefd[0] and pipefd[1]
-	if (wait_child_status(pid, &child_status) == -1)//this eventually should wait all children
+	cleanup_fd(node, node->type);
+	if (wait_one_child(pid, &child_status) == -1)
 	{
 		perror (BOLD RED "Waitpid failed for child" RESET);
 		return (-1);
 	}
-	if (cleanup_cmd_node(node))//check if here or in the child
+	if (cleanup_cmd_node(node))
 		perror(MAGENTA "Failed to cleanup cmd node\n" RESET);
-	cleanup_fd(node, node->type);//check if here or in other place 
-    // exec_external_cmd(node);//call this from child_process
+	cleanup_fd(node, node->type);
 }
 
