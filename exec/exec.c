@@ -6,114 +6,75 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/08 16:16:42 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/08 17:17:00 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
- #include "minishell.h" 
- #include "exec.h"//temporary for testing
+#include "minishell.h" 
+#include "exec.h"//temporary for testing
 
 //---------------------------------------//
-//V0:Execute single commands directly,   //
-//   from readline                       //
+//V0:Execute single external cmd         //
+//   directly from readline              //
 //                                       //
-//V1:supports basic parsing              //
+//V1: support external cmd in            //
+//    child process (cmd node)           //
 //                                       //
-//V2:support parsing refinement          //
+//V2: supports pipe_node                 //
 //                                       //
-//V3:execution with pipes & child pcs    //
+//V3: support some built-ins             //
 //                                       //
-//V4: support all built-ins              //
+//V4: supports basic parsing             //
 //                                       //
-//V5: support heredoc & redirections     //
+//V5: supports all built-ins             //
+//                                       //
+//V6: support parsing refinement         //
+//                                       //
+//V7: support heredoc & redirections     //
+//                                       //
+//V8: support bonus (if needed)          //
 //---------------------------------------//
 
-// Read a full line as raw input.
-// Use fork() and execvp() to execute the input line as-is.
-// Wait for the child process (waitpid).
-// Exit command ends the shell.
-// Should check for builtins commands if not, look for external commands ($PATH)
+//---------------------------------------//
+//                    V0                 //
+// GOAL: Executes single external cmd    //
+// 1. Read a full line as raw input.     //
+// 2. Use getenv to get absolute path    //
+// 3. Use execve() to execute in parent  //
+//    the input line as-is.              //
+// 4. Wait for the child process(waitpid)//
+// 5. Exec cmd will exit shell           //
+//---------------------------------------//
 
-// need to duplicate the arguments (char **argv) before passing them to the child process 
-//duplicating the arguments gives the child process its own isolated and safe copy of the command-line arguments. 
-//  This prevents unintended side effects and memory issues between the parent and child processes, 
-//  particularly crucial when execve() is about to replace the child's entire memory space.
-
-//VALORACION TMP PARA EMPEZAR
-//  For each external command in that list, you will:
-// Fork a new child process.
-// Set up redirections (using adapted setup_redir and redir_input/output).
-// Execute the command using execve (similar to your execution function).
-// In the parent, wait for that child (using wait_child). This generic, looped approach is what allows Minishell to handle N commands.
-
-//Initially I received a string with the cmd, flags and args
-//With the tree I tree node and envp
-// void	execution(char	**nargv, char **const envp)
-//V0 just executes single cmd
-//WHat tokenzation did: char *argv[] = {"ls", "-l", "/home", NULL};
-//argv[0] is command name
+//---------------------------------------//
+//          V1 - CURRENT                 //
+// GOAL: Executes single external cmd    //
+// 1. Read a full line as raw input.     //
+// 2. Use getenv to get absolute path    //
+// 3. Use fork() and execve() to execute //
+//    the input line as-is.              //
+// 4. Wait for the child process(waitpid)//
+// 5. Exit command should leave shell    //
+//    active                             //
+//---------------------------------------//
 
 /*
-*   Executes single external cmd
-*   1. 0 elements in argv is cmd
-*   2. Find absolut cmd path
-*   3. Fork
-*   4. Waitpit
-*   5. Executes cmd
+*   @brief Execute single external cmd
+*
+*   1. Find absolut path
+*   2. Executes execve in child process
+*   3. Handle errors: cmd_pah and execve
+*   @return none. executes in success or
+*   EXIT_FAILURE if fails
+*   @usage called in the child_process
+*
+*   @note:
+*   - handle error of execve only is
+*     reached if it fails
+*   - cmd_path only filled if there is a 
+*     valid path                  
 */
-/*
-cmd_name
-maybe in parser: node->u_data.cmd.cmd_type = get_cmd_type(node->u_data.cmd.argv[0]);
-    BUILIN IDEAS
 
-    - child process will check if is builtin to execute
-    - if is builtin will find which is it
-    - Will execute it accordingly
-*/
-
-//-------------------------------//
-//         EXECUTION   		     //
-//-------------------------------//
-
-/*
-*   Parent
-*   Execute single external cmd
-*   1. find absolut path
-*   2. 
-*/
-void	execute_cmd(t_node *node)
-{
-	pid_t	pid;//use later w pipes
-    //char	*cmd_name; //when parsing args
-	int		child_status;
-	int		fork_status;
-
-	// if (&node->u_data.cmd == BUILTIN)//later this but if is not in pipe
-	// {
-	// 	execute_builtin(&node->u_data.cmd);//PENDING THOURGH IF COND WITH STRNCMP
-	// 	return ;//check the return
-	// }
-	// fork_status = fork_handle(pid, node->type, int i_cmd, int nb_cmd);//formultiple cmd?
-	fork_status = fork_handle(pid, node->type, 0, 1);//1 cmd v1
-	if (check_fork(fork_status, pid, &child_status))
-		return (fork_status);
-	cleanup_fd(node, node->type);//to close fd_in, pipefd[0] and pipefd[1]
-	if (wait_child_status(pid, &child_status) == -1)//this eventually should wait all children
-	{
-		perror (BOLD RED "Waitpid failed for child" RESET);
-		return (-1);
-	}
-	if (cleanup_cmd_node(node))//check if here or in the child
-		perror(MAGENTA "Failed to cleanup cmd node\n" RESET);
-	cleanup_fd(node, node->type);//check if here or in other place 
-    // exec_external_cmd(node);//call this from child_process
-}
-
-/*
-*   Execute single external cmd
-*   1. find absolut path
-*   2. 
-*/
 void	exec_external_cmd(t_node *node)
 {
 	char	*cmd_path;
@@ -122,42 +83,29 @@ void	exec_external_cmd(t_node *node)
 	if (!cmd_path)
 	{
 		perror (BOLD RED "command_path not found" RESET);
-		//TODO: needed free if applies
 		exit(EXIT_FAILURE);
 	}
-	node->u_data.cmd.argv[0] = cmd_path;//only filled if there is a valid path
+	node->u_data.cmd.argv[0] = cmd_path;
 	execve(cmd_path, node->u_data.cmd.argv,node->u_data.cmd.env);
-	free(cmd_path);//this in case of execution fails.
-	//TODO check if free smt else
+	free(cmd_path);
 	exit(EXIT_FAILURE);
 }
-//TODO: include needed free in the general clean-up or may be another clean_up memory
 
-
-//---------------------------------------//
-//                                       //
-//          EXECUTE_NODE                 //
-//                                       //
-//V0:support external cmd                //
-//                                       //
-//V1: supports cmd_node                  //
-//                                       //
-//V1:supports pipe_node                  //
-//                                       //
-//V2:support bonus                       //
-//---------------------------------------//
 /*
-*	Receives a node from AST and decides type of execution
-*	Based on the type node
-*	1. Handle cmd node
-*	2. Handle pipe node
+*	@brief Receives a node from AST and decides 
+*   type of execution based on the type node
+*
+*	1. Base case: (!root) returns
+*   2. calls execute_cmd
+*
+*   @param root The root node of AST to be executed
+*
+*   @note execution will be performed in recursion
 */
 void	execution(t_node *root)
 {
 	if (!root)
-		return; // Base case for recursion
+		return ;
 	if (root->type == NODE_CMD) 
 		execute_cmd(root);
-	// else if (root->type == NODE_PIPE)
-	// 	execute_pipe_node(root);
 }
