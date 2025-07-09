@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 07:23:56 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/09 07:37:00 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,30 @@
 //V5: support heredoc & redirections     //
 //---------------------------------------//
 
+/**
+ * @brief Executes a single command in the current process.
+ * 
+ * 1. Finds cmd_path
+ * 2. Handles path not found
+ * 3. Executes external cmd
+ * 4. Handles execution (execve) failure
+ * 
+ * @note This version will exit shell when cmd executes 
+ * ('cause there are no forks)
+ */
+
 void	execution (t_node *root, char **envp)
 {
 	char	*cmd_path;
 
-	cmd_path = find_path (root->argv[0], envp);//I will received this from parsing
-	if (!cmd_path)//this needs to be done in the parsing
+	cmd_path = find_path (root->argv[0], envp);
+	if (!cmd_path)
 	{
-		perror ("command_path not found");//TODO: include general celan-up and check were to call t for free root_node
+		perror ("command_path not found");
 		exit(EXIT_FAILURE);
 	}
 	execve(cmd_path, root->argv, envp);
 	perror ("execve failed");
-	free (cmd_path);//freed here 'cause was created here and used here
-	//TODO: include general celan-up and check were to call t for free root_node
-	exit (EXIT_FAILURE);//later in the program a general celan-up to free all nodes
+	free (cmd_path);
+	exit (EXIT_FAILURE);
 }
