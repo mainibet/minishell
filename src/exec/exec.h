@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 14:49:52 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/09 15:11:09 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,28 +94,6 @@ typedef enum e_node_type//CREATED FOR TESTING EXEC
 	NODE_PIPE,
 }	t_node_type;
 
-
-/**
-Left-associative
-EXAMPLE: cat file.txt | grep "foo" | sort >> sorted.txt
-
-          PIPE (root)
-         /          \
-   PIPE              COMMAND (sort)
-  /     \            argv = ["sort", NULL]
-COMMAND  COMMAND     infile = NULL
-  (cat)   (grep)    outfile = "sorted.txt"
-argv =  ["cat", NULL] append = 1  (because of >>)
-infile = "file.txt"  
-outfile = NULL
-append = 0
-
-argv = ["grep", "foo", NULL]
-infile = NULL
-outfile = NULL
-append = 0
-
-*/
 // -----------------------------------------//
 //            GENERAL STRUCTS               //
 // -----------------------------------------//
@@ -132,11 +110,13 @@ append = 0
 
 typedef struct s_tree_node
 {
-	t_node_type	type;
-	union
+	t_node_type type;
+union
 	{
 		t_cmd_data	cmd;
-        // t_pipe_data pipe;
+		t_pipe_data pipe;
+		t_node *left;
+		t_node *right;
 	} u_data;
 } t_tree_node;
 
@@ -166,19 +146,41 @@ char	*find_path(char *argv);
 
 // --- EXECUTION --- //
 //Parent
-int	fork_handle(t_node *node, t_node_type *type, int i_cmd, int nb_cmd);
-int	setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
-int	wait_one_child(pid_t pid, int *status);
+int		fork_handle(t_node *node, int i_cmd, int nb_cmd);
+int		setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
+int		wait_one_child(pid_t pid, int *status);
 //child
-int	execute_cmd(t_node *node);
+int		execute_cmd(t_node *node);
 
 // --- ERRORS_CLEAN-UP --- //
-int cleanup_fd(t_node *node, t_node_type type);
+int		cleanup_fd(t_node *node, t_node_type type);
 void	cleanup_cmd_node(t_node *node);
 
 // --- TMP ONLY FOR TEXT EXEC --- //
 t_node	*create_node(t_node_type type);
-void	exit_error_program(const char *msg, char *line_to_free, char **tokens_to_free, t_node *node_to_free);
-int	fill_command_node(t_node *node, char **tokens);
+void	exit_error_program(const char *msg, char *line_to_free, 
+			char **tokens_to_free, t_node *node_to_free);
+int		fill_command_node(t_node *node, char **tokens);
+
+/**
+Left-associative
+EXAMPLE: cat file.txt | grep "foo" | sort >> sorted.txt
+
+          PIPE (root)
+         /          \
+   PIPE              COMMAND (sort)
+  /     \            argv = ["sort", NULL]
+COMMAND  COMMAND     infile = NULL
+  (cat)   (grep)    outfile = "sorted.txt"
+argv =  ["cat", NULL] append = 1  (because of >>)
+infile = "file.txt"  
+outfile = NULL
+append = 0
+
+argv = ["grep", "foo", NULL]
+infile = NULL
+outfile = NULL
+append = 0
+*/
 
 #endif

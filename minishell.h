@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 14:35:17 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/09 15:08:56 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,6 @@
 
 # include "libft/libft.h"
 # include "include/colors.h"
-# include "exec/exec.h"
+# include "src/exec/exec.h"
 
 #endif
