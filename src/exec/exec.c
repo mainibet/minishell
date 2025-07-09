@@ -6,9 +6,10 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 07:37:00 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/09 07:53:18 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -45,12 +46,17 @@ void	execution (t_node *root, char **envp)
 
 	cmd_path = find_path (root->argv[0], envp);
 	if (!cmd_path)
+	cmd_path = find_path (root->argv[0], envp);
+	if (!cmd_path)
 	{
+		perror ("command_path not found");
 		perror ("command_path not found");
 		exit(EXIT_FAILURE);
 	}
 	execve(cmd_path, root->argv, envp);
 	perror ("execve failed");
+	free (cmd_path);
+	exit (EXIT_FAILURE);
 	free (cmd_path);
 	exit (EXIT_FAILURE);
 }
