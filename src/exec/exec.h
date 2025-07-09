@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 08:40:43 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/09 14:42:08 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,58 @@
 
 // ---FORWARD DECLARATIONS--- //
 typedef struct s_tree_node t_node;
+
+//  --- COMMAND TYPE --- //
+
+/**
+ *  @brief Defines classification of a cmd
+ * 
+ * - Use: to recognize a external cmd froma builtin
+ * 
+ *  @note later might be use MAX_CMDTYPE to control
+ *  precedency
+*/
+typedef enum e_cmdtype
+{
+	EXECUTABLE,
+	BUILTIN,
+}	t_cmdtype;
+
+// --- INITIAL VERSION CMD NODE --- // 
+/**
+*   @brief stores data relevand in cmd_node AST:
+*   single external cmd
+*
+*   @note This struct intend to be part of `u_data' 
+*   union in AST
+*   @note `argv` will be later `t_token *tokens`
+*   @note future version might have io[2] instead of 
+*   @note future veresion might have int fd_other[MAX_OPEN_FDs]
+*   if so they will need to be closed before child 
+*   if not needed fd_in fd_out received
+*/
+typedef struct s_cmd_data
+{
+    char	**argv;
+    char	**env;
+    int		fd_in;
+	int		fd_out;
+	t_cmdtype	cmd_type;
+} t_cmd_data;
+
+
+/**
+*   @brief pipe operrations connecting 2 cmd branches 
+*   in AST
+*
+*   Pipe node will hold 2 pointers to left and right 
+*   child nodes
+*/
+typedef struct s_pipe_data
+{
+	t_tree_node  *left;
+	t_tree_node  *right;
+} t_pipe_data;
 
 // -----------------------------------------//
 //           TREE NODES TYPES               //
@@ -86,59 +138,9 @@ typedef struct s_tree_node
 	} u_data;
 } t_tree_node;
 
-/**
-*   @brief stores data relevand in cmd_node AST:
-*   single external cmd
-*
-*   @note This struct intend to be part of `u_data' 
-*   union in AST
-*   @note `argv` will be later `t_token *tokens`
-*   @note future version might have io[2] instead of 
-*   @note future veresion might have int fd_other[MAX_OPEN_FDs]
-*   if so they will need to be closed before child 
-*   if not needed fd_in fd_out received
-*/
-typedef struct s_cmd_data
-{
-    char	**argv;
-    char	**env;
-    int		fd_in;
-	int		fd_out;
-	t_cmdtype	cmd_type;
-} t_cmd_data;
-
-/**
-*   @brief pipe operrations connecting 2 cmd branches 
-*   in AST
-*
-*   Pipe node will hold 2 pointers to left and right 
-*   child nodes
-*/
-typedef struct s_pipe_data
-{
-	t_tree_node  *left;
-	t_tree_node  *right;
-} t_pipe_data;
-
 // -----------------------------------------//
 //             EXECUTION STRUCTS            //
 // -----------------------------------------//
-
-//  --- COMMAND TYPE --- //
-
-/**
- *  @brief Defines classification of a cmd
- * 
- * - Use: to recognize a external cmd froma builtin
- * 
- *  @note later might be use MAX_CMDTYPE to control
- *  precedency
-*/
-typedef enum e_cmdtype
-{
-	EXECUTABLE,
-	BUILTIN,
-}	t_cmdtype;
 
 /**
  *  @brief stores duplicated fd for tmp redirection
@@ -169,6 +171,6 @@ int	setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
 int	execute_cmd(t_node *node);
 
 // --- ERRORS_CLEAN-UP --- //
-int cleanup_fd(t_node *node, t_node_type *type);
+int cleanup_fd(t_node *node, t_node_type type);
 
 #endif
