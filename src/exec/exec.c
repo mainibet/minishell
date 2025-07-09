@@ -6,57 +6,106 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 07:53:18 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/09 08:35:30 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-#include "minishell.h"
+// #include "minishell.h"
+#include "../../minishell.h"
+#include "exec.h"//temporary for testing
 
 //---------------------------------------//
-//V0:Execute single commands directly,   //
-//   from readline                       //
+//V0:Execute single external cmd         //
+//   directly from readline              //
 //                                       //
-//V1:supports basic parsing              //
+//V1: support external cmd in            //
+//    child process (cmd node)           //
 //                                       //
-//V2:support parsing refinement          //
+//V2: supports pipe_node                 //
 //                                       //
-//V3:execution with pipes & child pcs    //
+//V3: support some built-ins             //
 //                                       //
-//V4: support all built-ins              //
+//V4: supports basic parsing             //
 //                                       //
-//V5: support heredoc & redirections     //
+//V5: supports all built-ins             //
+//                                       //
+//V6: support parsing refinement         //
+//                                       //
+//V7: support heredoc & redirections     //
+//                                       //
+//V8: support bonus (if needed)          //
+//---------------------------------------//
+
+//---------------------------------------//
+//                    V0                 //
+// GOAL: Executes single external cmd    //
+// 1. Read a full line as raw input.     //
+// 2. Use getenv to get absolute path    //
+// 3. Use execve() to execute in parent  //
+//    the input line as-is.              //
+// 4. Wait for the child process(waitpid)//
+// 5. Exec cmd will exit shell           //
+//---------------------------------------//
+
+//---------------------------------------//
+//          V1 - CURRENT                 //
+// GOAL: Executes single external cmd    //
+// 1. Read a full line as raw input.     //
+// 2. Use getenv to get absolute path    //
+// 3. Use fork() and execve() to execute //
+//    the input line as-is.              //
+// 4. Wait for the child process(waitpid)//
+// 5. Exit command should leave shell    //
+//    active                             //
 //---------------------------------------//
 
 /**
- * @brief Executes a single command in the current process.
- * 
- * 1. Finds cmd_path
- * 2. Handles path not found
- * 3. Executes external cmd
- * 4. Handles execution (execve) failure
- * 
- * @note This version will exit shell when cmd executes 
- * ('cause there are no forks)
- */
+*   @brief Execute single external cmd
+*
+*   1. Find absolut path
+*   2. Executes execve in child process
+*   3. Handle errors: cmd_pah and execve
+*   @return none. executes in success or
+*   EXIT_FAILURE if fails
+*   -Use called in the child_process
+*
+*   @note:
+*   - handle error of execve only is
+*     reached if it fails
+*   - cmd_path only filled if there is a 
+*     valid path                  
+*/
 
-void	execution (t_node *root, char **envp)
+void	exec_external_cmd(t_node *node)
 {
 	char	*cmd_path;
 
-	cmd_path = find_path (root->argv[0], envp);
-	if (!cmd_path)
-	cmd_path = find_path (root->argv[0], envp);
+	cmd_path = find_path (node->u_data.cmd.argv[0]);
 	if (!cmd_path)
 	{
-		perror ("command_path not found");
-		perror ("command_path not found");
+		perror (BOLD RED "command_path not found" RESET);
 		exit(EXIT_FAILURE);
 	}
-	execve(cmd_path, root->argv, envp);
-	perror ("execve failed");
-	free (cmd_path);
-	exit (EXIT_FAILURE);
-	free (cmd_path);
-	exit (EXIT_FAILURE);
+	execve(cmd_path, node->u_data.cmd.argv, node->u_data.cmd.env);
+	free(cmd_path);
+	exit(EXIT_FAILURE);
+}
+
+/**
+*	@brief Receives a node from AST and decides 
+*   type of execution based on the type node
+*
+*	1. Base case: (!root) returns
+*   2. calls execute_cmd
+*
+*   @param root The root node of AST to be executed
+*
+*   @note execution will be performed in recursion
+*/
+void	execution(t_node *root)
+{
+	if (!root)
+		return ;
+	if (root->type == NODE_CMD) 
+		execute_cmd(root);
 }
