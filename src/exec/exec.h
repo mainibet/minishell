@@ -6,12 +6,14 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 14:42:08 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/09 14:49:52 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXEC_H
 # define EXEC_H
+
+#include "../../minishell.h"//tmp
 
 // --- STANDARD HEADERS ---
 #include <readline/readline.h>
@@ -166,11 +168,17 @@ char	*find_path(char *argv);
 //Parent
 int	fork_handle(t_node *node, t_node_type *type, int i_cmd, int nb_cmd);
 int	setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
-
+int	wait_one_child(pid_t pid, int *status);
 //child
 int	execute_cmd(t_node *node);
 
 // --- ERRORS_CLEAN-UP --- //
 int cleanup_fd(t_node *node, t_node_type type);
+void	cleanup_cmd_node(t_node *node);
+
+// --- TMP ONLY FOR TEXT EXEC --- //
+t_node	*create_node(t_node_type type);
+void	exit_error_program(const char *msg, char *line_to_free, char **tokens_to_free, t_node *node_to_free);
+int	fill_command_node(t_node *node, char **tokens);
 
 #endif

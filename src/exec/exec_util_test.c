@@ -73,7 +73,7 @@ int	fill_command_node(t_node *node, char **tokens)
 		return (-1);
 	}
 	node->u_data.cmd.argv = duplicate_tokens(tokens);
-	if (!node->argv)
+	if (!node->u_data.cmd.argv)
 		return (-1);
 	return (0);
 }
