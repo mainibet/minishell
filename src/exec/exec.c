@@ -38,6 +38,7 @@
  * @note This version will exit shell when cmd executes 
  * ('cause there are no forks)
  */
+
 void	execution (t_node *root, char **envp)
 {
 	char	*cmd_path;

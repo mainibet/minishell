@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 17:47:06 by albetanc          #+#    #+#             */
-/*   Updated: 2025/05/26 13:18:29 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/06 11:32:36 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,21 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include "gnl/get_next_line.h"
+# include <colors.h>
 
+//-------------------------//
+//         STRUCTS         //
+//-------------------------//
+
+typedef struct s_list
+{
+    void			*content;
+    struct s_list	*next;
+}	t_list;
+
+//-------------------------//
+//         FUNCTIONS       //
+//-------------------------//
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
 int		ft_isalnum(int c);

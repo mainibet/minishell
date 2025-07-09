@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/06/28 18:11:47 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/06 11:32:55 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@
 //             MODULE HEADERS               //
 // -----------------------------------------//
 
-# include "libft.h"
-# include "src/exec/exec.h"
+# include "libft/libft.h"
+# include <colors.h>
+# include "exec/exec.h"
 
 #endif

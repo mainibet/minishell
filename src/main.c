@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/06/23 08:44:50 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/04 12:56:45 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,18 @@ int	main(void)
 	char	*line;
 	char	*prompt;
 
-	prompt = "🐶🥕 Milanshell >";
+	prompt = BOLD GREEN "🐶🥕 Milanshell >" RESET;
 	while (1)
 	{
 		line = readline(prompt);
 		if (line == NULL)
 		{
-			printf("exit\n");
+			printf(BLUE "exit\n" RESET);
 			break ;
 		}
 		if (*line)
 			add_history(line);
-		printf("Command received: %s\n", line);
+		printf(BOLD CYAN "Command received: %s\n" RESET, line);
 		free(line);
 	}
 	return (0);
