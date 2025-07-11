@@ -61,7 +61,7 @@ int	main(int argc, char **argv, char **envp)
 		// }
 		if (!parsed_tokens || !parsed_tokens[0]) // Verifica si hay tokens (ej. línea vacía o solo espacios)
 		{
-			free_array(parsed_tokens, 0);
+			free_all(line, parsed_tokens, NULL);
 			continue; // Pide el siguiente comando
 		}
 		root = create_node(NODE_CMD); 
