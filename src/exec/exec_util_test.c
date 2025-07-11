@@ -53,7 +53,7 @@ char	**duplicate_tokens(char **original_tokens)
 		duplicated_array[i] = duplicate_string(original_tokens[i]);
 		if (!duplicated_array[i]) 	// Check for memory allocation failure
 		{
-			free_array(duplicated_array, i);// Free previously allocated strings
+			free_array(duplicated_array);// Free previously allocated strings
 			perror("strdup failed in duplicate_tokens");
 			return (NULL);
 		}
@@ -73,7 +73,7 @@ int	fill_command_node(t_node *node, char **tokens)
 		return (-1);
 	}
 	node->u_data.cmd.argv = duplicate_tokens(tokens);
-	if (!node->argv)
+	if (!node->u_data.cmd.argv)
 		return (-1);
 	return (0);
 }
@@ -110,7 +110,7 @@ void	free_node(t_node *node)
 	{
 		if (node->u_data.cmd.argv)
 		{
-			free_array(node->u_data.cmd.argv, 0);
+			free_array(node->u_data.cmd.argv);
 			node->u_data.cmd.argv = NULL;
 		}
 	}
@@ -215,7 +215,7 @@ void	free_all(char *line, char **tokens_array, t_node *node)
 	if (line)
 		free(line);
 	if (tokens_array)
-		free_array(tokens_array); // Esta función debe liberar el char** de ft_split
+		free_array(tokens_array);
 	if (node)
-		free_node(node); // Esta función liberará el nodo y su argv interno
+		free_node(node);
 }

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:20:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 08:42:59 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/11 08:25:56 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,15 @@ int	cleanup_fd(t_node *node, t_node_type type)
 *
 *   -Use: call as a part of a broader cleanup routine for cmd exec
 */
-void	cleanup_cmd_node(t_node *node)
+int	cleanup_cmd_node(t_node *node)
 {
 	t_cmd_data	*cmd;
 
 	if (!node || node->type != NODE_CMD)
-		return ;
+		return (-1);
 	cmd = &node->u_data.cmd;
-	close_fd(&node->u_data.cmd.fd_in);
-	close_fd(&node->u_data.cmd.fd_out);
+	close_fd(node->u_data.cmd.fd_in);
+	close_fd(node->u_data.cmd.fd_out);
+	return (0);
 }
 

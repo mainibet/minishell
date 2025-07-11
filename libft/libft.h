@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 17:47:06 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 08:25:39 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/11 07:59:54 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 
 typedef struct s_list
 {
-    void			*content;
-    struct s_list	*next;
+	void			*content;
+	struct s_list	*next;
 }	t_list;
 
 //-------------------------//
@@ -77,6 +77,6 @@ int		ft_printf(const char *input, ...);
 int		open_fd(char *file_name);
 int		close_fd(int fd);
 char	*malloc_error(void);
-void	free_array(char **arr, int j);
+void	free_array(char **arr);
 
 #endif
