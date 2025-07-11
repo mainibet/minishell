@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 15:11:09 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/11 08:26:17 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ typedef struct s_cmd_data
 */
 typedef struct s_pipe_data
 {
-	t_tree_node  *left;
-	t_tree_node  *right;
+	t_node  *left;
+	t_node  *right;
 } t_pipe_data;
 
 // -----------------------------------------//
@@ -110,13 +110,13 @@ typedef enum e_node_type//CREATED FOR TESTING EXEC
 
 typedef struct s_tree_node
 {
-	t_node_type type;
-union
+	t_node_type	type;
+	union
 	{
 		t_cmd_data	cmd;
 		t_pipe_data pipe;
-		t_node *left;
-		t_node *right;
+		t_node		*left;
+		t_node		*right;
 	} u_data;
 } t_tree_node;
 
@@ -146,21 +146,26 @@ char	*find_path(char *argv);
 
 // --- EXECUTION --- //
 //Parent
-int		fork_handle(t_node *node, int i_cmd, int nb_cmd);
+int		fork_handle(pid_t *pid, t_node *node, int i_cmd, int nb_cmd);
 int		setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
 int		wait_one_child(pid_t pid, int *status);
-//child
 int		execute_cmd(t_node *node);
+
+//child
+void	child_process(t_node *node);
+void	exec_external_cmd(t_node *node);
 
 // --- ERRORS_CLEAN-UP --- //
 int		cleanup_fd(t_node *node, t_node_type type);
-void	cleanup_cmd_node(t_node *node);
+int		cleanup_cmd_node(t_node *node);
 
 // --- TMP ONLY FOR TEXT EXEC --- //
 t_node	*create_node(t_node_type type);
 void	exit_error_program(const char *msg, char *line_to_free, 
 			char **tokens_to_free, t_node *node_to_free);
 int		fill_command_node(t_node *node, char **tokens);
+char	**parse_line_to_tokens(char *line, const char *delimiter);
+void	free_all(char *line, char **tokens_array, t_node *node);
 
 /**
 Left-associative
