@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:15:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 14:52:42 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/11 08:26:50 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	check_fork(int result, pid_t pid, int *status)
 		else
 		{
 			if (pid != 0)
-				wait_child(pid, status);
+				wait_one_child(pid, status);
 			return (result);
 		}
 	}
@@ -69,24 +69,23 @@ int	check_fork(int result, pid_t pid, int *status)
 *   @note If `pid > 0`, we are in the parent process.
 */
 
-int	fork_handle(t_node *node, int i_cmd, int nb_cmd)
+int	fork_handle(pid_t *pid, t_node *node, int i_cmd, int nb_cmd)
 {
-	pid_t	pid;
-
-	pid = fork();
-	if (pid == -1)
+	(void) i_cmd;
+	*pid = fork();
+	if (*pid == -1)
 	{
 		perror (BOLD RED "Fork failed" RESET);
 		cleanup_fd(node, node->type);
 		return (-1);
 	}
-	if (pid == 0)
+	if (*pid == 0)
 	{
 		if (nb_cmd == 1)
 			child_process(node);
 		exit(EXIT_FAILURE);
 	}
-	return (pid);
+	return (0);
 }
 
 /**
@@ -110,7 +109,7 @@ int	execute_cmd(t_node *node)
 	int		child_status;
 	int		fork_status;
 
-	fork_status = fork_handle(pid, node->type, 0, 1);
+	fork_status = fork_handle(&pid, node, 0, 1);
 	if (check_fork(fork_status, pid, &child_status))
 		return (fork_status);
 	cleanup_fd(node, node->type);
@@ -122,5 +121,7 @@ int	execute_cmd(t_node *node)
 	if (cleanup_cmd_node(node))
 		perror(MAGENTA "Failed to cleanup cmd node\n" RESET);
 	cleanup_fd(node, node->type);
+	return (0);
 }
+
 
