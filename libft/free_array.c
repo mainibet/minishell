@@ -6,20 +6,35 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 13:54:19 by albetanc          #+#    #+#             */
-/*   Updated: 2025/05/24 11:07:37 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/11 08:01:06 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	free_array(char **arr, int j)
+// void	free_array(char **arr, int j)
+// {
+// 	if (!arr)
+// 		return ;
+// 	while (j > 0)
+// 	{
+// 		free (arr[j - 1]);
+// 		j--;
+// 	}
+// 	free (arr);
+// }
+
+void	free_array(char **arr)
 {
-	if (!arr)
+	int	i;
+
+	if (!arr) 
 		return ;
-	while (j > 0)
+	i = 0;
+	while (arr[i])
 	{
-		free (arr[j - 1]);
-		j--;
+		free(arr[i]);
+		i++;
 	}
-	free (arr);
+	free(arr);
 }
