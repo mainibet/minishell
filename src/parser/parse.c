@@ -1,30 +1,45 @@
-struct s_node;
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/15 13:35:57 by albetanc          #+#    #+#             */
+/*   Updated: 2025/07/15 13:56:10 by albetanc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-typedef struct s_operator
-{
-	enum e_toktype	type;
-	struct s_node	*left;
-	struct s_node	*right;
-}	t_operator;
+#include "minishell.h"
+#include "parser.h"
 
-enum e_nodetype
-{
-	OPERATOR,
-	TERMINAL,
-	MAX_NODETYPE
-};
+// struct s_node;//moved to minishell.h
 
-union u_node
-{
-	t_operator	op;
-	t_token		*tokens;
-};
+// typedef struct s_operator//moved to parser.h
+// {
+// 	enum e_toktype	type;
+// 	struct s_node	*left;
+// 	struct s_node	*right;
+// }	t_operator;
 
-typedef struct s_node 
-{
-	enum e_nodetype	type;
-	union u_node	content;
-}	t_node;
+// enum e_nodetype
+// {
+// 	OPERATOR,
+// 	TERMINAL,
+// 	MAX_NODETYPE
+// };
+
+// union u_node//included in parser.h
+// {
+// 	t_operator	op;
+// 	t_token		*tokens;
+// };
+
+// typedef struct s_node //included in parser.h
+// {
+// 	enum e_nodetype	type;
+// 	union u_node	content;
+// }	t_node;
 
 static void	free_node(t_node *node)
 {
@@ -35,7 +50,7 @@ static void	free_node(t_node *node)
 	}
 	free(node);
 }
-	
+
 static t_token	*next_operator(t_token *token)
 {
 	while (token->next && token->type < PIPE)
@@ -53,7 +68,6 @@ static int	precedence(t_token *token)
 		return (3);
 	return (0);
 }
-/
 
 static t_node	*parse_terminal(t_token *token)
 {
@@ -69,7 +83,7 @@ static t_node	*parse_terminal(t_token *token)
 
 static t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
 {
-	t_node *node;
+	t_node	*node;
 
 	node = malloc(sizeof(t_node));
 	if (!node)
@@ -124,40 +138,40 @@ t_node	*parse(t_token **token, int min_precedence)
  * - the child (if any) should close each element of fd that is greater than 2
  * 		(not stdout, stdin, or stderr)
  * - the parent should only close fd[1] and fd[2] after waitpid().
- */
-int	exec(t_token *tokens, int fd[3], char **env)
-{
-	char	*path;
-	char	**argv;
+//  */
+// int	exec(t_token *tokens, int fd[3], char **env)
+// {
+// 	char	*path;
+// 	char	**argv;
 
-	if (is_builtin(tokens))
-		return (exec_builtin(tokens));
-	parse_command(tokens, path, argv)
-	pid = fork();
-	if (!pid)
-	{
-		if (fd[0] > 2)
-		{
-			dup2(STDIN_FD, fd[0]);
-			close(fd[0]);
-		}
-		if (fd[1] > 2)
-		{
-			dup2(STDOUT_FD, fd[1]);
-			close(fd[1]);
-		}
-		if (fd[2] > 2)
-			close(fd[2]);
-		execve(path, argv, env);
-		perror(path);
-	}
-	ret = waitpid(pid);
-	if (fd[0] > 2)
-		close(fd[0]);
-	if (fd[1] > 2)
-		close(fd[1]);
-	return (get_return_code(ret));
-}
+// 	if (is_builtin(tokens))
+// 		return (exec_builtin(tokens));
+// 	parse_command(tokens, path, argv)
+// 	pid = fork();
+// 	if (!pid)
+// 	{
+// 		if (fd[0] > 2)
+// 		{
+// 			dup2(STDIN_FD, fd[0]);
+// 			close(fd[0]);
+// 		}
+// 		if (fd[1] > 2)
+// 		{
+// 			dup2(STDOUT_FD, fd[1]);
+// 			close(fd[1]);
+// 		}
+// 		if (fd[2] > 2)
+// 			close(fd[2]);
+// 		execve(path, argv, env);
+// 		perror(path);
+// 	}
+// 	ret = waitpid(pid);
+// 	if (fd[0] > 2)
+// 		close(fd[0]);
+// 	if (fd[1] > 2)
+// 		close(fd[1]);
+// 	return (get_return_code(ret));
+// }
 
 /* @brief recursively traverse a node in an AST, left to right
  * @param node the node to traverse
@@ -180,34 +194,34 @@ int	exec(t_token *tokens, int fd[3], char **env)
  *  		fd[3] = 0;
  *	if the node is terminal, pass on the tokens and fds to exec
  */
-int	traverse(t_node *node, int fd[3])
-{
-	int	innerfd[2];
-	int outerfd[2];
-	int	ret;
+// int	traverse(t_node *node, int fd[3])//function foe execution
+// {
+// 	int	innerfd[2];
+// 	int outerfd[2];
+// 	int	ret;
 
-	if (node->type == TERMINAL)
-		return (exec(node->content.tokens))
-	outerfd[0] = fd[0];
-	outerfd[1] = fd[1];
-	if (node->content.op.type == PIPE)
-		try_pipe(innerfd);
-	else
-	{
-		innerfd[0] = 0;
-		innerfd[1] = 1;
-	}
-	fd[1] = innerfd[1];
-	fd[2] = innerfd[0]; // to be closed in the child process
-	ret = traverse(node->content.op.left, fd);
-	fd[1] = outerfd[1];
-	if (node->op.type == AND && !ret)
-		return (0);
-	if (node->op.type == OR && ret)
-		return (ret);
-	fd[0] = innerfd[0];
-	fd[2] = 0; // nothing to close on the right
-	ret = traverse(node->content.op.right, fd);
-	fd[0] = outerfd[0];
-	return (ret);
-}
+// 	if (node->type == TERMINAL)
+// 		return (exec(node->content.tokens))
+// 	outerfd[0] = fd[0];
+// 	outerfd[1] = fd[1];
+// 	if (node->content.op.type == PIPE)
+// 		try_pipe(innerfd);
+// 	else
+// 	{
+// 		innerfd[0] = 0;
+// 		innerfd[1] = 1;
+// 	}
+// 	fd[1] = innerfd[1];
+// 	fd[2] = innerfd[0]; // to be closed in the child process
+// 	ret = traverse(node->content.op.left, fd);
+// 	fd[1] = outerfd[1];
+// 	if (node->op.type == AND && !ret)
+// 		return (0);
+// 	if (node->op.type == OR && ret)
+// 		return (ret);
+// 	fd[0] = innerfd[0];
+// 	fd[2] = 0; // nothing to close on the right
+// 	ret = traverse(node->content.op.right, fd);
+// 	fd[0] = outerfd[0];
+// 	return (ret);
+// }
