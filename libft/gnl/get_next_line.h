@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albetanc <albetanc@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 15:29:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/01/24 18:25:55 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/11 08:36:40 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stddef.h>
+# include "../libft.h"
 
 char	*get_next_line(int fd);
 size_t	ft_str_utils(char *dst, const char *src, size_t dstsize, int flag);
 char	*ft_strchr(const char *str, int c);
 size_t	ft_strlcat(char *dst, const char *src, size_t dst_size);
-char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_process_str(char *join, char *c, int flag);
 
 #endif

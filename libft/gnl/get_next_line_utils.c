@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albetanc <albetanc@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 16:08:51 by albetanc          #+#    #+#             */
-/*   Updated: 2025/01/22 13:01:18 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/11 08:37:04 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,29 +75,6 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dst_size)
 	}
 	dst[dst_len + i] = '\0';
 	return (dst_len + src_len);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	size_t	len1;
-	size_t	len2;
-	char	*str;
-
-	if (!s1 || !s2)
-		return (NULL);
-	len1 = ft_str_utils(NULL, s1, 0, 1);
-	len2 = ft_str_utils(NULL, s2, 0, 1);
-	str = malloc ((len1 + len2 + 1) * sizeof(char));
-	if (!str)
-		return (NULL);
-	str[0] = '\0';
-	if (!s1)
-		ft_str_utils(str, s2, len2 + 1, 0);
-	if (!s2)
-		ft_str_utils(str, s1, len1 + 1, 0);
-	ft_str_utils(str, s1, len1 + 1, 0);
-	ft_strlcat(str, s2, len1 + len2 + 1);
-	return (str);
 }
 
 char	*ft_process_str(char *join, char *c, int flag)
