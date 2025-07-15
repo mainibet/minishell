@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/15 16:02:30 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/15 16:03:43 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,15 @@
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+// -----------------------------------------//
+//             MODULE HEADERS               //
+// -----------------------------------------//
+
+# include "libft/libft.h"
+# include "include/colors.h"
+# include "include/lexer.h"
+# include "include/parser.h"
 
 // ---FORWARD DECLARATIONS--- //
 
@@ -70,15 +79,5 @@ enum e_toktype
 // -----------------------------------------//
 //           TREE NODES TYPES               //
 // -----------------------------------------//
-
-
-// -----------------------------------------//
-//             MODULE HEADERS               //
-// -----------------------------------------//
-
-# include "libft/libft.h"
-# include "include/colors.h"
-# include "include/lexer.h"
-# include "include/parser.h"
 
 #endif
