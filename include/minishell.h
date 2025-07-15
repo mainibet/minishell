@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/15 09:56:17 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/15 13:46:22 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,14 @@
 // ---FORWARD DECLARATIONS--- //
 
 typedef struct s_token t_token;
+typedef struct s_node t_node;
+
+enum e_nodetype
+{
+	OPERATOR,
+	TERMINAL,
+	MAX_NODETYPE
+};
 
 // -----------------------------------------//
 //                 TOKENS                   //
@@ -57,8 +65,6 @@ enum e_toktype
 	MAX_TYPE
 };
 
-// ---FORWARD DECLARATIONS--- //
-
 // -----------------------------------------//
 //           TREE NODES TYPES               //
 // -----------------------------------------//
@@ -70,6 +76,7 @@ enum e_toktype
 
 # include "libft/libft.h"
 # include "include/colors.h"
-# include "include/lexer.h"
+// # include "include/lexer.h"
+// # include "include/parser.h"
 
 #endif
