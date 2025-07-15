@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/15 08:40:03 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/15 09:56:17 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # include <sys/wait.h>
 
 // ---FORWARD DECLARATIONS--- //
+
 typedef struct s_token t_token;
 
 // -----------------------------------------//
@@ -69,6 +70,6 @@ enum e_toktype
 
 # include "libft/libft.h"
 # include "include/colors.h"
-# include "../src/exec/exec.h"
+# include "include/lexer.h"
 
 #endif
