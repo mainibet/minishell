@@ -2,6 +2,7 @@
     "files.associations": {
         "exec.h": "c",
         "MAIN_EXEC_TEST.C": "cpp",
-        "wait.h": "c"
+        "wait.h": "c",
+        "history.h": "c"
     }
 }
