@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/15 13:46:22 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:50:54 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ enum e_toktype
 
 # include "libft/libft.h"
 # include "include/colors.h"
-// # include "include/lexer.h"
+# include "include/lexer.h"
 // # include "include/parser.h"
 
 #endif
