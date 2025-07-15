@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/15 16:03:43 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/15 17:14:58 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,9 @@ enum e_toktype
 {
 	WORD = 1,
 	//HEREDOC,
-	//FILE_IN,
-	//FILE_OUT,
+	//FILE_IN,//better REDIR_IN?
+	//FILE_OUT,//better REDIR_OUT?
+	//APPEND//new
 	OPEN,
 	CLOSE,
 	PIPE,
