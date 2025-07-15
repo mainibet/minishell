@@ -1,31 +1,45 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lex.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/15 08:57:29 by albetanc          #+#    #+#             */
+/*   Updated: 2025/07/15 09:54:55 by albetanc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-enum e_toktype
-{
-	WORD = 1,
-	//HEREDOC,
-	//FILE_IN,
-	//FILE_OUT,
-	OPEN,
-	CLOSE,
-	PIPE,
-	AND,
-	OR,
-	SEMICOLON,
-	MAX_TYPE
-};
+#include "minishell.h"
 
-typedef struct s_token t_token;
+// #include <stdio.h>//included in minishell.h
+// #include <stdlib.h>//included in minishell.h
+// #include <string.h>//included in minishell.h
 
-typedef struct s_token
-{
-	char	 		*txt;
-	t_token			*next;
-	enum e_toktype	type;
-	char			delim;
-}	t_token;
+// enum e_toktype//included in minishell.h
+// {
+// 	WORD = 1,
+// 	//HEREDOC,
+// 	//FILE_IN,
+// 	//FILE_OUT,
+// 	OPEN,
+// 	CLOSE,
+// 	PIPE,
+// 	AND,
+// 	OR,
+// 	SEMICOLON,
+// 	MAX_TYPE
+// };
+
+// typedef struct s_token	t_token;//included in minishell.h
+
+// typedef struct s_token//included in lexer.h
+// {
+// 	char			*txt;
+// 	t_token			*next;
+// 	enum e_toktype	type;
+// 	char			delim;
+// }	t_token;
 
 /* advance the token pointer to the beginning of the next token */
 /* 
@@ -75,7 +89,7 @@ void	process_token(t_token token)
 }
 */
 
-enum e_toktype token_type(t_token *token)
+enum e_toktype	token_type(t_token *token)
 {
 	if (*token->txt == '(' || *token->txt == '{')
 		return (OPEN);
@@ -96,9 +110,9 @@ enum e_toktype token_type(t_token *token)
  * token.  If the first character is a quote, the whole quoted strding is 
  * the token, otherwise the _word_ is the token
  */
-t_token *extract_token(char *s, size_t size)
+t_token	*extract_token(char *s, size_t size)
 {
-	t_token *token;
+	t_token	*token;
 
 	token = malloc(sizeof(t_token));
 	if (!token)
@@ -115,7 +129,7 @@ t_token *extract_token(char *s, size_t size)
 	return (token);
 }
 
-void free_token(t_token *token)
+void	free_token(t_token *token)
 {
 	if (token->next)
 		free_token(token->next);
@@ -130,11 +144,11 @@ char	*consume_whitespace(char *p)
 	return (p);
 }
 
-t_token *lex(char *s, char delim)
+t_token	*lex(char *s, char delim)
 {
 	char	*p;
 	char	*q;
-	t_token *token;
+	t_token	*token;
 
 	p = s;
 	q = p;
@@ -162,9 +176,11 @@ t_token *lex(char *s, char delim)
 	return (token);
 }
 
-int print_tokens(t_token *token)
+int	print_tokens(t_token *token)
 {
-	int len = 0;
+	int	len;
+
+	len = 0;
 	while (token)
 	{
 		len += printf("%s ", token->txt);
