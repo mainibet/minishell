@@ -1,30 +1,4 @@
-struct s_node;
-
-typedef struct s_operator
-{
-	enum e_toktype	type;
-	struct s_node	*left;
-	struct s_node	*right;
-}	t_operator;
-
-enum e_nodetype
-{
-	OPERATOR,
-	TERMINAL,
-	MAX_NODETYPE
-};
-
-union u_node
-{
-	t_operator	op;
-	t_token		*tokens;
-};
-
-typedef struct s_node 
-{
-	enum e_nodetype	type;
-	union u_node	content;
-}	t_node;
+#include "parse.h"
 
 static void	free_node(t_node *node)
 {
@@ -53,7 +27,6 @@ static int	precedence(t_token *token)
 		return (3);
 	return (0);
 }
-/
 
 static t_node	*parse_terminal(t_token *token)
 {
@@ -84,6 +57,7 @@ static t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
 	return (node);
 }
 
+
 /* take the address of a token list and create a parse tree.
  * - all pipes are treated as right-associative.  this means we only need to keep
  *   3 open fds at any given time.
@@ -95,7 +69,7 @@ t_node	*parse(t_token **token, int min_precedence)
 	t_node	*left;
 	t_node	*right;
 
-	left = parse_command(*token);
+	left = parse_terminal(*token);
 	if (!left)
 		return (NULL);
 	*token = next_operator(*token);
@@ -120,6 +94,11 @@ t_node	*parse(t_token **token, int min_precedence)
 	return (left);
 }
 
+int is_builtin(t_token *token);
+int	exec_builtin(t_token *token);
+t_node	*parse_command(t_token *token, char *path, char **argv);
+int	get_return_code(int wstatus);
+
 /* execute the command or builtin specified by tokens
  * - the child (if any) should close each element of fd that is greater than 2
  * 		(not stdout, stdin, or stderr)
@@ -129,21 +108,23 @@ int	exec(t_token *tokens, int fd[3], char **env)
 {
 	char	*path;
 	char	**argv;
+	int		pid;
+	int		wstatus;
 
 	if (is_builtin(tokens))
 		return (exec_builtin(tokens));
-	parse_command(tokens, path, argv)
+	parse_command(tokens, path, argv);
 	pid = fork();
 	if (!pid)
 	{
 		if (fd[0] > 2)
 		{
-			dup2(STDIN_FD, fd[0]);
+			dup2(STDIN_FILENO, fd[0]);
 			close(fd[0]);
 		}
 		if (fd[1] > 2)
 		{
-			dup2(STDOUT_FD, fd[1]);
+			dup2(STDOUT_FILENO, fd[1]);
 			close(fd[1]);
 		}
 		if (fd[2] > 2)
@@ -151,13 +132,15 @@ int	exec(t_token *tokens, int fd[3], char **env)
 		execve(path, argv, env);
 		perror(path);
 	}
-	ret = waitpid(pid);
+	waitpid(pid, &wstatus, 0);
 	if (fd[0] > 2)
 		close(fd[0]);
 	if (fd[1] > 2)
 		close(fd[1]);
-	return (get_return_code(ret));
+	return (get_return_code(wstatus));
 }
+
+void	try_pipe(int fd[2]);
 
 /* @brief recursively traverse a node in an AST, left to right
  * @param node the node to traverse
@@ -180,14 +163,14 @@ int	exec(t_token *tokens, int fd[3], char **env)
  *  		fd[3] = 0;
  *	if the node is terminal, pass on the tokens and fds to exec
  */
-int	traverse(t_node *node, int fd[3])
+int	traverse(t_node *node, int fd[3], char **env)
 {
 	int	innerfd[2];
 	int outerfd[2];
 	int	ret;
 
 	if (node->type == TERMINAL)
-		return (exec(node->content.tokens))
+		return (exec(node->content.tokens, fd, env));
 	outerfd[0] = fd[0];
 	outerfd[1] = fd[1];
 	if (node->content.op.type == PIPE)
@@ -199,15 +182,15 @@ int	traverse(t_node *node, int fd[3])
 	}
 	fd[1] = innerfd[1];
 	fd[2] = innerfd[0]; // to be closed in the child process
-	ret = traverse(node->content.op.left, fd);
+	ret = traverse(node->content.op.left, fd, env);
 	fd[1] = outerfd[1];
-	if (node->op.type == AND && !ret)
+	if (node->content.op.type == AND && !ret)
 		return (0);
-	if (node->op.type == OR && ret)
+	if (node->content.op.type == OR && ret)
 		return (ret);
 	fd[0] = innerfd[0];
 	fd[2] = 0; // nothing to close on the right
-	ret = traverse(node->content.op.right, fd);
+	ret = traverse(node->content.op.right, fd, env);
 	fd[0] = outerfd[0];
 	return (ret);
 }
