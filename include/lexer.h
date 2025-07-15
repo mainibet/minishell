@@ -6,14 +6,14 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:36:45 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/15 13:48:03 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:46:28 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
 
-#include "include/minishell.h"
+# include "include/minishell.h"
 
 // -----------------------------------------//
 //                  STRUCTS                 //
