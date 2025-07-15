@@ -6,32 +6,22 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/11 08:26:17 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/15 17:36:23 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXEC_H
 # define EXEC_H
 
-#include "../../minishell.h"//tmp
+# include "minishell.h"
 
-// --- STANDARD HEADERS ---
-#include <readline/readline.h>
-#include <readline/history.h>
+// --- FORWARD DECLARATION --- //
+typedef struct s_node t_node;
 
-// ---FORWARD DECLARATIONS--- //
-typedef struct s_tree_node t_node;
+// -----------------------------------------//
+//                 STRUCTS                  //
+// -----------------------------------------//
 
-//  --- COMMAND TYPE --- //
-
-/**
- *  @brief Defines classification of a cmd
- * 
- * - Use: to recognize a external cmd froma builtin
- * 
- *  @note later might be use MAX_CMDTYPE to control
- *  precedency
-*/
 typedef enum e_cmdtype
 {
 	EXECUTABLE,
@@ -53,76 +43,19 @@ typedef enum e_cmdtype
 */
 typedef struct s_cmd_data
 {
-    char	**argv;
-    char	**env;
-    int		fd_in;
-	int		fd_out;
+	char		**argv;
+	char		**env;
+	int			fd_in;
+	int			fd_out;
 	t_cmdtype	cmd_type;
-} t_cmd_data;
+}	t_cmd_data;
 
-
-/**
-*   @brief pipe operrations connecting 2 cmd branches 
-*   in AST
-*
-*   Pipe node will hold 2 pointers to left and right 
-*   child nodes
-*/
 typedef struct s_pipe_data
 {
-	t_node  *left;
-	t_node  *right;
-} t_pipe_data;
+	t_node	*left;
+	t_node	*right;
+}	t_pipe_data;
 
-// -----------------------------------------//
-//           TREE NODES TYPES               //
-// -----------------------------------------//
-
-/**
-*   @brief defines types of nodes in AST
-*
-*   1. Categorizes the different structural elements
-*      a parsed cmd line can represent
-*   @usage for directing execution flow
-*   
-*   @note This enum was initially created 
-*   for testing the execution logic.
-*/
-typedef enum e_node_type//CREATED FOR TESTING EXEC
-{
-	NODE_CMD,
-	NODE_PIPE,
-}	t_node_type;
-
-// -----------------------------------------//
-//            GENERAL STRUCTS               //
-// -----------------------------------------//
-
-/**
-*   @brief represents a node in the AST
-*
-*   allows a node to hold data for cmd_node or
-*   pipe_node
-*
-*   @param type The type of the node (CMD, PIPE).
-*   @param u_data Union holding cmd or pipe data.
-*/
-
-typedef struct s_tree_node
-{
-	t_node_type	type;
-	union
-	{
-		t_cmd_data	cmd;
-		t_pipe_data pipe;
-		t_node		*left;
-		t_node		*right;
-	} u_data;
-} t_tree_node;
-
-// -----------------------------------------//
-//             EXECUTION STRUCTS            //
-// -----------------------------------------//
 
 /**
  *  @brief stores duplicated fd for tmp redirection
@@ -156,16 +89,9 @@ void	child_process(t_node *node);
 void	exec_external_cmd(t_node *node);
 
 // --- ERRORS_CLEAN-UP --- //
-int		cleanup_fd(t_node *node, t_node_type type);
+// int		cleanup_fd(t_node *node, t_node_type type);
+int		cleanup_fd(t_node *node, int node_type);
 int		cleanup_cmd_node(t_node *node);
-
-// --- TMP ONLY FOR TEXT EXEC --- //
-t_node	*create_node(t_node_type type);
-void	exit_error_program(const char *msg, char *line_to_free, 
-			char **tokens_to_free, t_node *node_to_free);
-int		fill_command_node(t_node *node, char **tokens);
-char	**parse_line_to_tokens(char *line, const char *delimiter);
-void	free_all(char *line, char **tokens_array, t_node *node);
 
 /**
 Left-associative
