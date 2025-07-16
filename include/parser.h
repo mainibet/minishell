@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:34:47 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/15 16:32:24 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/16 08:26:30 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,35 +15,11 @@
 
 # include "minishell.h"
 
-// ---FORWARD DECLARATIONS--- //
-
-typedef struct s_token	t_token;
-typedef struct s_node	t_node;
-enum					e_toktype;
-enum					e_nodetype;
-
 // -----------------------------------------//
 //                  STRUCTS                 //
 // -----------------------------------------//
 
-typedef struct s_operator
-{
-	enum e_toktype	type;
-	struct s_node	*left;
-	struct s_node	*right;
-}	t_operator;
 
-union u_node
-{
-	t_operator	op;
-	t_token		*tokens;
-};
-
-typedef struct s_node 
-{
-	enum e_nodetype	type;
-	union u_node	content;
-}	t_node;
 
 // -----------------------------------------//
 //                PROTOTYPES                //
