@@ -5,7 +5,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include <sys/wait.h>
-# include "../lexer/lex.c"
+# include "../lexer/lex.h"
 
 struct s_node;
 
@@ -37,13 +37,14 @@ typedef struct s_node
 
 /* prototypes */
 /* parse.c */
-enum	e_toktype token_type(t_token *token);
-t_token	*extract_token(char *s, size_t size);
-void	free_token(t_token *token);
-char	*consume_whitespace(char *p);
-t_token	*lex(char *s, char delim);
-int		print_tokens(t_token *token);
 t_node	*parse(t_token **token, int min_precedence);
+int		is_builtin(t_token *token);
+int		exec_builtin(t_token *token);
+int		is_arg(t_token *token);
+int		try_open(char *path, int flags);
+void	parse_redirect(t_token *token, int *fd[2]);
+t_node	*parse_command(t_token *token, char *path, char **argv, int *fd);
 int		exec(t_token *tokens, int fd[3], char **env);
+void	try_pipe(int fd[2]);
 int		traverse(t_node *node, int fd[3], char **env);
 #endif

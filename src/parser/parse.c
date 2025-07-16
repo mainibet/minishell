@@ -94,9 +94,81 @@ t_node	*parse(t_token **token, int min_precedence)
 	return (left);
 }
 
-int is_builtin(t_token *token);
-int	exec_builtin(t_token *token);
-t_node	*parse_command(t_token *token, char *path, char **argv);
+int is_builtin(t_token *token)
+{
+	const char	builtins[][10] = {"echo", "cd", "pwd", "export", "unset", 
+		"env", "exit", NULL};
+	int i;
+
+	i = 0;
+	while (builtins[i])
+		if (!strncmp(token->txt, builtins[i++], 10))
+			return (1);
+	return (0);
+}
+
+int	exec_builtin(t_token *token)
+{
+	// builtin if-else ladder
+	return (1);
+}
+
+int	is_arg(t_token *token)
+{
+	if (*token->txt == '<' || *token->txt == '>')
+		return (0);
+	return (1);
+}
+
+int	try_open(char *path, int flags)
+{
+	int ret;
+
+	ret = open(path, flags);
+	if (ret == -1)
+		exit(1);
+}
+
+void	parse_redirect(t_token *token, int *fd[2])
+{
+	const int	ind = *token->txt == '>';
+	int			mode;
+
+	// if <, close fd[0] if necessary, open filename, 
+	// and set fd[0] to the result.
+	// if >, do the same for fd1
+	if (fd[ind] > 2)
+		close(fd[ind]);
+	mode = O_WRONLY;
+	if (!ind)
+		mode = O_RDONLY;
+	if (mode == O_WRONLY && token->txt[1] == '>')
+		mode = mode & O_APPEND;
+	token = token->next;
+	if (!token)
+		exit(1);
+	fd[ind] = try_open(token->txt, mode);
+}
+
+t_node	*parse_command(t_token *token, char *path, char **argv, int *fd)
+{
+	int i;
+
+	path = token->txt;
+	token = token->next;
+	i = 0;
+	while (token && token->type < PIPE)
+	{
+		if (is_arg(token))
+		{
+			argv[i] = expand_vars(token);
+			i++;
+		}
+		else
+			parse_redirect(fd);
+	}
+}
+	
 int	get_return_code(int wstatus);
 
 /* execute the command or builtin specified by tokens
@@ -140,7 +212,18 @@ int	exec(t_token *tokens, int fd[3], char **env)
 	return (get_return_code(wstatus));
 }
 
-void	try_pipe(int fd[2]);
+void	try_pipe(int fd[2])
+{
+	int	ret;
+
+	ret = pipe(fd);
+	if (ret == -1)
+	{
+		perror("pipe");
+		exit(1);
+	}
+	return (ret);
+}
 
 /* @brief recursively traverse a node in an AST, left to right
  * @param node the node to traverse
