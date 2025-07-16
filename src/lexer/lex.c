@@ -1,31 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-enum e_toktype
-{
-	WORD = 1,
-	//HEREDOC,
-	//FILE_IN,
-	//FILE_OUT,
-	OPEN,
-	CLOSE,
-	PIPE,
-	AND,
-	OR,
-	SEMICOLON,
-	MAX_TYPE
-};
-
-typedef struct s_token t_token;
-
-typedef struct s_token
-{
-	char	 		*txt;
-	t_token			*next;
-	enum e_toktype	type;
-	char			delim;
-}	t_token;
+#include "lex.h"
 
 /* advance the token pointer to the beginning of the next token */
 /* 
