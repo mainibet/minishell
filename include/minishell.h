@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/15 17:14:58 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/16 08:25:44 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,11 @@
 typedef struct s_token t_token;
 typedef struct s_node t_node;
 
-enum e_nodetype
-{
-	OPERATOR,
-	TERMINAL,
-	MAX_NODETYPE
-};
+// -----------------------------------------//
+//            GLOBAL ENUMS                  //
+// -----------------------------------------//
 
-// -----------------------------------------//
-//                 TOKENS                   //
-// -----------------------------------------//
+// --- TOKEN TYPES --- //
 
 enum e_toktype
 {
@@ -77,8 +72,64 @@ enum e_toktype
 	MAX_TYPE
 };
 
+// --- COMMAND TYPE --//
+
+typedef enum e_cmdtype
+{
+	EXECUTABLE,
+	BUILTIN,
+}	t_cmdtype;
+
+// --- NODE TYPE --- //
+
+enum e_nodetype
+{
+	OPERATOR,
+	TERMINAL,//can we call it command?
+	// MAX_NODETYPE
+};
+
 // -----------------------------------------//
-//           TREE NODES TYPES               //
+//                AST STRUCTS               //
+// -----------------------------------------//
+
+// --- COMMAND NODE --- //
+typedef struct s_cmd_data
+{
+	t_token		*tokens;
+	char		**argv;//processed args for execution
+	char		**env;
+	int			fd_in;
+	int			fd_out;
+	t_cmdtype	cmd_type;
+}	t_cmd_data;
+
+// --- OPERATOR DATA ---//
+
+typedef struct s_operator
+{
+	enum e_toktype	type;
+	struct s_node	*left;
+	struct s_node	*right;
+}	t_operator;
+
+// --- UNION FOR NODE CONTENT --- //
+
+union u_node
+{
+	t_operator	op;
+	t_cmd_data	cmd;
+};
+
+// --- STRUCT FOR ALL NODES --- //
+typedef struct s_node 
+{
+	enum e_nodetype	type;
+	union u_node	content;
+}	t_node;
+
+// -----------------------------------------//
+//                PROTOTYPES                //
 // -----------------------------------------//
 
 #endif
