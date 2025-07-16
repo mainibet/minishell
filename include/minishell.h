@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/16 08:25:44 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/16 10:01:56 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ typedef enum e_cmdtype
 enum e_nodetype
 {
 	OPERATOR,
-	TERMINAL,//can we call it command?
+	TERMINAL
 	// MAX_NODETYPE
 };
 
