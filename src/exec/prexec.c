@@ -6,11 +6,11 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 08:41:11 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/16 09:40:29 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 11:11:36 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 static int	count_tokens(t_token *token)
 {
@@ -66,19 +66,27 @@ char	**token_to_argv(t_token *token)
 	return (argv);
 }
 
-void	process_cmd(t_node *node, char **envp)
+void	pre_execution(t_node *node, char **envp)
 {
 	t_token	*curren_token;
 	int		i;
 	int		nb_token;
 
-	if (node->type != TERMINAL)
+	if (!node)
 		return ;
-	node->content.cmd.argv = token_to_argv(node->content.cmd.tokens);
-	if (!node->content.cmd.argv)
+	if (node->type != COMMAND)//tmp
+		return ;
+	// (node->type == COMMAND)//late
+	node->u_data.cmd.argv = token_to_argv(node->u_data.cmd.tokens);
+	// else if (node->type == OPERATOR)//later
+	// {
+	// 	re_execution(node->u_data.op.left, envp);
+	// 	re_execution(node-?u_data.op.rith, envp);
+	// }
+	if (!node->u_data.cmd.argv)
 		exit(EXIT_FAILURE);//check to handle error correctly
-	node->content.cmd.env = envp;
-	node->content.cmd.cmd_type = EXECUTABLE;//for this test
-	node->content.cmd.fd_in = STDIN_FILENO;
-	node->content.cmd.fd_out = STDOUT_FILENO;
+	node->u_data.cmd.env = envp;
+	node->u_data.cmd.cmd_type = EXECUTABLE;//for this test
+	node->u_data.cmd.fd_in = STDIN_FILENO;
+	node->u_data.cmd.fd_out = STDOUT_FILENO;
 }
