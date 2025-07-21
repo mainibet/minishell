@@ -3,6 +3,7 @@
         "exec.h": "c",
         "MAIN_EXEC_TEST.C": "cpp",
         "wait.h": "c",
-        "history.h": "c"
+        "history.h": "c",
+        "minishell.h": "c"
     }
 }
