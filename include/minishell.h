@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/16 10:01:56 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 09:59:31 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,12 @@ typedef enum e_cmdtype
 
 // --- NODE TYPE --- //
 
-enum e_nodetype
+typedef enum e_nodetype
 {
 	OPERATOR,
-	TERMINAL
+	COMMAND//CHANGED IT WAS TERMINAL
 	// MAX_NODETYPE
-};
+}t_nodetype;
 
 // -----------------------------------------//
 //                AST STRUCTS               //
@@ -115,7 +115,7 @@ typedef struct s_operator
 
 // --- UNION FOR NODE CONTENT --- //
 
-union u_node
+union u_node_content//changed from u_node to node_content
 {
 	t_operator	op;
 	t_cmd_data	cmd;
@@ -124,8 +124,8 @@ union u_node
 // --- STRUCT FOR ALL NODES --- //
 typedef struct s_node 
 {
-	enum e_nodetype	type;
-	union u_node	content;
+	enum e_nodetype			type;
+	union u_node_content	u_data;//changed from content to data
 }	t_node;
 
 // -----------------------------------------//
