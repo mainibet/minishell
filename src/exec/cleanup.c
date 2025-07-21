@@ -6,12 +6,12 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:20:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/11 08:25:56 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 09:45:58 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "minishell.h"
-#include "../../minishell.h"
+#include "../include/minishell.h"
 
 /**
 *   @brief Closes relevant file descriptors to safely 
