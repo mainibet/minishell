@@ -6,11 +6,11 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:57:29 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/15 15:51:16 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 12:05:40 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "lexer.h"
 // #include <stdio.h>//included in minishell.h
 // #include <stdlib.h>//included in minishell.h
 // #include <string.h>//included in minishell.h

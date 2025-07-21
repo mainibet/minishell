@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/21 11:38:05 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 12:11:53 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,13 @@
 
 # include "../libft/libft.h"
 # include "colors.h"
-# include "lexer.h"
-# include "parser.h"
-# include "prexec.h"
 
 // ---FORWARD DECLARATIONS--- //
 
 typedef struct s_token t_token;
 typedef struct s_node t_node;
+typedef struct s_cmd_data t_cmd_data; // Forward declare for union
+typedef struct s_operator t_operator;
 
 // -----------------------------------------//
 //            GLOBAL ENUMS                  //
@@ -71,7 +70,7 @@ enum e_toktype
 	OR,
 	SEMICOLON,
 	MAX_TYPE
-};
+} t_toktype;
 
 // --- COMMAND TYPE --//
 
@@ -93,6 +92,17 @@ typedef enum e_nodetype
 // -----------------------------------------//
 //                AST STRUCTS               //
 // -----------------------------------------//
+
+// --- TOKEN STRUCT --- //
+
+typedef struct s_token
+{
+	char			*txt;
+	enum e_toktype	type;
+	t_token			*next;
+	char			delim;
+}	t_token;
+
 
 // --- COMMAND NODE --- //
 typedef struct s_cmd_data

@@ -6,11 +6,15 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/21 11:37:27 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 12:15:33 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include "../include/lexer.h"
+#include "../include/parser.h"
+#include "../include/prexec.h"
+#include "../include/exec.h"
 
 //-------------------------------//
 //          V0: main             //
@@ -32,7 +36,7 @@ t_node	*parse_input(char *line, t_token **token_out)
 	token_list = lex(line, ' ');
 	if (!token_list)
 	{
-		fprintf(stderr, BOLD RED "Lexing failed or empty imput\n" RESET)//test
+		fprintf(stderr, BOLD RED "Lexing failed or empty imput\n" RESET);//test
 		*token_out = NULL;//test
 		return (NULL);
 	}

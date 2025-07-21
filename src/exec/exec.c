@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/21 11:40:04 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 12:19:11 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,8 @@ void	exec_external_cmd(t_node *node)
 */
 void	execution(t_node *cmd)
 {
-	if (!root)
+	if (!cmd)
 		return ;
-	if (root->type == NODE_CMD) 
-		execute_cmd(root);
+	if (cmd->type == COMMAND) 
+		execute_cmd(cmd);
 }

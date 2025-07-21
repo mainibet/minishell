@@ -6,11 +6,12 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 08:41:11 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/21 11:11:36 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 12:12:08 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include "prexec.h"
 
 static int	count_tokens(t_token *token)
 {

@@ -6,12 +6,18 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:35:57 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/15 15:50:58 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 12:37:24 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 #include "parser.h"
+#include "../include/lexer.h"
+
+// --- FORWARD DECLARATIONS --- //
+t_node			*parse_command(t_token *token);
+static t_token	*next_operator(t_token *token);
+static int		precedence(t_token *token);
 
 // struct s_node;//moved to minishell.h
 
@@ -41,12 +47,12 @@
 // 	union u_node	content;
 // }	t_node;
 
-static void	free_node(t_node *node)
+void	free_node(t_node *node)
 {
 	if (node->type == OPERATOR)
 	{
-		free_node(node->content.op.left);
-		free_node(node->content.op.right);
+		free_node(node->u_data.op.left);
+		free_node(node->u_data.op.right);
 	}
 	free(node);
 }
@@ -69,19 +75,19 @@ static int	precedence(t_token *token)
 	return (0);
 }
 
-static t_node	*parse_terminal(t_token *token)
+t_node	*parse_command(t_token *token)//name changed from parse terminal to parse command
 {
 	t_node	*node;
 
 	node = malloc(sizeof(t_node));
 	if (!node)
 		return (NULL);
-	node->type = TERMINAL;
-	node->content.tokens = token;
+	node->type = COMMAND;
+	node->u_data.cmd.tokens = token;
 	return (node);
 }
 
-static t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
+t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
 {
 	t_node	*node;
 
@@ -92,9 +98,9 @@ static t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
 		free_node(right);
 	}
 	node->type = OPERATOR;
-	node->content.op.type = token_type(op);
-	node->content.op.left = left;
-	node->content.op.right = right;
+	node->u_data.op.type = token_type(op);
+	node->u_data.op.left = left;
+	node->u_data.op.right = right;
 	return (node);
 }
 
