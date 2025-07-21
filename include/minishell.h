@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/21 09:59:31 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 11:38:05 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,11 @@
 //             MODULE HEADERS               //
 // -----------------------------------------//
 
-# include "libft/libft.h"
-# include "include/colors.h"
-# include "include/lexer.h"
-# include "include/parser.h"
+# include "../libft/libft.h"
+# include "colors.h"
+# include "lexer.h"
+# include "parser.h"
+# include "prexec.h"
 
 // ---FORWARD DECLARATIONS--- //
 
