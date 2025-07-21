@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/21 09:46:13 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 11:40:04 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	exec_external_cmd(t_node *node)
 *
 *   @note execution will be performed in recursion
 */
-void	execution(t_node *root)
+void	execution(t_node *cmd)
 {
 	if (!root)
 		return ;
