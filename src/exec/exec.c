@@ -6,12 +6,12 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 08:35:30 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 09:46:13 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "minishell.h"
-#include "../../minishell.h"
+#include "../include/minishell.h"
 #include "exec.h"//temporary for testing
 
 //---------------------------------------//
