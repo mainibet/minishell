@@ -6,12 +6,13 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:07:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 08:21:22 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 10:00:42 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "minishell.h"
-#include "../../minishell.h"
+#include "../include/minishell.h"
+#include "../include/exec.h"
 
 /**
 *   @brief sets up I/O redi and executes cmd
