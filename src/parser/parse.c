@@ -6,13 +6,13 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:35:57 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/21 12:37:24 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/23 14:47:54 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
 #include "parser.h"
-#include "../include/lexer.h"
+#include "lexer.h"
 
 // --- FORWARD DECLARATIONS --- //
 t_node			*parse_command(t_token *token);
