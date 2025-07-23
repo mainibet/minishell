@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/21 12:15:33 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/23 15:16:40 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		printf(BOLD MAGENTA "Command received: %s\n" RESET, line);//test
 		handle_command(line, envp);//new
-		if (!line)
-			break ;
 	}
 	return (0);
 }
