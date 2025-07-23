@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 08:41:11 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/21 12:12:08 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/23 11:46:11 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ char	**token_to_argv(t_token *token)
 
 void	pre_execution(t_node *node, char **envp)
 {
-	t_token	*curren_token;
-	int		i;
-	int		nb_token;
+	// t_token	*curren_token;
+	// int		i;
+	// int		nb_token;
 
 	if (!node)
 		return ;
@@ -82,7 +82,7 @@ void	pre_execution(t_node *node, char **envp)
 	// else if (node->type == OPERATOR)//later
 	// {
 	// 	re_execution(node->u_data.op.left, envp);
-	// 	re_execution(node-?u_data.op.rith, envp);
+	// 	re_execution(node->u_data.op.rith, envp);
 	// }
 	if (!node->u_data.cmd.argv)
 		exit(EXIT_FAILURE);//check to handle error correctly
