@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/21 12:11:53 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/23 11:59:27 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ typedef struct s_operator t_operator;
 
 // --- TOKEN TYPES --- //
 
-enum e_toktype
+typedef enum e_toktype
 {
 	WORD = 1,
 	//HEREDOC,
@@ -70,7 +70,7 @@ enum e_toktype
 	OR,
 	SEMICOLON,
 	MAX_TYPE
-} t_toktype;
+}	t_toktype;
 
 // --- COMMAND TYPE --//
 
