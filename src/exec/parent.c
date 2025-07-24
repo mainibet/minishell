@@ -6,12 +6,12 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:15:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/11 08:26:50 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/23 14:58:58 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "minishell.h"
-#include "../../minishell.h"
+#include "../include/minishell.h"
 #include "exec.h"//temporary for testing
 
 /**
@@ -112,15 +112,15 @@ int	execute_cmd(t_node *node)
 	fork_status = fork_handle(&pid, node, 0, 1);
 	if (check_fork(fork_status, pid, &child_status))
 		return (fork_status);
-	cleanup_fd(node, node->type);
+	// cleanup_fd(node, node->type);//this generates error in external cmd because we include 0 and 1 in cmd node
 	if (wait_one_child(pid, &child_status) == -1)
 	{
 		perror (BOLD RED "Waitpid failed for child" RESET);
 		return (-1);
 	}
-	if (cleanup_cmd_node(node))
-		perror(MAGENTA "Failed to cleanup cmd node\n" RESET);
-	cleanup_fd(node, node->type);
+	// if (cleanup_cmd_node(node))//this generates error in external cmd because we include 0 and 1 in cmd node
+		// perror(MAGENTA "Failed to cleanup cmd node\n" RESET);
+	// cleanup_fd(node, node->type);//this generates error in external cmd because we include 0 and 1 in cmd node
 	return (0);
 }
 

@@ -6,12 +6,12 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 08:35:30 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/21 12:19:11 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "minishell.h"
-#include "../../minishell.h"
+#include "../include/minishell.h"
 #include "exec.h"//temporary for testing
 
 //---------------------------------------//
@@ -102,10 +102,10 @@ void	exec_external_cmd(t_node *node)
 *
 *   @note execution will be performed in recursion
 */
-void	execution(t_node *root)
+void	execution(t_node *cmd)
 {
-	if (!root)
+	if (!cmd)
 		return ;
-	if (root->type == NODE_CMD) 
-		execute_cmd(root);
+	if (cmd->type == COMMAND) 
+		execute_cmd(cmd);
 }
