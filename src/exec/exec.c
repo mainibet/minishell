@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/21 12:19:11 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/24 09:50:39 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@
 //---------------------------------------//
 
 //---------------------------------------//
-//          V1 - CURRENT                 //
+//                  V1                   //
 // GOAL: Executes single external cmd    //
 // 1. Read a full line as raw input.     //
 // 2. Use getenv to get absolute path    //
@@ -58,6 +58,32 @@
 // 5. Exit command should leave shell    //
 //    active                             //
 //---------------------------------------//
+
+//---------------------------------------//
+//            V2 - CURRENT               //
+// GOAL: Executes pipe nodes             //
+// 1. Multipipes: 3 CHILD?               //
+// 2. COMPLETE THIS                      //
+// 3. INCLUDE ECHO EXECUTION? BUILTIN    //
+//   fd CONTROL                          //
+// 4.traverse CHECK JOSHUA'S             //
+// 5.                                    //
+//                                       //
+//---------------------------------------//
+/*
+* CLEAN-UP WITH PIPES
+* DEFINE TYPES OF CHILD CONSIDERING OTHERS OPERANDS
+* BUILTINS FLOW ONLY ECHO
+* INCLUDE OPERAN NODE IN EXECUTION FLOW
+* CONTROL AND CHECK OPENING AND CLOSE FD
+* PIPE AND REDIRECTIO IMPLEMENTATION IN CHILD
+* UPDATE NAMES IN ECHO BUILTIN
+* CHECK IF PREEXECUTION NEEDS SOMETHING
+* CHECK EDGE CASES
+* CHECK ALLOWED FUNCTIONS
+* UPDATE EXEC SPIDER FOR SINGLE EXTERNAL CMD
+* MAKE SPIDER FOR PIPE EXECUTION
+*/
 
 /**
 *   @brief Execute single external cmd
