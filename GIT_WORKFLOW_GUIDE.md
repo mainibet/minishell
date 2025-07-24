@@ -53,7 +53,7 @@ If you're in your branch and want to bring changes from `main`, you have two opt
 git merge main              # Merge all changes from main into your branch
 ```
 
-#### 🎯 To bring only **specific files** from `main` (or another branch)
+#### 🎯 To bring only **specific files** from `main` to the branch where you are (or another branch)
 
 ```bash
 git checkout main -- file1 file2
