@@ -6,12 +6,12 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:13:58 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/09 08:20:36 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/23 14:46:21 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "minishell.h"
-#include "../../minishell.h"
+#include "../include/minishell.h"
 
 /*
    To find the full path of a command.
