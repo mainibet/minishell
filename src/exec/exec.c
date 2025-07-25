@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/24 09:50:39 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/25 12:24:47 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,35 @@ void	exec_external_cmd(t_node *node)
 	free(cmd_path);
 	exit(EXIT_FAILURE);
 }
+static int	handle_operator(t_node *node)//NEW
+{
+	int	left_status;
+	int	right_status;
+
+	if (node->u_data.op.type == PIPE)
+		return (handle_pipe_node(node));//TODO connect with pipe.c
+	else if (node->u_data.op.type == AND)
+	{
+		left_status = execution(node->u_data.op.left);
+		if (left_status == 0)
+			return (execution(node->u_data.op.right));
+		return (left_status);
+	}
+	else if (node->u_data.op.type == OR)
+	{
+		left_status = execution(node->u_data.op.left);
+		if (left_status != 0)
+			return (execution(node->u_data.op.right));
+		return (left_status);
+	}
+	else if (node->u_data.op.type == SEMICOLON)
+	{
+		execution(node->u_data.op.left);
+		return (execution(node->u_data.op.right));
+	}
+	fprintf(stderr, CYAN RED "Error: unknow type operand for execution\n" RESET);
+	return (1);
+}
 
 /**
 *	@brief Receives a node from AST and decides 
@@ -128,10 +157,14 @@ void	exec_external_cmd(t_node *node)
 *
 *   @note execution will be performed in recursion
 */
-void	execution(t_node *cmd)
+int	execution(t_node *node)//check if change parameter name
 {
-	if (!cmd)
+	if (!node)
 		return ;
-	if (cmd->type == COMMAND) 
-		execute_cmd(cmd);
+	if (node->type == COMMAND) 
+		execute_cmd(node);
+	else if (node->type == OPERATOR)//NEW
+		return (handle_operador(node));
+	fprintf(stderr, CYAN RED "Error: unknow type node for execution\n" RESET);
+	return (1);
 }
