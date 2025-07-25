@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:15:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/25 09:24:28 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/25 11:39:24 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,21 @@ int	wait_one_child(pid_t pid, int *status)
 	return (0);
 }
 
+int	wait_children(pid_t *pid, int nb_child, int *status)//NEW
+{
+	int	i;
+	int	res;
+
+	i = 0;
+	while (i < nb_child)
+	{
+		res = wait_one_child(pid[i], &status[i]);
+		if (res == -1)
+			return (-1);//check if smt else needed
+		i++;
+	}
+	return (0);
+}
 /**
 *   [ERROR HANDLING]
 *   @brief Checks the result of a fork_handle
@@ -44,10 +59,11 @@ int	check_fork(int result, pid_t pid, int *status)
 	{
 		if (result == 1)
 			return (0);
-		else
+		else//NEW
 		{
-			// if (pid != 0)
-			// 	wait_one_child(pid, status);
+			if (pid != 0)
+				// wait_one_child(pid, status);
+                wait_child();//TO DO FUNCION to choose if child 1 or children
 			return (result);
 		}
 	}
@@ -81,8 +97,8 @@ int	fork_handle(pid_t *pid, t_node *node, int i_cmd, int nb_cmd)
 	}
 	if (*pid == 0)
 	{
-		if (nb_cmd == 1)
-			child_process(node);
+		// if (nb_cmd == 1)
+		child_process(node);//change for pipes (multiple cmd)
 		exit(EXIT_FAILURE);
 	}
 	return (0);
@@ -112,13 +128,13 @@ int	execute_cmd(t_node *node)
 	fork_status = fork_handle(&pid, node, 0, 1);
 	if (check_fork(fork_status, pid, &child_status))
 		return (fork_status);
-	// cleanup_fd(node, node->type);//this generates error in external cmd because we include 0 and 1 in cmd node
+	cleanup_fd(node, node->type);//include condition only for fd bigger than 2
 	if (wait_one_child(pid, &child_status) == -1)
 		return (-1);
 	// if (cleanup_cmd_node(node))//this generates error in external cmd because we include 0 and 1 in cmd node
 		// perror(MAGENTA "Failed to cleanup cmd node\n" RESET);
-	// cleanup_fd(node, node->type);//this generates error in external cmd because we include 0 and 1 in cmd node
-	return (0);
+	// cleanup_fd(node, node->type);//include condition only for fd bigger than 2
+	return (0);//migth change for the child's actual exit status
 }
 
 
