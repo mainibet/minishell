@@ -6,19 +6,19 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/08 17:18:21 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/25 09:31:05 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXEC_H
-# define EXEC_H
+// #ifndef EXEC_H
+// # define EXEC_H
 
-// --- STANDARD HEADERS ---
-#include <readline/readline.h>
-#include <readline/history.h>
+// // --- STANDARD HEADERS ---
+// #include <readline/readline.h>
+// #include <readline/history.h>
 
-// ---FORWARD DECLARATIONS--- //
-typedef struct s_tree_node t_node;
+// // ---FORWARD DECLARATIONS--- //
+// typedef struct s_tree_node t_node;
 
 // -----------------------------------------//
 //           TREE NODES TYPES               //
