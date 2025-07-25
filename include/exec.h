@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/21 12:29:06 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/25 11:42:34 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*find_path(char *argv);
 int		fork_handle(pid_t *pid, t_node *node, int i_cmd, int nb_cmd);
 int		setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
 int		wait_one_child(pid_t pid, int *status);
-void	execution(t_node *cmd);
+int		execution(t_node *cmd);
 int		execute_cmd(t_node *node);
 
 //child
