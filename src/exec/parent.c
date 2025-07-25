@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:15:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/23 14:58:58 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/25 09:24:28 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ int	check_fork(int result, pid_t pid, int *status)
 			return (0);
 		else
 		{
-			if (pid != 0)
-				wait_one_child(pid, status);
+			// if (pid != 0)
+			// 	wait_one_child(pid, status);
 			return (result);
 		}
 	}
@@ -114,10 +114,7 @@ int	execute_cmd(t_node *node)
 		return (fork_status);
 	// cleanup_fd(node, node->type);//this generates error in external cmd because we include 0 and 1 in cmd node
 	if (wait_one_child(pid, &child_status) == -1)
-	{
-		perror (BOLD RED "Waitpid failed for child" RESET);
 		return (-1);
-	}
 	// if (cleanup_cmd_node(node))//this generates error in external cmd because we include 0 and 1 in cmd node
 		// perror(MAGENTA "Failed to cleanup cmd node\n" RESET);
 	// cleanup_fd(node, node->type);//this generates error in external cmd because we include 0 and 1 in cmd node
