@@ -6,13 +6,29 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:15:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/25 11:39:24 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/29 16:44:11 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "minishell.h"
 #include "../include/minishell.h"
 #include "exec.h"//temporary for testing
+
+int	wait_children(pid_t *pid, int nb_child, int *status)//NEW
+{
+	int	i;
+	int	res;
+
+	i = 0;
+	while (i < nb_child)
+	{
+		res = wait_one_child(pid[i], &status[i]);
+		if (res == -1)
+			return (-1);//check if smt else needed
+		i++;
+	}
+	return (0);
+}
 
 /**
 *   Parent waits for a specific child process to terminate, using waitpid()
@@ -30,21 +46,6 @@ int	wait_one_child(pid_t pid, int *status)
 	return (0);
 }
 
-int	wait_children(pid_t *pid, int nb_child, int *status)//NEW
-{
-	int	i;
-	int	res;
-
-	i = 0;
-	while (i < nb_child)
-	{
-		res = wait_one_child(pid[i], &status[i]);
-		if (res == -1)
-			return (-1);//check if smt else needed
-		i++;
-	}
-	return (0);
-}
 /**
 *   [ERROR HANDLING]
 *   @brief Checks the result of a fork_handle
@@ -130,8 +131,9 @@ int	execute_cmd(t_node *node)
 		return (fork_status);
 	cleanup_fd(node, node->type);//include condition only for fd bigger than 2
 	if (wait_one_child(pid, &child_status) == -1)
-		return (-1);
-	// if (cleanup_cmd_node(node))//this generates error in external cmd because we include 0 and 1 in cmd node
+	return (-1);
+	// if ((node->u_data.cmd.fd_in != 0) && (cleanup_cmd_node(node)))//this generates error in external cmd because we include 0 and 1 in cmd node
+    //if is not stdin
 		// perror(MAGENTA "Failed to cleanup cmd node\n" RESET);
 	// cleanup_fd(node, node->type);//include condition only for fd bigger than 2
 	return (0);//migth change for the child's actual exit status
