@@ -6,28 +6,13 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/29 16:40:02 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/29 17:16:59 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "exec.h"//temporary for testing
 
-int	wait_children(pid_t *pid, int nb_child, int *status)//NEW
-{
-	int	i;
-	int	res;
-
-	i = 0;
-	while (i < nb_child)
-	{
-		res = wait_one_child(pid[i], &status[i]);
-		if (res == -1)
-			return (-1);//check if smt else needed
-		i++;
-	}
-	return (0);
-}
 /*
     Used in pipes to count pipe nodes
     1. loop in the nodes until match the type node chosen
@@ -75,7 +60,51 @@ int	setup_pipe(int pipefd[2], int fd_in)//check if static or not
 // int	parent(struct s_pipe_data *data)
 // is_pipeline() helper? to mark the cmd?
 
+	pid_t	pid;
+	int		child_status;
+	int		fork_status;
+
+	fork_status = fork_handle(&pid, node, 0, 1);
+	if (check_fork(fork_status, pid, &child_status))
+		return (fork_status);
+	cleanup_fd(node, node->type);//include condition only for fd bigger than 2
+	if (wait_one_child(pid, &child_status) == -1)
+	return (-1);
+
+    // Un enum para especificar el lado del pipe
+typedef enum e_pipe_side
+{
+	PIPE_LEFT,
+	PIPE_RIGHT
+}	t_pipe_side;
+
+pid_t	parent_pipe(t_node *node, int *pipe_fd, t_pipe_side)
+{
+	pid_t	pid;
+
+	fork_status = fork_handle(&pid, node, 0, 1);//fix for multiple cmds, also fork_handle
+	if (check_fork(fork_status, pid, &child_status))
+		return (fork_status);
+	cleanup_fd(node, node->type);//include condition only for fd bigger than 2
+	if (wait_one_child(pid, &child_status) == -1)
+	return (-1);
+	
+}
 int handle_pipe_node(t_node *node)
+{
+	int		pipe_fd[2];//for the current node
+	pid_t	left_cpid;//left child pid
+	pid_t	right_cpid;//right child pid
+	int		left_status;
+	int		right_status;
+
+	if (set_pipe(pipe_fd == -1))
+		return (-1);
+	left_cpid = execute_pipe_cmd(node->u_data.op.left, pipe_fd, PIPE_LEFT);
+	return (pid);
+}
+
+int execute_pipe_node(t_node *node)
 {
 	pid_t    *pid;//save this in a parent struct
 	int		*child_status;
@@ -88,7 +117,7 @@ int handle_pipe_node(t_node *node)
 	// j = 0;
 	nb_cmd = count_node(node, COMMAND);
 	nb_pipes = count_node(node, OPERATOR);//CHECK IF NEEDED WILL CHANGE WITH &&
-	if (setup_pipe(node) == -1)
+	if (setup_pipe(node, pipe_fd[1]) == -1)
 		return (-1);
 	pid = malloc(sizeof(pid_t) * nb_cmd);//check
 	if (!pid)//check later when is good how we send the correct pid every time
