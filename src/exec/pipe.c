@@ -6,13 +6,28 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/07 13:22:30 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/29 16:40:02 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "exec.h"//temporary for testing
 
+int	wait_children(pid_t *pid, int nb_child, int *status)//NEW
+{
+	int	i;
+	int	res;
+
+	i = 0;
+	while (i < nb_child)
+	{
+		res = wait_one_child(pid[i], &status[i]);
+		if (res == -1)
+			return (-1);//check if smt else needed
+		i++;
+	}
+	return (0);
+}
 /*
     Used in pipes to count pipe nodes
     1. loop in the nodes until match the type node chosen
@@ -20,7 +35,7 @@
     Return the count
 	Note: the fisrt if condition is the base case of the recursion
 */
-int count_node(t_node *node, t_node_type target_type)//NEW
+int count_node(t_node *node, t_nodetype target_type)//NEW
 {
 	int	count;
 
@@ -29,8 +44,8 @@ int count_node(t_node *node, t_node_type target_type)//NEW
 	count = 0;
 	if (node->type == target_type)
 		count = 1;
-	count += count_node(node->left, target_type);
-	count += count_node(node->right, target_type);
+	count += count_node(node->u_data.op.left, target_type);
+	count += count_node(node->u_data.op.right, target_type);
 	return (count);
 }
 
@@ -43,7 +58,7 @@ int	setup_pipe(int pipefd[2], int fd_in)//check if static or not
 {
 	if (pipe(pipefd) == -1)
 	{
-		perror(BOLD RED "pipe failed" RESET);
+		perror(BOLD RED "Pipe failed\n" RESET);
 		close_fd(fd_in);
 		return (-1);
 	}
@@ -59,7 +74,8 @@ int	setup_pipe(int pipefd[2], int fd_in)//check if static or not
 //create fork per each child
 // int	parent(struct s_pipe_data *data)
 // is_pipeline() helper? to mark the cmd?
-int	execute_pipe_node(t_node *root)//this used to be my parent
+
+int handle_pipe_node(t_node *node)
 {
 	pid_t    *pid;//save this in a parent struct
 	int		*child_status;
@@ -70,9 +86,9 @@ int	execute_pipe_node(t_node *root)//this used to be my parent
 
 	i = 0;
 	// j = 0;
-	nb_cmd = count_node(root, NODE_CMD);
-	nb_pipes = count_node(root, NODE_PIPE);
-	if (setup_pipe(root) == -1)
+	nb_cmd = count_node(node, COMMAND);
+	nb_pipes = count_node(node, OPERATOR);//CHECK IF NEEDED WILL CHANGE WITH &&
+	if (setup_pipe(node) == -1)
 		return (-1);
 	pid = malloc(sizeof(pid_t) * nb_cmd);//check
 	if (!pid)//check later when is good how we send the correct pid every time
@@ -82,12 +98,12 @@ int	execute_pipe_node(t_node *root)//this used to be my parent
 	child_status = malloc(sizeof(int) * nb_cmd);//check
 	while (i < nb_cmd)
 	{
-		pid[i] = fork_handle(pid, root, nb_cmd);//here instead of root will be current node
+		pid[i] = fork_handle(pid, node, nb_cmd);//here instead of root will be current node
 		if (check_fork(pid[i], 0, &child_status))
 			return (pid[i]);//CHECK IF THIS RET IS OK
 		i++;
 	}
-	cleanup_fd(root, root->type);
+	cleanup_fd(node, node->type);
     // --wait all children --//
     i = 0;//would be usefull with recursion?
 	while (i < nb_cmd)//is it possible to have active child check?
