@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/25 11:42:34 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/31 17:55:23 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_fd_dup
 char	*find_path(char *argv);
 
 // --- EXECUTION --- //
-//Parent
+//Parent cmd node
 int		fork_handle(pid_t *pid, t_node *node, int i_cmd, int nb_cmd);
 int		setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
 int		wait_one_child(pid_t pid, int *status);
@@ -49,6 +49,10 @@ int		execute_cmd(t_node *node);
 //child
 void	child_process(t_node *node);
 void	exec_external_cmd(t_node *node);
+
+//pipelines
+int		execute_pipeline(t_node *node);
+int		wait_children(pid_t left_pid, pid_t right_pid, int *right_status);
 
 // --- ERRORS_CLEAN-UP --- //
 // int		cleanup_fd(t_node *node, t_node_type type);
