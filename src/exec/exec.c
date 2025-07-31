@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/25 12:24:47 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/31 17:58:18 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ static int	handle_operator(t_node *node)//NEW
 	int	right_status;
 
 	if (node->u_data.op.type == PIPE)
-		return (handle_pipe_node(node));//TODO connect with pipe.c
+		return (execute_pipeline(node));//TODO connect with pipe.c
 	else if (node->u_data.op.type == AND)
 	{
 		left_status = execution(node->u_data.op.left);
@@ -160,11 +160,12 @@ static int	handle_operator(t_node *node)//NEW
 int	execution(t_node *node)//check if change parameter name
 {
 	if (!node)
-		return ;
+		return (0);
 	if (node->type == COMMAND) 
-		execute_cmd(node);
+		// execute_cmd(node);//this for single external cmd
+		child_process(node);//for pipes
 	else if (node->type == OPERATOR)//NEW
-		return (handle_operador(node));
+		return (handle_operator(node));
 	fprintf(stderr, CYAN RED "Error: unknow type node for execution\n" RESET);
 	return (1);
 }
