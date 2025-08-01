@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 14:29:17 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/04 16:19:54 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/01 08:21:42 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 *   3. Write each arg with spaces if is not the last one
 *   4. Includes '\n' if there is no -n in the args
 */
-void	my_echo(t_node *node)
+int	my_echo(t_node *node)
 {
 	int		i;
 	int		new_line;
@@ -42,17 +42,20 @@ void	my_echo(t_node *node)
 	}
 	while (node->u_data.cmd.argv[i])//loop to str per str
 	{
-		if(safe_write(node->u_data.cmd.io[1], node->u_data.cmd.argv[i], 
-			ft_strlen(node->u_data.cmd.argv[i])) == -1)//implement correctly
+		if (safe_write(node->u_data.cmd.fd_out, node->u_data.cmd.argv[i],
+				ft_strlen(node->u_data.cmd.argv[i])) == -1)//implement correctly
 			return (1);//1 means error
 		if (node->u_data.cmd.argv[i + 1])
 		{
-			if (safe_write(node->u_data.cmd.io[1], " ", 1) == -1)
+			if (safe_write(node->u_data.cmd.fd_out, " ", 1) == -1)
 				return (1);
 		}
 		i++;
 	}
-	if (safe_write(node->u_data.cmd.io[1], "\n", 1) == -1)
-		return (1);
+	if (new_line)//handles -n
+	{
+		if (safe_write(node->u_data.cmd.fd_out, "\n", 1) == -1)
+			return (1);
+	}
 	return (0);
 }
