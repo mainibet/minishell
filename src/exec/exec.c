@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/31 17:58:18 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/01 09:32:17 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@
 *   3. Handle errors: cmd_pah and execve
 *   @return none. executes in success or
 *   EXIT_FAILURE if fails
-*   -Use called in the child_process
+*   -Use called in the execute_in_child
 *
 *   @note:
 *   - handle error of execve only is
@@ -101,6 +101,21 @@
 *   - cmd_path only filled if there is a 
 *     valid path                  
 */
+//this is in child from pipes so no fork need
+int	execute_simple_cmd(t_node *cmd_node)
+{
+	if (is_builtin(cmd_node->u_data.cmd.argv[0]))
+	{
+		my_echo(cmd_node);//in the meantime only with this
+		return (0);
+	}
+	else
+	{
+		exec_external_cmd(cmd_node);
+		exit (EXIT_FAILURE);
+	}
+	return (1);
+}
 
 void	exec_external_cmd(t_node *node)
 {
@@ -157,15 +172,23 @@ static int	handle_operator(t_node *node)//NEW
 *
 *   @note execution will be performed in recursion
 */
+
 int	execution(t_node *node)//check if change parameter name
 {
+	fprintf(stderr, MAGENTA BOLD "About to dispatch command\n" RESET);//test
 	if (!node)
 		return (0);
 	if (node->type == COMMAND) 
-		// execute_cmd(node);//this for single external cmd
-		child_process(node);//for pipes
+	{//test
+		fprintf(stderr, MAGENTA BOLD "Will be a cmd\n" RESET);//test
+		// return (execute_cmd(node));
+		return (handle_cmd_exec(node, false));
+	}//test
 	else if (node->type == OPERATOR)//NEW
+	{//test
+		fprintf(stderr, MAGENTA BOLD "Will be a oprator\n" RESET);//test
 		return (handle_operator(node));
+	}//test
 	fprintf(stderr, CYAN RED "Error: unknow type node for execution\n" RESET);
 	return (1);
 }
