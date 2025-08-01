@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:15:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/31 18:08:02 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/01 09:34:49 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	wait_children(pid_t left_pid, pid_t right_pid, int *right_status)//NEW
 // 	if (*pid == 0)
 // 	{
 // 		if (nb_cmd == 1)
-// 			child_process(node);//change for pipes (multiple cmd)
+// 			execute_in_child(node);//change for pipes (multiple cmd)
 // 		else
 			
 //         exit(EXIT_FAILURE);
@@ -137,9 +137,15 @@ int	wait_children(pid_t left_pid, pid_t right_pid, int *right_status)//NEW
 // 	return (0);//migth change for the child's actual exit status
 // }
 
-
+int	handle_cmd_exec(t_node *node, bool is_pipe_child)
+{
+	if (is_pipe_child)
+		return (execute_simple_cmd(node));
+	else
+		return (execute_cmd(node));
+}
 //new version to include pipes
-int execute_cmd(t_node *node) // Esta funcion SÍ forkea para comandos top-level
+int	execute_cmd(t_node *node) // Esta funcion SÍ forkea para comandos top-level
 {
 	pid_t	pid;
 	int		child_status;
@@ -150,13 +156,13 @@ int execute_cmd(t_node *node) // Esta funcion SÍ forkea para comandos top-level
 		perror(BOLD RED "Fork failed for top-level command" RESET);
 		return (1);
 	}
-	else if (pid == 0)
+	else if (pid == 0)//child
 	{
 		//CHECK FD TO CLOSE
-		execute_simple_command(node);
+		execute_in_child(node);
 		exit(EXIT_FAILURE); //if fails smt in single cmd
 	}
-	else // Proceso padre
+	else // Parent process
 	{
 		waitpid(pid, &child_status, 0); // Esperar al hijo
 		if (WIFEXITED(child_status))
