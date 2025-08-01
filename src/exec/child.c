@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:07:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/31 18:32:11 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/01 08:40:01 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "../include/builtin.h"
 
 //this is in child from pipes so no fork need
-int	execute_cimple_cmd(t_node *cmd_node)
+int	execute_simple_cmd(t_node *cmd_node)
 {
 	if (is_builtin(cmd_node->u_data.cmd.argv[0]))
 	{
@@ -42,7 +42,7 @@ int	execute_cimple_cmd(t_node *cmd_node)
 *
 *   @note v0: execute single external cmd: no pipes no builtins
 */
-void	child_process(t_node *node)
+void	execute_in_child(t_node *node)
 {
 	t_fd_dup		dup;
 	t_cmd_data		*cmd;
@@ -54,7 +54,7 @@ void	child_process(t_node *node)
 	// 	exit(1);
 	if (is_builtin(cmd->argv[0]))//might change if declared $ARG in cmd line
 	{
-		status = execute_builin(node);
+		status = execute_builtin(node);
 		exit(status);//some exit status
 	}
 	else
