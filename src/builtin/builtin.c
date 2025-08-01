@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:10:28 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/31 18:21:34 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/01 09:10:51 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	is_builtin(const char *cmd_name)
 	// if (ft_strcmp(cmd_name, "env") == 0)
 	// 	return (BUILTIN_ENV);
 	// if (ft_strcmp(cmd_name, "exit") == 0)
-		return (BUILTIN_EXIT);
+		// return (BUILTIN_EXIT);
 	return (BUILTIN_NONE);
 }
 
@@ -49,6 +49,6 @@ int	execute_builtin(t_node *node)
 	// 	return (my_cd(node)); 
 	// else if (e_builtin_type == BUILTIN_PWD)
 	// 	return (my_pwd(node));//here include the others builtins 
-	fprintf(stderr, BOLD RED "Error: Unknown builtin type for execution\n" RESET);//check if needed
+	fprintf(stderr, BOLD RED "Error: unknown builtin type for execution\n" RESET);//check if needed
 	return (1);
 }
