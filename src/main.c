@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/23 15:16:40 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/01 09:07:57 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ t_node	*parse_input(char *line, t_token **token_out)
 		*token_out = NULL;//test
 		return (NULL);
 	}
-	fprintf(stderr, MAGENTA "Tokens generated: " RESET);//test
-	print_tokens(token_list);//test
-	fprintf(stderr, MAGENTA"\n" RESET);//test
+	// fprintf(stderr, MAGENTA "Tokens generated: " RESET);//test
+	// print_tokens(token_list);//test
+	// fprintf(stderr, MAGENTA"\n" RESET);//test
 // --- parser ---//
 	parser_tokens = token_list;
 	root = parse(&parser_tokens, 0);//0 is the minimum precedency to begin
