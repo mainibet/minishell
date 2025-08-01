@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:20:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/25 11:04:33 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/01 08:48:50 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 // --- FORWARD DECLARATIONS --- //
 int	cleanup_cmd_node(t_node *node);
+int	cleanup_operator_fd(t_node *node);
 
 /**
 *   @brief Closes relevant file descriptors to safely 
@@ -34,17 +35,8 @@ int	cleanup_fd(t_node *node, t_cmdtype type)
 	if (type == COMMAND)
 		cleanup_cmd_node(node);
 	else if (type == OPERATOR)//new
-		cleanup_pipe_fd(node);//new
+		cleanup_operator_fd(node);//new
 	return (0);
-}
-
-void	cleanup_pipe_fd(t_node *node) //NEW
-{
-	t_pipe_data	*pipe;
-
-	pipe = &node->u_data.pipe;
-	close_fd(&pipe->input_fd);
-	close_fd(&pipe->output_fd);
 }
 
 /**
@@ -68,3 +60,18 @@ int	cleanup_cmd_node(t_node *node)
 	return (0);
 }
 
+int	cleanup_operator_fd(t_node *node)
+{
+	if (!node)
+		return (-1);
+	if (node->type == OPERATOR)
+	{
+		if (node->u_data.op.left)
+			cleanup_operator_fd(node->u_data.op.left);
+		if (node->u_data.op.right)
+			cleanup_operator_fd(node->u_data.op.right);
+	}
+	else if (node->type == COMMAND)
+		cleanup_cmd_node(node);
+	return (0);
+}
