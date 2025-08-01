@@ -96,6 +96,8 @@ teste makefile
 18. Identify main handling error cases (in miro)
 19. Improve close_fd to check that is not close before
 20. Test absolut path of external cmd in the program
+21. Executes external cmd in the program
+22. Make shorter some functions of execution
 
 
 

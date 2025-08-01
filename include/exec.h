@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/31 17:55:23 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/01 09:34:14 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define EXEC_H
 
 # include "minishell.h"
+# include <stdbool.h> //bool
 
 // -----------------------------------------//
 //                 STRUCTS                  //
@@ -44,10 +45,12 @@ int		fork_handle(pid_t *pid, t_node *node, int i_cmd, int nb_cmd);
 int		setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
 int		wait_one_child(pid_t pid, int *status);
 int		execution(t_node *cmd);
-int		execute_cmd(t_node *node);
+int		execute_cmd(t_node *node);//single top-level cmd to fork
+int		execute_simple_cmd(t_node *cmd_node);//when is in pipe to avoid double fork
+int		handle_cmd_exec(t_node *node, bool is_pipe_child);
 
 //child
-void	child_process(t_node *node);
+void	execute_in_child(t_node *node);
 void	exec_external_cmd(t_node *node);
 
 //pipelines
