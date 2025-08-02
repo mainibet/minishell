@@ -66,6 +66,8 @@ static t_token	*next_operator(t_token *token)
 
 static int	precedence(t_token *token)
 {
+	if(!token)//NEW TO TEST PIPES
+		return (0);//NEW TO TEST PIPE
 	if (token->type == SEMICOLON)
 		return (1);
 	if (token->type == AND || token->type == OR)
@@ -109,37 +111,94 @@ t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
  *   3 open fds at any given time.
  * - all other operators are left-associative
  */
-t_node	*parse(t_token **token, int min_precedence)
+// t_node	*parse(t_token **token, int min_precedence)//TMP TO TEST PIPES
+// {
+// 	t_token	*op;
+// 	t_node	*left;
+// 	t_node	*right;
+
+// 	left = parse_command(*token);
+// 	if (!left)
+// 		return (NULL);
+// 	*token = next_operator(*token);
+
+// 	while (*token && (*token)->type >= PIPE && precedence(*token) >= min_precedence)
+// 	{
+// 		op = *token;
+// 		*token = (*token)->next;
+// 		if ((*token)->type == PIPE)
+// 			right = parse(token, precedence(op)); // right-associative for pipes
+// 		else
+// 			right = parse(token, precedence(op) + 1);
+// 		if (!right)
+// 		{
+// 			free_node(left);
+// 			return (NULL);
+// 		}
+// 		left = parse_operator(op, left, right);
+// 		if (!left)
+// 			return (NULL);
+// 	}
+// 	return (left);
+// }
+
+static t_token *find_lowest_precedence_operator(t_token *token)//ONLY TEST
 {
-	t_token	*op;
-	t_node	*left;
-	t_node	*right;
-
-	left = parse_command(*token);
-	if (!left)
-		return (NULL);
-	*token = next_operator(*token);
-
-	while (*token && (*token)->type >= PIPE && precedence(*token) >= min_precedence)
-	{
-		op = *token;
-		*token = (*token)->next;
-		if ((*token)->type == PIPE)
-			right = parse(token, precedence(op)); // right-associative for pipes
-		else
-			right = parse(token, precedence(op) + 1);
-		if (!right)
-		{
-			free_node(left);
-			return (NULL);
-		}
-		left = parse_operator(op, left, right);
-		if (!left)
-			return (NULL);
-	}
-	return (left);
+    t_token *lowest_op;
+    t_token *current;
+    
+    lowest_op = NULL;
+    current = token;
+    
+    while (current)
+    {
+        // En este if, buscamos el valor de precedencia MÁS BAJO.
+        // Si el operador actual no es un operador (precedencia 0), lo ignoramos.
+        if (precedence(current) > 0 && (!lowest_op || precedence(current) < precedence(lowest_op)))
+        {
+            lowest_op = current;
+        }
+        current = current->next;
+    }
+    return (lowest_op);
 }
 
+t_node *parse(t_token *token_list)//SOLO TEST
+{
+    t_token *op_token;
+    t_token *current;
+    t_node  *left;
+    t_node  *right;
+
+    if (!token_list)
+        return (NULL);
+    
+    op_token = find_lowest_precedence_operator(token_list);
+
+    if (!op_token)
+        return (parse_command(token_list));
+
+    // Corrección aquí:
+    // Creamos la lista para la parte derecha, comenzando después del operador.
+    t_token *right_list = op_token->next;
+    
+    // Y ahora, para el lado izquierdo, recorremos la lista hasta el operador
+    // y rompemos el enlace, creando una lista de tokens para el lado izquierdo.
+    current = token_list;
+    while (current && current->next != op_token)
+        current = current->next;
+    
+    // Si encontramos el token antes de op_token, rompemos la lista.
+    if (current)
+        current->next = NULL;
+    
+    // Parseamos recursivamente el lado izquierdo y el derecho con las listas correctas.
+    left = parse(token_list);
+    right = parse(right_list);
+
+    // Unimos los resultados con el operador.
+    return (parse_operator(op_token, left, right));
+}
 /* execute the command or builtin specified by tokens
  * - the child (if any) should close each element of fd that is greater than 2
  * 		(not stdout, stdin, or stderr)
