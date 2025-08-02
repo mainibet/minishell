@@ -46,13 +46,20 @@ char	**token_to_argv(t_token *token)
 	int		nb_token;
 	int		i;
 
-	nb_token = count_tokens(token);
+	// nb_token = count_tokens(token);
+	nb_token = 0;
+	curren_token = token;
+	while (curren_token && curren_token->type != OPERATOR)
+	{
+		nb_token++;
+		curren_token = curren_token->next;
+	}
 	argv = malloc(sizeof(char *) * (nb_token + 1));//check where to free
 	if (!argv)
 		malloc_error();//check if exit or NULL (may be NULL)
 	current_token = token;
 	i = 0;
-	while (current_token)
+	while (current_token && current_token->type != OPERATOR)
 	{
 		argv[i] = ft_strdup(current_token->txt);
 		if (!argv[i])
