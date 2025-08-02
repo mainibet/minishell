@@ -13,6 +13,7 @@
 // #include "minishell.h"
 #include "../include/minishell.h"
 #include "exec.h"//temporary for testing
+# include "builtin.h"
 
 //---------------------------------------//
 //V0:Execute single external cmd         //
