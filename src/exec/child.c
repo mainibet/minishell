@@ -15,21 +15,6 @@
 #include "../include/exec.h"
 #include "../include/builtin.h"
 
-//this is in child from pipes so no fork need
-int	execute_simple_cmd(t_node *cmd_node)
-{
-	if (is_builtin(cmd_node->u_data.cmd.argv[0]))
-	{
-		my_echo(cmd_node);//in the meantime only with this
-		return (0);
-	}
-	else
-	{
-		exec_external_cmd(cmd_node);
-		exit (EXIT_FAILURE);
-	}
-	return (1);
-}
 /**
 *   @brief sets up I/O redi and executes cmd
 *
