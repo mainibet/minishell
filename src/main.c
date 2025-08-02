@@ -45,7 +45,8 @@ t_node	*parse_input(char *line, t_token **token_out)
 	// fprintf(stderr, MAGENTA"\n" RESET);//test
 // --- parser ---//
 	parser_tokens = token_list;
-	root = parse(&parser_tokens, 0);//0 is the minimum precedency to begin
+	// root = parse(&parser_tokens, 0);//0 is the minimum precedency to begin
+	root = parse(parser_tokens);//NEW TEST EXEC
 	if (!root)
 	{
 		fprintf(stderr, "Parsing failed\n");
