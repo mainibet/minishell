@@ -25,7 +25,8 @@
 //                PROTOTYPES                //
 // -----------------------------------------//
 
-t_node	*parse(t_token **token, int min_precedence);
+// t_node	*parse(t_token **token, int min_precedence);
+t_node *parse(t_token *token_list);//TEST
 void	free_node(t_node *node);
 
 #endif
