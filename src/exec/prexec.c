@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 #include "prexec.h"
+#include "builtin.h"
 
 static int	count_tokens(t_token *token)
 {
@@ -75,19 +76,25 @@ void	pre_execution(t_node *node, char **envp)
 
 	if (!node)
 		return ;
-	if (node->type != COMMAND)//tmp
-		return ;
-	// (node->type == COMMAND)//late
-	node->u_data.cmd.argv = token_to_argv(node->u_data.cmd.tokens);
-	// else if (node->type == OPERATOR)//later
-	// {
-	// 	re_execution(node->u_data.op.left, envp);
-	// 	re_execution(node->u_data.op.rith, envp);
-	// }
-	if (!node->u_data.cmd.argv)
-		exit(EXIT_FAILURE);//check to handle error correctly
+	if (node->type == OPERATOR)
+	{
+		pre_execution(node->u_data.op.left, envp);
+		pre_execution(node->u_data.op.right, envp);
+	}
+	else if (node->type == COMMAND)
+	{
+		node->u_data.cmd.argv = token_to_argv(node->u_data.cmd.tokens);////init node
+		if (!node->u_data.cmd.argv)
+		{
+			perror(BOLD RED "Failed to create argv" RESET); //check msg
+			exit(EXIT_FAILURE);
+		}
 	node->u_data.cmd.env = envp;
-	node->u_data.cmd.cmd_type = EXECUTABLE;//for this test
+	if (node->u_data.cmd.argv[0] && is_builtin(node->u_data.cmd.argv[0]))
+		node->u_data.cmd.cmd_type = BUILTIN;
+	else
+		node->u_data.cmd.cmd_type = EXECUTABLE;//for this test
 	node->u_data.cmd.fd_in = STDIN_FILENO;
 	node->u_data.cmd.fd_out = STDOUT_FILENO;
+	}
 }
