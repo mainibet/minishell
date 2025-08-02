@@ -157,7 +157,8 @@ t_token	*lex(char *s, char delim)
 	if (!*q && delim != ' ')
 	{
 		perror("unclosed quote");
-		exit(1);
+		return (NULL);
+		// exit(1);//changed for test
 	}
 	token = extract_token(p, q - p);
 	if (!token)
@@ -166,13 +167,21 @@ t_token	*lex(char *s, char delim)
 	token->delim = delim;
 	q = consume_whitespace(q);
 	if (*q)
+	{
 		if (*q == '\'' || *q == '"')
 			token->next = lex(q + 1, *q);
 		else
 			token->next = lex(q, ' ');
+		if (token->next == NULL && *q)//NEW TEST
+   		{//NEW TEST
+			free(token->txt);//NEW TEST
+        	free(token);//NEW TEST
+        	return (NULL);//NEW TEST
+    	}//NEW TEST
+	}
 	else
 		token->next = NULL;
-	return (token);
+		return (token);
 }
 
 int	print_tokens(t_token *token)
