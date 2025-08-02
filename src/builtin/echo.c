@@ -33,6 +33,7 @@ int	my_echo(t_node *node)
 	int		i;
 	int		new_line;
 
+	fprintf(stderr, MAGENTA BOLD "MY ECHO is about to be run\n" RESET);
 	i = 1;//from 1 are the cmd's arg
 	new_line = 1;
 	if (node->u_data.cmd.argv[i] && ft_strncmp(node->u_data.cmd.argv[i], "-n", 3) == 0)//3 including '\0'
