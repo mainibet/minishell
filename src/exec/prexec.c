@@ -70,7 +70,7 @@ char	**token_to_argv(t_token *token)
 	// int		i;
 
 	nb_token = 0;
-	curren_token = token;
+	current_token = token;
 	while (current_token && current_token->type != OPERATOR)
 	{
 		nb_token++;
@@ -97,7 +97,7 @@ char	**token_to_argv(t_token *token)
 	if (copy_token_strings(argv, token) != 0)
     {
 		free(argv);
-		fprintf(BOLD CYAN "copy_token_strings FAILED\n" RESET);//TEST
+		fprintf(stderr, BOLD CYAN "copy_token_strings FAILED\n" RESET);//TEST
 		return (NULL);
     }
 	return (argv);
