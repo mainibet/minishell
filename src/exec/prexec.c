@@ -39,24 +39,11 @@ void	free_partial_arr(char **arr, int allocated_i)
 	free (arr);
 }
 
-char	**token_to_argv(t_token *token)
+static int copy_token_strings(char **argv, t_token *token)
 {
-	char	**argv;
-	t_token	*current_token;
-	int		nb_token;
-	int		i;
+    t_token *current_token;
+    int     i;
 
-	// nb_token = count_tokens(token);
-	nb_token = 0;
-	curren_token = token;
-	while (curren_token && curren_token->type != OPERATOR)
-	{
-		nb_token++;
-		curren_token = curren_token->next;
-	}
-	argv = malloc(sizeof(char *) * (nb_token + 1));//check where to free
-	if (!argv)
-		malloc_error();//check if exit or NULL (may be NULL)
 	current_token = token;
 	i = 0;
 	while (current_token && current_token->type != OPERATOR)
@@ -66,12 +53,53 @@ char	**token_to_argv(t_token *token)
 		{
 			perror ("Failed ft_strdup token to argv");//check
 			free_partial_arr(argv, i);
-			return (NULL);//check and make good the return if fails
+			return (1);
 		}
 		current_token = current_token->next;
 		i++;
 	}
 	argv[i] = NULL;
+	return (0);
+}
+
+char	**token_to_argv(t_token *token)
+{
+	char	**argv;
+	t_token	*current_token;
+	int		nb_token;
+	// int		i;
+
+	nb_token = 0;
+	curren_token = token;
+	while (current_token && current_token->type != OPERATOR)
+	{
+		nb_token++;
+		current_token = current_token->next;
+	}
+	argv = malloc(sizeof(char *) * (nb_token + 1));//check where to free
+	if (!argv)
+		malloc_error();//check if exit or NULL (may be NULL)
+	// current_token = token;
+	// i = 0;
+	// while (current_token && current_token->type != OPERATOR)
+	// {
+	// 	argv[i] = ft_strdup(current_token->txt);
+	// 	if (!argv[i])
+	// 	{
+	// 		perror ("Failed ft_strdup token to argv");//check
+	// 		free_partial_arr(argv, i);
+	// 		return (NULL);//check and make good the return if fails
+	// 	}
+	// 	current_token = current_token->next;
+	// 	i++;
+	// }
+	// argv[i] = NULL;
+	if (copy_token_strings(argv, token) != 0)
+    {
+		free(argv);
+		fprintf(BOLD CYAN "copy_token_strings FAILED\n" RESET);//TEST
+		return (NULL);
+    }
 	return (argv);
 }
 
