@@ -28,16 +28,16 @@ void check_pipe(int pipefd[2])
 	}
 }
 
-pid_t check_fork()
-{
-	pid_t pid = fork();
-	if (pid < 0)
-	{
-		perror("fork failed");
-		exit(1);
-	}
-	return (pid);
-}
+// pid_t check_fork()
+// {
+// 	pid_t pid = fork();
+// 	if (pid < 0)
+// 	{
+// 		perror("fork failed");
+// 		exit(1);
+// 	}
+// 	return (pid);
+// }
 
 void check_wait(pid_t pid, char *path)
 {
