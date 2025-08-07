@@ -7,7 +7,7 @@
 [[ -z "$1" ]] && echo "usage: $0 <header>.h"
 which cproto > /dev/null || 
 	alias cproto="docker run jbarratt42/cproto \
-		-v $PWD:/cproto 
+		-v $PWD:/app
 		-v /usr/include:/usr/include"
 tmp=$(mktemp)
 sed '/\/\* prototypes \*\//q' $1 > $tmp
