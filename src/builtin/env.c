@@ -1,31 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/11 09:27:29 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/11 10:01:41 by albetanc         ###   ########.fr       */
+/*   Created: 2025/08/11 09:55:37 by albetanc          #+#    #+#             */
+/*   Updated: 2025/08/11 09:59:57 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "exec.h"//TMP FOR TESTING
 
-//cwd: current working directory
-//Original pwd: Print the full 
-//filename of the current working directory.
-int	my_pwd(char *cwd_path)
+//return 0 for success
+int	my_env(char **envp)
 {
-	if (cwd_path)
+	int	i;
+
+	if (!envp)
 	{
-		printf("%s\n", cwd_path);
-		return (0);
-	}
-	else
-	{
-		fprintf(stderr, BLUE "pwd: current directory not found\n" RESET);
+		fprintf(stderr, BLUE "env: no environment variables found\n");
 		return (1);
 	}
+	i = 0;
+	while (envp[i])
+	{
+		printf("%s\n", envp[i]);
+		i++;
+	}
+	return (0);
 }
