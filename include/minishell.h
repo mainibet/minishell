@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/23 11:59:27 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/11 13:59:45 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,18 @@ typedef struct s_node
 	enum e_nodetype			type;
 	union u_node_content	u_data;//changed from content to data
 }	t_node;
+
+// --- INCLUDED BECAUSE EXECUTION --- //
+
+typedef struct s_program//new include in minishell.h
+{
+	char	*line;//original command line fill by user
+	char	**envp_cpy;//uncomment when is in minishell.h
+	char	**envp;//original not will be free
+	t_node	*root;
+	t_token	*token_list;
+	int		last_exit_status;
+}	t_context;
 
 // -----------------------------------------//
 //                PROTOTYPES                //
