@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:15:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/06 10:36:57 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/11 14:13:21 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 #include "../include/minishell.h"
 #include "exec.h"//temporary for testing
 
-int	wait_children(pid_t left_pid, pid_t right_pid, int *right_status)//NEW
+int	wait_children(t_context *program, pid_t left_pid, pid_t right_pid, int *right_status)//NEW
 {
 	int	left_status;
 
+	(void) program; //check
 	waitpid(left_pid, &left_status, 0);
 	waitpid(right_pid, right_status, 0);
 	if (WIFEXITED(*right_status))
@@ -137,15 +138,17 @@ int	wait_children(pid_t left_pid, pid_t right_pid, int *right_status)//NEW
 // 	return (0);//migth change for the child's actual exit status
 // }
 
-int	handle_cmd_exec(t_node *node, bool is_pipe_child)
+int	handle_cmd_exec(t_context *program, t_node *node, bool is_pipe_child)
 {
 	if (is_pipe_child)
-		return (execute_simple_cmd(node));
+		// return (execute_simple_cmd(node));
+		return (execute_simple_cmd(program, node));
 	else
-		return (execute_cmd(node));
+		// return (execute_cmd(node));
+		return (execute_cmd(program, node));
 }
 //new version to include pipes
-int	execute_cmd(t_node *node) // Esta funcion SÍ forkea para comandos top-level
+int	execute_cmd(t_node *node) // fork top-level commands
 {
 	pid_t	pid;
 	int		child_status;
