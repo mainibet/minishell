@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:54:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/11 11:40:33 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/11 14:15:13 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,12 @@ int ft_strcmp(const char *s1, const char *s2);//include to libft
 
 // --- SPECIFICS --- //
 
+int	execute_builtin(t_context *program, t_node *node);
 int	my_echo(t_node *node);
 int	my_pwd(char *cwd_path);
-int	my_env(char **envp);
-int	my_export(char **envp);
+// int	my_env(char **envp);
+int	my_env(t_context *program, t_node *node);
+int	my_export(t_context *program, t_node *node);
+// int	my_export(char **envp);
 
 #endif
