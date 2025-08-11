@@ -105,3 +105,71 @@ void exec_terminal(t_node node, int fd[3], t_context *context);
  * returning the return status of the child process.
  */
 int wait_child(int pid);
+
+/* ================= EXECUTION PART ================= */
+
+/* @brief process a node: prepare and execute commands 
+* (to be called from main after parsing)
+ * @param program the program context
+ * @return the return status of the last command
+ */
+int process_node(t_context *program);
+
+/* @brief execute the command tree
+ * @param program the program context
+ * @param node the root of the command tree
+ * @return the return status of the last command
+ */
+int execution(t_context *program, t_node *node);
+
+/* @brief check if a command is a builtin and execute it */
+int is_builtin(const char *cmd_name);
+int execute_builtin(t_node *node);
+
+/* @brief builtin implementations */
+int my_echo(t_node *node);
+int my_env(char **envp);
+int my_export(char **envp);
+int my_pwd(char *cwd_path);
+
+/* @brief string comparison (used by builtins) */
+int ft_strcmp(const char *s1, const char *s2);
+
+/* @brief find and resolve executable path */
+char *find_path(char *argv);
+
+/* @brief convert tokens to argv and pre-execution setup */
+char **token_to_argv(t_token *token);
+void pre_execution(t_node *node, char **envp);
+
+/* @brief setup input/output redirections */
+int redir_input(int fd);
+int redir_output(int fd);
+int setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
+
+/* @brief execute a command node in a child process */
+void execute_in_child(t_node *node);
+
+/* @brief execute a simple command or external command */
+int execute_simple_cmd(t_node *cmd_node);
+void exec_external_cmd(t_node *node);
+
+/* @brief handle operators in the execution tree */
+static int handle_operator(t_node *node);
+
+/* @brief handle command execution in parent process */
+int handle_cmd_exec(t_node *node, bool is_pipe_child);
+int execute_cmd(t_node *node);
+
+/* @brief execute left/right side of a pipe and pipeline */
+pid_t execute_left(t_node *left_node, int pipefd[2]);
+pid_t execute_right(t_node *right_node, int pipefd[2]);
+int execute_pipeline(t_node *node);
+
+/* @brief wait for left/right child processes in a pipeline */
+int wait_children(pid_t left_pid, pid_t right_pid, int *right_status);
+
+/* @brief cleanup resources for a command node */
+int cleanup_cmd_node(t_node *node);
+int cleanup_operator_fd(t_node *node);
+int cleanup_fd(t_node *node, t_cmdtype type);
