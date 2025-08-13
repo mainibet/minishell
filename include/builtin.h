@@ -40,9 +40,9 @@ int		execute_builtin(t_program *program, t_node *node);
 int ft_strcmp(const char *s1, const char *s2);//include to libft
 
 // --- SPECIFICS --- //
-int	my_echo(t_node *node);
+int	my_echo(t_program *program, t_node *node);
 // int	my_pwd(char *cwd_path);
-int	my_pwd(t_program *program, t_node *node);;
+int	my_pwd(t_program *program, t_node *node);
 // int	my_env(char **envp);
 int	my_env(t_program *program, t_node *node);
 int	my_export(t_program *program, t_node *node);
