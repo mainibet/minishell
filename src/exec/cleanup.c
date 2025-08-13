@@ -75,3 +75,16 @@ int	cleanup_operator_fd(t_node *node)
 		cleanup_cmd_node(node);
 	return (0);
 }
+
+//line included to centralized cleanup
+void	cleanup_program(t_program *program)
+{//probably includes prompt when is dynamic
+	if (program->line)
+		free(program->line);
+	if (program->token_list)
+		free_token(program->token_list);
+	if (program->root)
+		free_node(program->root);
+	if (program->envp_cpy)
+		free_array(program->envp_cpy);
+}
