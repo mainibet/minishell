@@ -30,8 +30,8 @@
 *
 *   @note v0: execute single external cmd: no pipes no builtins
 */
-// void	execute_in_child(t_node *node)
-void execute_in_child(t_program *program, t_node *node)
+// void	child_process(t_node *node)
+void child_process(t_program *program, t_node *node)
 {
 	// t_fd_dup		dup;
 	t_cmd_data		*cmd;
@@ -43,20 +43,14 @@ void execute_in_child(t_program *program, t_node *node)
 	// 	exit(1);
 	if (is_builtin(cmd->argv[0]))//might change if declared $ARG in cmd line
 	{
-		status = execute_builtin(node);
+		status = execute_builtin(program, node);
 		exit(status);//some exit status
 	}
 	else
 	{
-		exec_external_cmd(node);//this was to execute only single external cmd
+		exec_cmd_inpipe(node);//this was to execute only single external cmd
 		perror (BOLD RED "Exec/Builtin failed" RESET);
 		// cleanup_fd(node, node->type);// Only cleanup FDs opened by this child. CHECK IF W OTHERS
 		exit(EXIT_FAILURE);
 	}
-	// if (setup_redir(cmd->fd_in, cmd->fd_out, &dup) != 0)//only when actual redirectio is needed or in pipes
-	// 	exit(1);
-	exec_external_cmd(node);
-	perror (BOLD RED "Exec/Builtin failed" RESET);
-	// cleanup_fd(node, node->type);// Only cleanup FDs opened by this child.
-	exit(EXIT_FAILURE);
 }
