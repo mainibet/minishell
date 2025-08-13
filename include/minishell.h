@@ -60,9 +60,9 @@ typedef enum e_toktype
 {
 	WORD = 1,
 	//HEREDOC,
-	//FILE_IN,//better REDIR_IN?
-	//FILE_OUT,//better REDIR_OUT?
-	//APPEND//new
+	//REDIR_IN,
+	//REDIR_OUT,
+	//APPEND
 	OPEN,
 	CLOSE,
 	PIPE,
@@ -144,12 +144,12 @@ typedef struct s_node
 typedef struct s_program//new include in minishell.h
 {
 	char	*line;//original command line fill by user
-	char	**envp_cpy;//uncomment when is in minishell.h
+	char	**envp_cpy;
 	char	**envp;//original not will be free
 	t_node	*root;
 	t_token	*token_list;
 	int		last_exit_status;
-}	t_context;
+}	t_program;
 
 // -----------------------------------------//
 //                PROTOTYPES                //
