@@ -36,7 +36,7 @@ int	is_builtin(const char *cmd_name)
 }
 
 // int	execute_builtin(t_node *node)
-int	execute_builtin(t_context *program, t_node *node)//change to exit
+int	execute_builtin(t_program *program, t_node *node)
 {
 	t_cmd_data	*cmd;
 	t_builtin_type	e_builtin_type;
@@ -51,7 +51,7 @@ int	execute_builtin(t_context *program, t_node *node)//change to exit
 	// else if (e_builtin_type == BUILTIN_CD)
 	// 	return (my_cd(node)); 
 	else if (e_builtin_type == BUILTIN_PWD)
-		return (my_pwd(node));
+		return (my_pwd(program, node));
 	else if (e_builtin_type == BUILTIN_EXPORT)
 		return (my_export(program, node));//implement program->envp-cpy
 	else if (e_builtin_type == BUILTIN_EXIT)
