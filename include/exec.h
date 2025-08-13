@@ -44,11 +44,12 @@ char	*find_path(char *argv);
 int		fork_handle(pid_t *pid, t_node *node, int i_cmd, int nb_cmd);
 int		setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
 int		wait_one_child(pid_t pid, int *status);
+int		execution(t_program *program, t_node *node, bool is_pipe_child);
+
 // int		execution(t_node *cmd);
-int		execution(t_program *program, t_node *node);
-int		execute_cmd(t_node *node);//single top-level cmd to fork
+int		exec_cmd_nopipe(t_node *node);
 int		execute_simple_cmd(t_node *cmd_node);//when is in pipe to avoid double fork
-int		handle_cmd_exec(t_node *node, bool is_pipe_child);
+int		handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child);
 
 //child
 // void	execute_in_child(t_node *node);
