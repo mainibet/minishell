@@ -107,8 +107,9 @@ int	execute_simple_cmd(t_program *program, t_node *cmd_node)
 {
 	if (is_builtin(cmd_node->u_data.cmd.argv[0]))
 	{
-		my_echo(cmd_node);//in the meantime only with this
-		return (0);
+		// my_echo(cmd_node);//in the meantime only with this
+		return (execute_builtin(program, cmd_node));
+		// return (0);
 	}
 	else
 	{
