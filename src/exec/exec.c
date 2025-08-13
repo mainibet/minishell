@@ -103,7 +103,7 @@
 *     valid path                  
 */
 //this is in child from pipes so no fork need
-int	execute_simple_cmd(t_context *program, t_node *cmd_node)
+int	execute_simple_cmd(t_program *program, t_node *cmd_node)
 {
 	if (is_builtin(cmd_node->u_data.cmd.argv[0]))
 	{
@@ -133,7 +133,7 @@ void	exec_external_cmd(t_node *node)
 	exit(EXIT_FAILURE);
 }
 
-static int	handle_operator(t_context *program, t_node *node)//NEW
+static int	handle_operator(t_program *program, t_node *node)//NEW
 {
 	int	left_status;
 	int	right_status;
@@ -175,7 +175,7 @@ static int	handle_operator(t_context *program, t_node *node)//NEW
 *   @note execution will be performed in recursion
 */
 
-int	execution(t_context *program, t_node *node)//check if change parameter name
+int	execution(t_program *program, t_node *node)//check if change parameter name
 {
 	int	status;
 
@@ -209,7 +209,7 @@ int	execution(t_context *program, t_node *node)//check if change parameter name
 
 //to be called from main after parsing
 // will prepare the cmds for execution and executions
-int	process_node(t_context *program)//new
+int	process_node(t_program *program)//new
 {
 	int	status;
 
