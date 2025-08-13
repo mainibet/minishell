@@ -63,6 +63,7 @@ int		wait_children(pid_t left_pid, pid_t right_pid, int *right_status);
 // int		cleanup_fd(t_node *node, t_node_type type);
 int		cleanup_fd(t_node *node, int node_type);
 int		cleanup_cmd_node(t_node *node);
+void	cleanup_program(t_program *program);
 
 /**
 Left-associative
