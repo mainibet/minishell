@@ -21,6 +21,6 @@
 // -----------------------------------------//
 
 // void	pre_execution(t_node *node, char **envp);
-void	pre_execution(t_program *program);
+void	pre_execution(t_program *program, t_node *node);
 
 #endif
