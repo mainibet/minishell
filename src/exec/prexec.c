@@ -41,8 +41,8 @@ void	free_partial_arr(char **arr, int allocated_i)
 
 static int copy_token_strings(char **argv, t_token *token)
 {
-    t_token *current_token;
-    int     i;
+	t_token	*current_token;
+	int		i;
 
 	current_token = token;
 	i = 0;
@@ -95,15 +95,16 @@ char	**token_to_argv(t_token *token)
 	// }
 	// argv[i] = NULL;
 	if (copy_token_strings(argv, token) != 0)
-    {
+	{
 		free(argv);
 		fprintf(stderr, BOLD CYAN "copy_token_strings FAILED\n" RESET);//TEST
 		return (NULL);
-    }
+	}
 	return (argv);
 }
 
-void	pre_execution(t_node *node, char **envp)
+// void	pre_execution(t_node *node, char **envp)
+void	pre_execution(t_program *program, t_node *node)
 {
 	// t_token	*curren_token;
 	// int		i;
@@ -113,8 +114,8 @@ void	pre_execution(t_node *node, char **envp)
 		return ;
 	if (node->type == OPERATOR)
 	{
-		pre_execution(node->u_data.op.left, envp);
-		pre_execution(node->u_data.op.right, envp);
+		pre_execution(node->u_data.op.left, program->envp);
+		pre_execution(node->u_data.op.right, program->envp);
 	}
 	else if (node->type == COMMAND)
 	{
@@ -124,7 +125,7 @@ void	pre_execution(t_node *node, char **envp)
 			perror(BOLD RED "Failed to create argv" RESET); //check msg
 			exit(EXIT_FAILURE);
 		}
-	node->u_data.cmd.env = envp;
+	node->u_data.cmd.env = program->envp;
 	if (node->u_data.cmd.argv[0] && is_builtin(node->u_data.cmd.argv[0]))
 		node->u_data.cmd.cmd_type = BUILTIN;
 	else
