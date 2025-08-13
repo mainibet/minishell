@@ -15,11 +15,11 @@
 
 //return 0 for success
 // int	my_env(char **envp)
-int	my_env(t_context *program, t_node *node)
+int	my_env(t_program *program, t_node *node)
 {
 	int	i;
 
-	(void) node;//check
+	(void)node;
 	if (!program->envp_cpy)
 	{
 		fprintf(stderr, BLUE "env: no environment variables found\n");
