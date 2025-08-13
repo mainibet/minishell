@@ -70,7 +70,7 @@
 	// cleanup_fd(node, node->type);//include condition only for fd bigger than 2
 	// if (wait_one_child(pid, &child_status) == -1)
 	// return (-1);
-pid_t	execute_left(t_context *program, t_node *left_node, int pipefd[2])
+pid_t	execute_left(t_program *program, t_node *left_node, int pipefd[2])
 {
 	pid_t	pid;
 
@@ -89,13 +89,13 @@ pid_t	execute_left(t_context *program, t_node *left_node, int pipefd[2])
 		}
 		close_fd(pipefd[0]);
 		close_fd(pipefd[1]);
-		execution(program, left_node);
+		execution(program, left_node, true);
 		exit(EXIT_FAILURE);
 	}
 	return (pid);
 }
 
-pid_t	execute_right(t_context *program, t_node *right_node, int pipefd[2])
+pid_t	execute_right(t_program *program, t_node *right_node, int pipefd[2])
 {
 	pid_t	pid;
 
@@ -114,7 +114,7 @@ pid_t	execute_right(t_context *program, t_node *right_node, int pipefd[2])
 		}
 		close_fd(pipefd[0]);
 		close_fd(pipefd[1]);
-		execution(program, right_node);
+		execution(program, right_node, true);
 		exit(EXIT_FAILURE);
 	}
 	return (pid);
@@ -126,7 +126,7 @@ pid_t	execute_right(t_context *program, t_node *right_node, int pipefd[2])
 */
 
 //this consider left and right child
-int	execute_pipeline(t_context *program, t_node *node)
+int	execute_pipeline(t_program *program, t_node *node)
 {
 	pid_t	left_pid;
 	pid_t	right_pid;
