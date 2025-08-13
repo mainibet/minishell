@@ -14,7 +14,7 @@
 #include "../include/minishell.h"
 #include "exec.h"//temporary for testing
 
-int	wait_children(t_context *program, pid_t left_pid, pid_t right_pid, int *right_status)//NEW
+int	wait_children(t_program *program, pid_t left_pid, pid_t right_pid, int *right_status)//NEW
 {
 	int	left_status;
 
@@ -95,7 +95,7 @@ int	wait_children(t_context *program, pid_t left_pid, pid_t right_pid, int *righ
 // 	if (*pid == 0)
 // 	{
 // 		if (nb_cmd == 1)
-// 			execute_in_child(node);//change for pipes (multiple cmd)
+// 			child_process(node);//change for pipes (multiple cmd)
 // 		else
 			
 //         exit(EXIT_FAILURE);
@@ -119,7 +119,7 @@ int	wait_children(t_context *program, pid_t left_pid, pid_t right_pid, int *righ
 *   receives it closed and has more control
 */
 //to execute cmd witout pipes so need fork
-// int	execute_cmd(t_node *node)
+// int	execute_external_cm(t_node *node)
 // {
 // 	pid_t	pid;
 // 	int		child_status;
@@ -138,17 +138,10 @@ int	wait_children(t_context *program, pid_t left_pid, pid_t right_pid, int *righ
 // 	return (0);//migth change for the child's actual exit status
 // }
 
-int	handle_cmd_exec(t_context *program, t_node *node, bool is_pipe_child)
-{
-	if (is_pipe_child)
-		// return (execute_simple_cmd(node));
-		return (execute_simple_cmd(program, node));
-	else
-		// return (execute_cmd(node));
-		return (execute_cmd(program, node));
-}
 //new version to include pipes
-int	execute_cmd(t_node *node) // fork top-level commands
+//fork before execve
+//Used when cmd is not in pipe
+int	exec_cmd_nopipe(t_program *program, t_node *node)
 {
 	pid_t	pid;
 	int		child_status;
@@ -162,12 +155,12 @@ int	execute_cmd(t_node *node) // fork top-level commands
 	else if (pid == 0)//child
 	{
 		//CHECK FD TO CLOSE
-		execute_in_child(node);
-		exit(EXIT_FAILURE); //if fails smt in single cmd
+		child_process(program, node);
+		exit(EXIT_FAILURE);
 	}
 	else // Parent process
 	{
-		waitpid(pid, &child_status, 0); // Esperar al hijo
+		waitpid(pid, &child_status, 0);
 		if (WIFEXITED(child_status))
 			return (WEXITSTATUS(child_status));
 		return (1); // Default error if not exited normally
