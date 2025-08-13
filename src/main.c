@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include "../include/lexer.h"
-#include "../include/parser.h"
+// #include "../include/lexer.h"
+// #include "../include/parser.h"
 #include "../include/prexec.h"
 #include "../include/exec.h"
 
@@ -83,7 +83,7 @@ static void	handle_command(char *line, char **envp)
 	fprintf(stderr, BOLD MAGENTA "Command processed and cleaned up\n" RESET); //TEST
 }
 
-void	init_context(t_context *program, char **envp)
+void	init_program(t_program *program, char **envp)
 {
 	program->line = NULL;
 	program->root = NULL;
@@ -96,12 +96,12 @@ void	init_context(t_context *program, char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	char		*prompt;
-	t_context	program;//new for builtin exit
+	t_program	program;//new for builtin exit
 
 	(void) argc;//check if needed
 	(void) argv;//check if needed
 
-	init_context(&program, envp);
+	init_program(&program, envp);
 	prompt = BOLD GREEN "🐶🥕 Milanshell >" RESET;
 	while (1)
 	{
