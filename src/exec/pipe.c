@@ -70,6 +70,18 @@
 	// cleanup_fd(node, node->type);//include condition only for fd bigger than 2
 	// if (wait_one_child(pid, &child_status) == -1)
 	// return (-1);
+
+	int	wait_children(pid_t left_pid, pid_t right_pid, int *right_status)//NEW
+{
+	int	left_status;
+
+	waitpid(left_pid, &left_status, 0);
+	waitpid(right_pid, right_status, 0);
+	if (WIFEXITED(*right_status))
+		return (WEXITSTATUS(*right_status));
+	return (1);
+}
+
 pid_t	execute_left(t_program *program, t_node *left_node, int pipefd[2])
 {
 	pid_t	pid;
@@ -156,5 +168,5 @@ int	execute_pipeline(t_program *program, t_node *node)
 	}
 	close(pipefd[0]);
 	close(pipefd[1]);
-	return (wait_children(program, left_pid, right_pid, &right_status));//right as the last one comd to execute
+	return (wait_children(left_pid, right_pid, &right_status));//right as the last one comd to execute
 }
