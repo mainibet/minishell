@@ -19,7 +19,7 @@
 *	@returns 0 on success and 1 on error
 */
 // int	my_export(char **envp)
-int	my_export(t_context *program, t_node *node)
+int	my_export(t_program *program, t_node *node)
 {
 	int		i;
 	char	**args;
