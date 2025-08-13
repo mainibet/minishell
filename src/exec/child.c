@@ -30,7 +30,8 @@
 *
 *   @note v0: execute single external cmd: no pipes no builtins
 */
-void	execute_in_child(t_node *node)
+// void	execute_in_child(t_node *node)
+void execute_in_child(t_program *program, t_node *node)
 {
 	// t_fd_dup		dup;
 	t_cmd_data		*cmd;
