@@ -26,7 +26,6 @@ typedef enum e_builtin_type
 	BUILTIN_UNSET,
 	BUILTIN_ENV,
 	BUILTIN_EXIT,
-	// MAX_BUILTIN_TYPE//usefull to loop or validations
 }	t_builtin_type;
 
 // -----------------------------------------//
@@ -34,14 +33,13 @@ typedef enum e_builtin_type
 // -----------------------------------------//
 
 int		is_builtin(const char *cmd_name);
-int		execute_builtin(t_node *node);
+// int		execute_builtin(t_node *node);
+int		execute_builtin(t_program *program, t_node *node);
 
 // --- libft --//
 int ft_strcmp(const char *s1, const char *s2);//include to libft
 
 // --- SPECIFICS --- //
-
-int	execute_builtin(t_program *program, t_node *node);
 int	my_echo(t_node *node);
 // int	my_pwd(char *cwd_path);
 int	my_pwd(t_program *program, t_node *node);;
@@ -49,5 +47,6 @@ int	my_pwd(t_program *program, t_node *node);;
 int	my_env(t_program *program, t_node *node);
 int	my_export(t_program *program, t_node *node);
 // int	my_export(char **envp);
+int	my_exit(t_program *program, t_node *node);;
 
 #endif
