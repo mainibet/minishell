@@ -62,11 +62,11 @@ Supported operations include piping, redirections, environment management, and b
 ```
 minishell/
 ├── Makefile                 # Main build script (targets: NAME, all, clean, fclean, re)
-├── README.md                # Public documentation: description, installation, usage
-├── DEVELOPMENT.md           # Internal notes: features, progress tracking, decisions
-├── GIT_WORKFLOW_GUIDE.md    # Internal use: create branches locally, sync main and move in branches.
-├── TEST.md                  # Detailed test cases, results, and testing instructions
-│
+├── README.md                # Public documentation: description, installation, usage 
+├── docs/
+│   └── TEST.md                  # Detailed test cases, results, and testing instructions
+│   └── DEVELOPMENT.md           # Internal notes: features, progress tracking, decisions
+│   └── GIT_WORKFLOW_GUIDE.md    # Internal use: create branches locally, sync main and move in branches.
 ├── include/                 # Header files
 │   └── minishell.h          # Main header, includes other specific headers and common standard libraries
 │   ├── structs.h
