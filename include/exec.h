@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/01 09:34:14 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/11 14:11:04 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,20 @@ char	*find_path(char *argv);
 
 // --- EXECUTION --- //
 //Parent cmd node
+// int		wait_one_child(pid_t pid, int *status);//included in exec_cmd_nopipe
 int		fork_handle(pid_t *pid, t_node *node, int i_cmd, int nb_cmd);
 int		setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
-int		wait_one_child(pid_t pid, int *status);
-int		execution(t_node *cmd);
-int		execute_cmd(t_node *node);//single top-level cmd to fork
-int		execute_simple_cmd(t_node *cmd_node);//when is in pipe to avoid double fork
-int		handle_cmd_exec(t_node *node, bool is_pipe_child);
+int		execution(t_program *program, t_node *node, bool is_pipe_child);
+int		handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child);
+// int		execution(t_node *cmd);
+int		exec_cmd_nopipe(t_program *promgra, t_node *node);
+// int		execute_simple_cmd(t_node *cmd_node);//when is in pipe to avoid double fork
+void	exec_cmd_inpipe(t_node *node);
 
 //child
-void	execute_in_child(t_node *node);
-void	exec_external_cmd(t_node *node);
+// void	child_process(t_node *node);
+void child_process(t_program *program, t_node *node)
+// void	exec_external_cmd(t_node *node);
 
 //pipelines
 int		execute_pipeline(t_node *node);
@@ -61,6 +64,7 @@ int		wait_children(pid_t left_pid, pid_t right_pid, int *right_status);
 // int		cleanup_fd(t_node *node, t_node_type type);
 int		cleanup_fd(t_node *node, int node_type);
 int		cleanup_cmd_node(t_node *node);
+void	cleanup_program(t_program *program);
 
 /**
 Left-associative

@@ -1,11 +1,11 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/11 09:55:37 by albetanc          #+#    #+#             */
+/*   Created: 2025/08/11 11:52:09 by albetanc          #+#    #+#             */
 /*   Updated: 2025/08/11 13:59:45 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -13,23 +13,14 @@
 #include "minishell.h"
 #include "exec.h"//TMP FOR TESTING
 
-//return 0 for success
-// int	my_env(char **envp)
-int	my_env(t_program *program, t_node *node)
+/*
+*	@brief ends the progam and free resources needed: nodes, tokens, etc
+*	@returns void because ends the program
+*/
+void	my_exit(t_program *program, t_node *node)
 {
-	int	i;
-
-	(void)node;
-	if (!program->envp_cpy)
-	{
-		fprintf(stderr, BLUE "env: no environment variables found\n");
-		return (1);
-	}
-	i = 0;
-	while (program->envp_cpy[i])
-	{
-		printf("%s\n", program->envp_cpy[i]);
-		i++;
-	}
-	return (0);
+	(void) node;
+	cleanup_program(program);
+	exit(program->last_exit_status);
 }
+

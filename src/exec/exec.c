@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/06 10:36:15 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/11 14:04:30 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@
 //---------------------------------------//
 //            V2 - CURRENT               //
 // GOAL: Executes pipe nodes             //
-// 1. Multipipes: 3 CHILD?               //
+// 1. Multipipes: 3 CHILD.               //
 // 2. COMPLETE THIS                      //
 // 3. INCLUDE ECHO EXECUTION? BUILTIN    //
 //   fd CONTROL                          //
@@ -94,7 +94,7 @@
 *   3. Handle errors: cmd_pah and execve
 *   @return none. executes in success or
 *   EXIT_FAILURE if fails
-*   -Use called in the execute_in_child
+*   -Use called in the child_process
 *
 *   @note:
 *   - handle error of execve only is
@@ -103,22 +103,24 @@
 *     valid path                  
 */
 //this is in child from pipes so no fork need
-int	execute_simple_cmd(t_node *cmd_node)
-{
-	if (is_builtin(cmd_node->u_data.cmd.argv[0]))
-	{
-		my_echo(cmd_node);//in the meantime only with this
-		return (0);
-	}
-	else
-	{
-		exec_external_cmd(cmd_node);
-		exit (EXIT_FAILURE);
-	}
-	return (1);
-}
+// int	execute_simple_cmd(t_program *program, t_node *cmd_node)//included in handle_cmd
+// {
+// 	if (is_builtin(cmd_node->u_data.cmd.argv[0]))
+// 	{
+// 		// my_echo(cmd_node);//in the meantime only with this
+// 		return (execute_builtin(program, cmd_node));
+// 		// return (0);
+// 	}
+// 	else
+// 	{
+// 		exec_external_cmd(cmd_node);
+// 		exit (EXIT_FAILURE);
+// 	}
+// 	return (1);
+// }
 
-void	exec_external_cmd(t_node *node)
+//Executes a cmd with execve
+void	exec_cmd_inpipe(t_node *node)
 {
 	char	*cmd_path;
 
@@ -132,34 +134,51 @@ void	exec_external_cmd(t_node *node)
 	free(cmd_path);
 	exit(EXIT_FAILURE);
 }
-static int	handle_operator(t_node *node)//NEW
+
+static int	handle_operator(t_program *program, t_node *node, bool is_pipe_child)//NEW
 {
 	int	left_status;
 	int	right_status;
 
 	if (node->u_data.op.type == PIPE)
-		return (execute_pipeline(node));//TODO connect with pipe.c
+		return (execute_pipeline(program, node, is_pipe_child));//TODO connect with pipe.c and program
 	else if (node->u_data.op.type == AND)
 	{
-		left_status = execution(node->u_data.op.left);
+		left_status = execution(program, node->u_data.op.left);
 		if (left_status == 0)
-			return (execution(node->u_data.op.right));
+			return (execution(program, node->u_data.op.right));
 		return (left_status);
 	}
 	else if (node->u_data.op.type == OR)
 	{
-		left_status = execution(node->u_data.op.left);
+		left_status = execution(program, node->u_data.op.left);
 		if (left_status != 0)
-			return (execution(node->u_data.op.right));
+			return (execution(program, node->u_data.op.right));
 		return (left_status);
 	}
 	else if (node->u_data.op.type == SEMICOLON)
 	{
-		execution(node->u_data.op.left);
-		return (execution(node->u_data.op.right));
+		execution(program, node->u_data.op.left);
+		return (execution(program, node->u_data.op.right));
 	}
-	fprintf(stderr, CYAN RED "Error: unknow type operand for execution\n" RESET);
+	fprintf(stderr, BOLD RED "Error: unknow type operand for execution\n" RESET);
 	return (1);
+}
+
+//decides cmd execution
+int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
+{
+	if (is_builtin(node->u_data.cmd.argv[0]))//check here logic to execute builtins in parent or in child correctly
+		// return (execute_simple_cmd(node));
+		return (execute_builtin(program, node));
+	else if (is_pipe_child)
+	{
+		exec_cmd_inpipe(node);
+		exit (EXIT_FAILURE);
+	}
+	else
+		// return (execute_external_cm(node));
+		return (exec_cmd_nopipe(program, node));
 }
 
 /**
@@ -167,29 +186,60 @@ static int	handle_operator(t_node *node)//NEW
 *   type of execution based on the type node
 *
 *	1. Base case: (!root) returns
-*   2. calls execute_cmd
+*   2. calls execute_external_cm
 *
 *   @param root The root node of AST to be executed
 *
 *   @note execution will be performed in recursion
 */
 
-int	execution(t_node *node)//check if change parameter name
+int	execution(t_program *program, t_node *node, bool is_pipe_child)//check if change parameter name
 {
+	int	status;
+
 	fprintf(stderr, MAGENTA BOLD "About to dispatch command\n" RESET);//test
 	if (!node)
+	{
+		program->last_exit_status = 0;//new my_exit
 		return (0);
+	}
 	if (node->type == COMMAND) 
-	{//test
+	{
+		status = handle_cmd_exec(program, node, is_pipe_child);//NEW
 		fprintf(stderr, MAGENTA BOLD "Will be a cmd\n" RESET);//test
-		// return (execute_cmd(node));
-		return (handle_cmd_exec(node, false));
-	}//test
-	else if (node->type == OPERATOR)//NEW
-	{//test
+		// return (execute_external_cm(node));//only external cmmd
+		// return (handle_cmd_exec(node, false));//builtin and external cmd
+	}
+	else if (node->type == OPERATOR)
+	{
+		status = handle_operator(program, node, is_pipe_child);//new
 		fprintf(stderr, MAGENTA BOLD "Will be a oprator\n" RESET);//test
-		return (handle_operator(node));
-	}//test
-	fprintf(stderr, CYAN RED "Error: unknow type node for execution\n" RESET);
-	return (1);
+		// return (handle_operator(node));
+	}
+	else
+	{
+		fprintf(stderr, BOLD RED "Error: unknow type node for execution\n" RESET);
+		status = 1;
+	}
+	program->last_exit_status = status;
+	return (status);
+}
+
+//to be called from main after parsing
+// will prepare the cmds for execution and executions
+int	process_node(t_program *program)//new
+{
+	int	status;
+
+	status = pre_execution(program);
+	if (status != 0)
+	{
+		fprintf(stderr, BOLD CYAN "There was an error in pre-execution" RESET);
+		free(program->line);//chek if also free token_list
+		free_node(program->root);
+		return (status);
+	}
+	status = execution(program, program->root, false);
+//todo cleanup cmd
+	return (status);
 }

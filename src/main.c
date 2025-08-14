@@ -6,13 +6,13 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/01 09:07:57 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/11 13:59:45 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include "../include/lexer.h"
-#include "../include/parser.h"
+// #include "../include/lexer.h"
+// #include "../include/parser.h"
 #include "../include/prexec.h"
 #include "../include/exec.h"
 
@@ -79,29 +79,48 @@ static void	handle_command(char *line, char **envp)
 	pre_execution(root, envp);
 	execution(root);
 	free_token(token_list);
-    free_node(root);
-    fprintf(stderr, BOLD MAGENTA "Command processed and cleaned up\n" RESET); //TEST
+	free_node(root);
+	fprintf(stderr, BOLD MAGENTA "Command processed and cleaned up\n" RESET); //TEST
+}
+
+void	init_program(t_program *program, char **envp)
+{
+	program->line = NULL;
+	program->root = NULL;
+	program->token_list = NULL;
+	program->envp = envp;
+	program->envp_cpy = NULL;
+	program->last_exit_status = 0;
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	*line;
-	char	*prompt;
+	char		*prompt;
+	t_program	program;//new for builtin exit
 
 	(void) argc;//check if needed
 	(void) argv;//check if needed
 
+	init_program(&program, envp);
 	prompt = BOLD GREEN "🐶🥕 Milanshell >" RESET;
 	while (1)
 	{
-		line = readline(prompt);
-		if (!line && isatty(STDIN_FILENO)) //if issaty returns 0 is in an fd
+		program.line = readline(prompt);//new program.
+		if (!program.line && isatty(STDIN_FILENO)) //if issaty returns 0 is in an fd
 		{
 			printf(BLUE "exit\n" RESET);
 			break ;
 		}
-		printf(BOLD MAGENTA "Command received: %s\n" RESET, line);//test
-		handle_command(line, envp);//new
+		if (program.line && *program.line)
+		{
+			add_history(program.line);
+			printf(BOLD MAGENTA "Command received: %s\n" RESET, program.line);//test
+			process_node(&program);//new NODE ROOT NEEDS TO BE FILL BY PARSER
+		}
+		else if (program.line)
+			free(program.line);
 	}
-	return (0);
+	cleanup_program(&program);
+	return (program.last_exit_status);
+	// return (0);
 }

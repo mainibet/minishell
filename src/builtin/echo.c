@@ -28,11 +28,13 @@
 *   3. Write each arg with spaces if is not the last one
 *   4. Includes '\n' if there is no -n in the args
 */
-int	my_echo(t_node *node)
+// int	my_echo(t_node *node)
+int	my_echo(t_program *program, t_node *node)
 {
 	int		i;
 	int		new_line;
 
+	(void) program;
 	fprintf(stderr, MAGENTA BOLD "MY ECHO is about to be run\n" RESET);
 	i = 1;//from 1 are the cmd's arg
 	new_line = 1;
