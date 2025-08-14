@@ -23,8 +23,12 @@ int	my_export(t_program *program, t_node *node)
 {
 	int		i;
 	char	**args;
+	int		nb_args;
 
 	args = node->u_data.cmd.argv;
+	nb_args = 0;
+	while (args && args[nb_args])
+		nb_args++;
 	if (node->u_data.cmd.argv == 1)
 	{
 		if (!program->envp_cpy)
