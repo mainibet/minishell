@@ -29,7 +29,7 @@ int	my_export(t_program *program, t_node *node)
 	nb_args = 0;
 	while (args && args[nb_args])
 		nb_args++;
-	if (node->u_data.cmd.argv == 1)
+	if (nb_args == 1)
 	{
 		if (!program->envp_cpy)
 		{
