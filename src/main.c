@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-#include "../include/prexec.h"
-#include "../include/exec.h"
+#include "minishell.h"
 
 //-------------------------------//
 //          V0: main             //
@@ -32,7 +30,7 @@
 // and execution.......          //
 //-------------------------------//
 
-t_node	*token_parse_input(char *line, t_token **token_out)
+t_node	*token_parser_input(char *line, t_token **token_out)
 {
 	t_token	*token_list;
 	t_token	*parser_tokens;
@@ -71,7 +69,7 @@ static void	process_cmdline(t_program *program, char *line)
 		return ;
 	}
 	add_history(line);
-	root = parse_input(line, &token_list);
+	root = token_parser_input(line, &token_list);
 	free(line);
 	if (!root)//if parsing failed
 		return ;
