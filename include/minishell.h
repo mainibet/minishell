@@ -154,9 +154,10 @@ typedef struct s_program
 // -----------------------------------------//
 
 // --- ERRORS_CLEAN-UP --- //
-int		cleanup_fd(t_node *node, int node_type);
+int		cleanup_fd(t_node *node, t_nodetype type);
 int		cleanup_cmd_node(t_node *node);
 void	cleanup_program(t_program *program);
 void	free_node(t_node *node);
+void	free_token(t_token *token);
 
 #endif
