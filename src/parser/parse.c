@@ -15,7 +15,7 @@
 #include "lexer.h"
 
 // --- FORWARD DECLARATIONS --- //
-t_node			*head_tokenarse_command(t_token *token);
+t_node			*parse_command(t_token *token);
 static t_token	*next_operator(t_token *token);
 static int		precedence(t_token *token);
 
