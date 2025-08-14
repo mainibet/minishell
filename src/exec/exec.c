@@ -78,7 +78,10 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 			exit (status);
 		}
 		else
+		{
 			exec_cmd_inpipe(node);
+			exit (1);
+		}
 	}
 	else
 	{
@@ -126,17 +129,8 @@ int	execution(t_program *program, t_node *node, bool is_pipe_child)
 // will prepare the cmds for execution and executions
 int	process_node(t_program *program)//better to make it with all the node life cycle
 {
-	int	status;
-
-	status = pre_execution(program);
-	if (status != 0)
-	{
-		fprintf(stderr, BOLD CYAN "There was an error in pre-execution" RESET);
-		free(program->line);//CHECK if also free token_list
-		free_node(program->root);
-		return (status);
-	}
-	status = execution(program, program->root, false);
+	pre_execution(program, program->root);
+	program->last_exit_status = execution(program, program->root, false);
 //TODO cleanup cmd
-	return (status);
+	return (program->last_exit_status);
 }
