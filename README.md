@@ -21,12 +21,19 @@ provides an in-depth exploration of UNIX process management, pipes, signals, fil
 - Signal handling for Ctrl+C, Ctrl+D, and Ctrl+\ like Bash
 
 ## 🧱 Input Processing Flow
-1. **Lexing** – Raw input is split into tokens (commands, symbols, strings), preserving quotes and metacharacters.
-2. **Parsing** – Tokens are grouped into structured command representations, handling pipes and redirections.
-3. **Expansion** – Environment variables (`$VAR`, `$?`) are expanded, respecting shell quoting rules:
+1. **Lexing** – Takes the full command line and splits it into logical units called tokens. For example, the input "echo "hello world" | wc -w" becomes a token list like [echo], [hello world], [|], [wc], [-w]. This lexer handles quotes and separates words based on spaces and operators.
+
+2. **Parser** – After the lexer, the parser organizes the token list into a hierarchical structure called an Abstract Syntax Tree (AST). This tree represents the logical structure of the command line, respecting the precedence of operators (|, &&, ||, ;). This allows us to understand which commands to run and in what order. For instance, in a command with pipes, the tree will have a | operator node with a command on its left and another on its right.
+
+3. **Prexecution** - In this phase, the AST is prepared for execution. Environment variables (like $PATH or $HOME) are expanded, I/O redirections and heredocs are managed, and absolute paths for commands are resolved.
+
+3.1. _Expansion_ – Environment variables (`$VAR`, `$?`) are expanded, respecting shell quoting rules:
    - `'single quotes'` prevent expansion.
    - `"double quotes"` allow expansion.
-4. **Execution** – Built-ins are handled internally; others use `execve`. Redirections and pipes are configured here.
+4. **Execution** – traverses the Abstract Syntax Tree (AST) node by node. For each node, it takes the corresponding action:
+- Executes external commands single and in pipes.
+- If it is operator node, it manages the execution flow. For example, for a pipe (|), it creates left and right child processes and handles communication between them.
+- Built-in commands are executed and is tracked their state and if they are a child process if they are part of a pipe.
 
 This modular flow ensures predictable behavior and makes debugging easier.
 
@@ -70,22 +77,22 @@ minishell/
 │   ├── signals.h
 │   └── utils.h
 │
-├── libft/                   # Custom libft copy (mandatory if allowed)
-│   ├── Makefile             # Builds libft separately before minishell
-│   ├── gnl/                 # get_next_line implementation
-│   ├── ft_printf/           # Custom ft_printf implementation
-│   └── ...                  # Core libft functions (ft_strlen, ft_split, etc.)
+├── libft/
+│   ├── Makefile
+│   ├── gnl/
+│   ├── ft_printf/
+│   └── ...
 │
-├── src/                     # Source code organized by responsibility
-│   ├── main.c               # Entry point (initialization, shell loop)
+├── src/
+│   ├── main.c
 │
 │   ├── lexer/               # Lexical analysis: tokenization and quote preservation
-│   │   └── lexer.c, utils.c
+│   │   └── lexer.c
 │
 │   ├── parser/              # Parses tokens into commands, handles syntax & structure
-│   │   └── parser.c, ast.c
+│   │   └── parser.c
 │
-│   ├── exec/                # Execution logic, redirections, pipes
+│   ├── exec/                # Execution logic, redirections, pipes, etc
 │   │   └── exec.c, redir.c, pipe.c
 │
 │   ├── builtins/            # Built-in command implementations
@@ -94,17 +101,17 @@ minishell/
 │   ├── signals/             # Signal handling (Ctrl+C, Ctrl+D, etc.)
 │   │   └── signals.c
 │
-│   └── utils/               # Reusable utility functions
-│       └── string_utils.c, error.c, memory.c
+│   └── utils/               # Helper functions
+│       └── cleanup.c
 │
-└── tests/                   # Optional: Shell test scripts
+└── tests/                   # Optional: Shell test scripts or CI/CD when push
     ├── run_all_test.sh      #executes all listed scripts when 'make debug'
-    ├── test_redirects.sh
-    └── test_builtins.sh
+    ├── test_redirects.sh (example)
+    └── test_builtins.sh (example)
 
 ```
 
 👤 Autor
 - Alicia Betancourt ([mainibet](https://github.com/mainibet))
-- Joshua Barratt ([jbarrat42](https://github.com/jbarrat42))
+- 
 
