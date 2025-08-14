@@ -28,6 +28,17 @@ int	cleanup_operator_fd(t_node *node);
 *   -Use: e.g. in parent process after execution
 *   @note V0: to exectue single external cmd: no pipe no builtins
 */
+
+void	free_node(t_node *node)
+{
+	if (node->type == OPERATOR)
+	{
+		free_node(node->u_data.op.left);
+		free_node(node->u_data.op.right);
+	}
+	free(node);
+}
+
 int	cleanup_fd(t_node *node, t_cmdtype type)
 {
 	if (!node)
