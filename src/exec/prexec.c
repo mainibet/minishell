@@ -103,13 +103,8 @@ char	**token_to_argv(t_token *token)
 	return (argv);
 }
 
-// void	pre_execution(t_node *node, char **envp)
 void	pre_execution(t_program *program, t_node *node)
 {
-	// t_token	*curren_token;
-	// int		i;
-	// int		nb_token;
-
 	if (!node)
 		return ;
 	if (node->type == OPERATOR)
@@ -119,17 +114,18 @@ void	pre_execution(t_program *program, t_node *node)
 	}
 	else if (node->type == COMMAND)
 	{
-		node->u_data.cmd.argv = token_to_argv(node->u_data.cmd.tokens);////init node
+		node->u_data.cmd.argv = token_to_argv(node->u_data.cmd.tokens);//init node
 		if (!node->u_data.cmd.argv)
 		{
-			perror(BOLD RED "Failed to create argv" RESET); //check msg
+			perror("Failed to create token args");//check msg
+			cleanup_program(program);//check if smt else need to be clean
 			exit(EXIT_FAILURE);
 		}
 	node->u_data.cmd.env = program->envp;
 	if (node->u_data.cmd.argv[0] && is_builtin(node->u_data.cmd.argv[0]))
 		node->u_data.cmd.cmd_type = BUILTIN;
 	else
-		node->u_data.cmd.cmd_type = EXECUTABLE;//for this test
+		node->u_data.cmd.cmd_type = EXECUTABLE;
 	node->u_data.cmd.fd_in = STDIN_FILENO;
 	node->u_data.cmd.fd_out = STDOUT_FILENO;
 	}
