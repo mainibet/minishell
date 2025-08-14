@@ -27,26 +27,28 @@
 // includes add_history          //
 //-------------------------------//
 
-t_node	*parse_input(char *line, t_token **token_out)
+//-------------------------------//
+//         V1: CURRENT           //
+//                               //
+// Calls lexer, parser, prexec   //
+// and execution.......          //
+//-------------------------------//
+
+t_node	*token_parse_input(char *line, t_token **token_out)
 {
 	t_token	*token_list;
 	t_token	*parser_tokens;
 	t_node	*root;
-// --- lexer --- //
+
 	token_list = lex(line, ' ');
 	if (!token_list)
 	{
 		fprintf(stderr, BOLD RED "Lexing failed or empty imput\n" RESET);//test
-		*token_out = NULL;//test
+		*token_out = NULL;
 		return (NULL);
 	}
-	// fprintf(stderr, MAGENTA "Tokens generated: " RESET);//test
-	// print_tokens(token_list);//test
-	// fprintf(stderr, MAGENTA"\n" RESET);//test
-// --- parser ---//
 	parser_tokens = token_list;
-	// root = parse(&parser_tokens, 0);//0 is the minimum precedency to begin
-	root = parse(parser_tokens);//NEW TEST EXEC
+	root = parse(parser_tokens);
 	if (!root)
 	{
 		fprintf(stderr, "Parsing failed\n");
@@ -58,14 +60,14 @@ t_node	*parse_input(char *line, t_token **token_out)
 	return (root);
 }
 
-static void	handle_command(char *line, char **envp)
+static void	process_cmdline(t_program *program, char *line)
 {
 	t_token	*token_list;
 	t_node	*root;
 
-	if (!line)//handles NULL line
+	if (!line)
 		return ;
-	if (!*line)//handles empty line
+	if (!*line)
 	{
 		free(line);
 		return ;
@@ -76,8 +78,8 @@ static void	handle_command(char *line, char **envp)
 	if (!root)//if parsing failed
 		return ;
 	fprintf(stderr, BOLD MAGENTA "AST built. stating pre-execution \n" RESET);//TEST
-	pre_execution(root, envp);
-	execution(root);
+	pre_execution(program, root);
+	execution(program, root, false);
 	free_token(token_list);
 	free_node(root);
 	fprintf(stderr, BOLD MAGENTA "Command processed and cleaned up\n" RESET); //TEST
@@ -115,12 +117,11 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(program.line);
 			printf(BOLD MAGENTA "Command received: %s\n" RESET, program.line);//test
-			process_node(&program);//new NODE ROOT NEEDS TO BE FILL BY PARSER
+			process_node(&program);//this will be the root
 		}
 		else if (program.line)
 			free(program.line);
 	}
 	cleanup_program(&program);
 	return (program.last_exit_status);
-	// return (0);
 }
