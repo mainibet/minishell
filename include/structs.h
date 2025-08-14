@@ -101,8 +101,8 @@ typedef struct s_program
 	char	*line;
 	char	**envp_cpy;
 	char	**envp;
-	struct	t_node	*root;
-	struct	t_token	*token_list;
+	t_node	*root;
+	t_token	*token_list;
 	int		last_exit_status;
 } t_program;
 
