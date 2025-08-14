@@ -42,6 +42,11 @@
 
 # include "../libft/libft.h"
 # include "colors.h"
+# include "lexer.h"
+# include "parser.h"
+# include "prexec.h"
+# include "exec.h"
+# include "builtin.h"
 
 // ---FORWARD DECLARATIONS--- //
 
