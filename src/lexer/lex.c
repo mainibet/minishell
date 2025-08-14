@@ -48,14 +48,6 @@ t_token	*extract_token(char *s, size_t size)
 	return (token);
 }
 
-void	free_token(t_token *token)
-{
-	if (token->next)
-		free_token(token->next);
-	free(token->txt);
-	free(token);
-}
-
 char	*consume_whitespace(char *head_token)
 {
 	while (*head_token && (*head_token == ' ' || *head_token == '\t'))
@@ -63,7 +55,7 @@ char	*consume_whitespace(char *head_token)
 	return (head_token);
 }
 
-t_token	*lex(char *s, char delim)
+t_token	*lex(char *s, char delim)//make it shorter
 {
 	char	*head_token;
 	char	*current;
