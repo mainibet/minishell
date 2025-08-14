@@ -35,6 +35,8 @@ typedef struct s_fd_dup
 //                PROTOTYPES                //
 // -----------------------------------------//
 
+int	process_node(t_program *program);
+
 // --- ABSOLUTE PATH --- //
 
 char	*find_path(char *argv);
