@@ -54,7 +54,7 @@ void child_process(t_program *program, t_node *node);
 
 //pipelines
 void	exec_cmd_inpipe(t_node *node);
-int	execute_pipeline(t_program *program, t_node *node);
+int		execute_pipeline(t_program *program, t_node *node);
 int		wait_children(pid_t left_pid, pid_t right_pid, int *right_status);
 
 /**
