@@ -32,8 +32,8 @@ int	cleanup_fd(t_node *node, t_cmdtype type)
 		return (-1);
 	if (type == COMMAND)
 		cleanup_cmd_node(node);
-	else if (type == OPERATOR)//new
-		cleanup_operator_fd(node);//new
+	else if (type == OPERATOR)
+		cleanup_operator_fd(node);
 	return (0);
 }
 
@@ -66,7 +66,7 @@ int	cleanup_operator_fd(t_node *node)
 }
 
 //To centralized cleanup
-void	cleanup_program(t_program *token_headrogram)
+void	cleanup_program(t_program *program)
 {//probably includes prompt when is dynamic
 	if (program->line)
 		free(program->line);
