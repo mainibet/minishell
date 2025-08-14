@@ -11,12 +11,7 @@
 /* ************************************************************************** */
 
 
-// #include "minishell.h"
-#include "../include/minishell.h"
-#include "../include/exec.h"
-#include "../include/minishell.h"
-#include "../include/exec.h"
-#include "../include/builtin.h"
+#include "minishell.h"
 
 /**
 *   @brief sets up I/O redi and executes cmd

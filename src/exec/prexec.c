@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "prexec.h"
-#include "builtin.h"
 
 static int	count_tokens(t_token *token)
 {

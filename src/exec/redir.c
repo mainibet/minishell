@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "minishell.h"
-#include "../include/minishell.h"
-#include "exec.h" //temporary for testing
+#include "minishell.h"
 
 /**
  * @brief Redirects STDIN_FILENO to a specified fd

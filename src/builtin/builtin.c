@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "builtin.h"
 
 int	is_builtin(const char *cmd_name)
 {

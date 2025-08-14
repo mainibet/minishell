@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "parser.h"
-#include "lexer.h"
 
 // --- FORWARD DECLARATIONS --- //
 t_node			*parse_command(t_token *token);
