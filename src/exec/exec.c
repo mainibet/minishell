@@ -10,116 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "minishell.h"
-#include "../include/minishell.h"
-#include "exec.h"//temporary for testing
+#include "minishell.h"
+#include "exec.h"
 # include "builtin.h"
 
-//---------------------------------------//
-//V0:Execute single external cmd         //
-//   directly from readline              //
-//                                       //
-//V1: support external cmd in            //
-//    child process (cmd node)           //
-//                                       //
-//V2: supports pipe_node                 //
-//                                       //
-//V3: support some built-ins             //
-//                                       //
-//V4: supports basic parsing             //
-//                                       //
-//V5: supports all built-ins             //
-//                                       //
-//V6: support parsing refinement         //
-//                                       //
-//V7: support heredoc & redirections     //
-//                                       //
-//V8: support bonus (if needed)          //
-//---------------------------------------//
-
-//---------------------------------------//
-//                    V0                 //
-// GOAL: Executes single external cmd    //
-// 1. Read a full line as raw input.     //
-// 2. Use getenv to get absolute path    //
-// 3. Use execve() to execute in parent  //
-//    the input line as-is.              //
-// 4. Wait for the child process(waitpid)//
-// 5. Exec cmd will exit shell           //
-//---------------------------------------//
-
-//---------------------------------------//
-//                  V1                   //
-// GOAL: Executes single external cmd    //
-// 1. Read a full line as raw input.     //
-// 2. Use getenv to get absolute path    //
-// 3. Use fork() and execve() to execute //
-//    the input line as-is.              //
-// 4. Wait for the child process(waitpid)//
-// 5. Exit command should leave shell    //
-//    active                             //
-//---------------------------------------//
-
-//---------------------------------------//
-//            V2 - CURRENT               //
-// GOAL: Executes pipe nodes             //
-// 1. Multipipes: 3 CHILD.               //
-// 2. COMPLETE THIS                      //
-// 3. INCLUDE ECHO EXECUTION? BUILTIN    //
-//   fd CONTROL                          //
-// 4.traverse CHECK JOSHUA'S             //
-// 5.                                    //
-//                                       //
-//---------------------------------------//
-/*
-* CLEAN-UP WITH PIPES
-* DEFINE TYPES OF CHILD CONSIDERING OTHERS OPERANDS
-* BUILTINS FLOW ONLY ECHO
-* INCLUDE OPERAN NODE IN EXECUTION FLOW
-* CONTROL AND CHECK OPENING AND CLOSE FD
-* PIPE AND REDIRECTIO IMPLEMENTATION IN CHILD
-* UPDATE NAMES IN ECHO BUILTIN
-* CHECK IF PREEXECUTION NEEDS SOMETHING
-* CHECK EDGE CASES
-* CHECK ALLOWED FUNCTIONS
-* UPDATE EXEC SPIDER FOR SINGLE EXTERNAL CMD
-* MAKE SPIDER FOR PIPE EXECUTION
-*/
-
-/**
-*   @brief Execute single external cmd
-*
-*   1. Find absolut path
-*   2. Executes execve in child process
-*   3. Handle errors: cmd_pah and execve
-*   @return none. executes in success or
-*   EXIT_FAILURE if fails
-*   -Use called in the child_process
-*
-*   @note:
-*   - handle error of execve only is
-*     reached if it fails
-*   - cmd_path only filled if there is a 
-*     valid path                  
-*/
-//this is in child from pipes so no fork need
-// int	execute_simple_cmd(t_program *program, t_node *cmd_node)//included in handle_cmd
-// {
-// 	if (is_builtin(cmd_node->u_data.cmd.argv[0]))
-// 	{
-// 		// my_echo(cmd_node);//in the meantime only with this
-// 		return (execute_builtin(program, cmd_node));
-// 		// return (0);
-// 	}
-// 	else
-// 	{
-// 		exec_external_cmd(cmd_node);
-// 		exit (EXIT_FAILURE);
-// 	}
-// 	return (1);
-// }
-
 //Executes a cmd with execve
+//doesn't fork
 void	exec_cmd_inpipe(t_node *node)
 {
 	char	*cmd_path;
@@ -141,34 +37,32 @@ static int	handle_operator(t_program *program, t_node *node, bool is_pipe_child)
 	int	right_status;
 
 	if (node->u_data.op.type == PIPE)
-		return (execute_pipeline(program, node, is_pipe_child));//TODO connect with pipe.c and program
+		return (execute_pipeline(program, node));//TODO connect with pipe.c and program
 	else if (node->u_data.op.type == AND)
 	{
-		left_status = execution(program, node->u_data.op.left);
+		left_status = execution(program, node->u_data.op.left, true);
 		if (left_status == 0)
-			return (execution(program, node->u_data.op.right));
+			return (execution(program, node->u_data.op.right, true));
 		return (left_status);
 	}
-	else if (node->u_data.op.type == OR)
-	{
-		left_status = execution(program, node->u_data.op.left);
-		if (left_status != 0)
-			return (execution(program, node->u_data.op.right));
-		return (left_status);
-	}
-	else if (node->u_data.op.type == SEMICOLON)
-	{
-		execution(program, node->u_data.op.left);
-		return (execution(program, node->u_data.op.right));
-	}
+	// else if (node->u_data.op.type == OR)
+	// {
+	// 	left_status = execution(program, node->u_data.op.left);
+	// 	if (left_status != 0)
+	// 		return (execution(program, node->u_data.op.right));
+	// 	return (left_status);
+	// }
+	// else if (node->u_data.op.type == SEMICOLON)
+	// {
+	// 	execution(program, node->u_data.op.left);
+	// 	return (execution(program, node->u_data.op.right));
+	// }
 	fprintf(stderr, BOLD RED "Error: unknow type operand for execution\n" RESET);
 	return (1);
 }
 
 //decides cmd execution
-//builtins: cd, export, unset, exit modify shell status needs to be exec in parent
-//echo, pwd, env only read, can be executed in pipes
-int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
+int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make it shorter
 {
 	int	status;
 	char *cmd_name;
@@ -199,40 +93,25 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 	}
 }
 
-/**
-*	@brief Receives a node from AST and decides 
-*   type of execution based on the type node
-*
-*	1. Base case: (!root) returns
-*   2. calls execute_external_cm
-*
-*   @param root The root node of AST to be executed
-*
-*   @note execution will be performed in recursion
-*/
-
-int	execution(t_program *program, t_node *node, bool is_pipe_child)//check if change parameter name
+int	execution(t_program *program, t_node *node, bool is_pipe_child)
 {
 	int	status;
 
 	fprintf(stderr, MAGENTA BOLD "About to dispatch command\n" RESET);//test
 	if (!node)
 	{
-		program->last_exit_status = 0;//new my_exit
+		program->last_exit_status = 0;
 		return (0);
 	}
 	if (node->type == COMMAND) 
 	{
-		status = handle_cmd_exec(program, node, is_pipe_child);//NEW
+		status = handle_cmd_exec(program, node, is_pipe_child);
 		fprintf(stderr, MAGENTA BOLD "Will be a cmd\n" RESET);//test
-		// return (execute_external_cm(node));//only external cmmd
-		// return (handle_cmd_exec(node, false));//builtin and external cmd
 	}
 	else if (node->type == OPERATOR)
 	{
-		status = handle_operator(program, node, is_pipe_child);//new
+		status = handle_operator(program, node, is_pipe_child);
 		fprintf(stderr, MAGENTA BOLD "Will be a oprator\n" RESET);//test
-		// return (handle_operator(node));
 	}
 	else
 	{
@@ -245,7 +124,7 @@ int	execution(t_program *program, t_node *node, bool is_pipe_child)//check if ch
 
 //to be called from main after parsing
 // will prepare the cmds for execution and executions
-int	process_node(t_program *program)//new
+int	process_node(t_program *program)//better to make it with all the node life cycle
 {
 	int	status;
 
@@ -253,11 +132,11 @@ int	process_node(t_program *program)//new
 	if (status != 0)
 	{
 		fprintf(stderr, BOLD CYAN "There was an error in pre-execution" RESET);
-		free(program->line);//chek if also free token_list
+		free(program->line);//CHECK if also free token_list
 		free_node(program->root);
 		return (status);
 	}
 	status = execution(program, program->root, false);
-//todo cleanup cmd
+//TODO cleanup cmd
 	return (status);
 }
