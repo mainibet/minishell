@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "exec.h"/
 
 int	wait_children(t_program *program, pid_t left_pid, pid_t right_pid, int *right_status)
 {
