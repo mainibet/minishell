@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/11 13:59:45 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/07/23 11:59:27 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@
 
 typedef struct s_token t_token;
 typedef struct s_node t_node;
-typedef struct s_cmd_data t_cmd_data; // Forward declare for union
+typedef struct s_cmd_data t_cmd_data;
 typedef struct s_operator t_operator;
 
 // -----------------------------------------//
@@ -60,8 +60,8 @@ typedef enum e_toktype
 {
 	WORD = 1,
 	//HEREDOC,
-	//REDIR_IN,
-	//REDIR_OUT,
+	//REDIR_IN
+	//REDIR_OUT
 	//APPEND
 	OPEN,
 	CLOSE,
@@ -126,7 +126,7 @@ typedef struct s_operator
 
 // --- UNION FOR NODE CONTENT --- //
 
-union u_node_content//changed from u_node to node_content
+union u_node_content
 {
 	t_operator	op;
 	t_cmd_data	cmd;
@@ -136,23 +136,27 @@ union u_node_content//changed from u_node to node_content
 typedef struct s_node 
 {
 	enum e_nodetype			type;
-	union u_node_content	u_data;//changed from content to data
+	union u_node_content	u_data;
 }	t_node;
 
-// --- INCLUDED BECAUSE EXECUTION --- //
-
-typedef struct s_program//new include in minishell.h
+typedef struct s_program
 {
-	char	*line;//original command line fill by user
+	char	*line;
 	char	**envp_cpy;
-	char	**envp;//original not will be free
+	char	**envp;
 	t_node	*root;
 	t_token	*token_list;
 	int		last_exit_status;
-}	t_program;
+} t_program;
 
 // -----------------------------------------//
 //                PROTOTYPES                //
 // -----------------------------------------//
 
+// --- ERRORS_CLEAN-UP --- //
+// int		cleanup_fd(t_node *node, t_node_type type);
+int		cleanup_fd(t_node *node, int node_type);
+int		cleanup_cmd_node(t_node *node);
+void	cleanup_program(t_program *program);
+void	free_node(t_node *node);
 #endif

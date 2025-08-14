@@ -166,19 +166,37 @@ static int	handle_operator(t_program *program, t_node *node, bool is_pipe_child)
 }
 
 //decides cmd execution
+//builtins: cd, export, unset, exit modify shell status needs to be exec in parent
+//echo, pwd, env only read, can be executed in pipes
 int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 {
-	if (is_builtin(node->u_data.cmd.argv[0]))//check here logic to execute builtins in parent or in child correctly
-		// return (execute_simple_cmd(node));
-		return (execute_builtin(program, node));
-	else if (is_pipe_child)
+	int	status;
+	char *cmd_name;
+
+	if (!node || !node->u_data.cmd.argv)
+		return (1);
+	cmd_name = node->u_data.cmd.argv[0];
+	if (is_pipe_child)
 	{
-		exec_cmd_inpipe(node);
-		exit (EXIT_FAILURE);
+		if (is_builtin(cmd_name))
+		{
+			status = execute_builtin(program, node);
+			exit (status);
+		}
+		else
+			exec_cmd_inpipe(node);
 	}
 	else
-		// return (execute_external_cm(node));
-		return (exec_cmd_nopipe(program, node));
+	{
+		if (is_builtin(cmd_name))
+		{
+			status = execute_builtin(program, node);
+			program->last_exit_status = status;
+			return (status);
+		}
+		else
+			return (exec_cmd_nopipe(program, node));
+	}
 }
 
 /**

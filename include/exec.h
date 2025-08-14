@@ -53,18 +53,12 @@ void	exec_cmd_inpipe(t_node *node);
 
 //child
 // void	child_process(t_node *node);
-void child_process(t_program *program, t_node *node)
+void child_process(t_program *program, t_node *node);
 // void	exec_external_cmd(t_node *node);
 
 //pipelines
 int		execute_pipeline(t_node *node);
 int		wait_children(pid_t left_pid, pid_t right_pid, int *right_status);
-
-// --- ERRORS_CLEAN-UP --- //
-// int		cleanup_fd(t_node *node, t_node_type type);
-int		cleanup_fd(t_node *node, int node_type);
-int		cleanup_cmd_node(t_node *node);
-void	cleanup_program(t_program *program);
 
 /**
 Left-associative
