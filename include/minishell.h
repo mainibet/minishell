@@ -105,13 +105,13 @@ typedef struct s_token
 
 
 // --- COMMAND NODE --- //
-typedef struct s_cmd_data
+typedef struct s_cmd_data//possible include struct with redirections
 {
 	t_token		*tokens;
 	char		**argv;//processed args for execution
 	char		**env;
-	int			fd_in;
-	int			fd_out;
+	int			fd_in;//check if this is the strategy
+	int			fd_out;//check if this is the strategy
 	t_cmdtype	cmd_type;
 }	t_cmd_data;
 
@@ -154,9 +154,9 @@ typedef struct s_program
 // -----------------------------------------//
 
 // --- ERRORS_CLEAN-UP --- //
-// int		cleanup_fd(t_node *node, t_node_type type);
 int		cleanup_fd(t_node *node, int node_type);
 int		cleanup_cmd_node(t_node *node);
 void	cleanup_program(t_program *program);
 void	free_node(t_node *node);
+
 #endif
