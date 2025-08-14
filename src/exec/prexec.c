@@ -39,6 +39,19 @@ void	free_partial_arr(char **arr, int allocated_i)
 	free (arr);
 }
 
+
+static int is_operator_token(t_token *token)
+{
+	if (!token)
+		return (0);
+	if (token->type == PIPE ||
+		token->type == AND ||
+		token->type == OR ||
+		token->type == SEMICOLON)
+		return (1);
+	return (0);
+}
+
 static int copy_token_strings(char **argv, t_token *token)
 {
 	t_token	*current_token;
@@ -46,7 +59,7 @@ static int copy_token_strings(char **argv, t_token *token)
 
 	current_token = token;
 	i = 0;
-	while (current_token && current_token->type != OPERATOR)
+	while (current_token && !is_operator_token(current_token))
 	{
 		argv[i] = ft_strdup(current_token->txt);
 		if (!argv[i])
@@ -67,11 +80,10 @@ char	**token_to_argv(t_token *token)
 	char	**argv;
 	t_token	*current_token;
 	int		nb_token;
-	// int		i;
 
 	nb_token = 0;
 	current_token = token;
-	while (current_token && current_token->type != OPERATOR)
+	while (current_token && !is_operator_token(current_token))
 	{
 		nb_token++;
 		current_token = current_token->next;
@@ -109,8 +121,8 @@ void	pre_execution(t_program *program, t_node *node)
 		return ;
 	if (node->type == OPERATOR)
 	{
-		pre_execution(node->u_data.op.left, program->envp);
-		pre_execution(node->u_data.op.right, program->envp);
+		pre_execution(program, node->u_data.op.left);
+		pre_execution(program, node->u_data.op.right);
 	}
 	else if (node->type == COMMAND)
 	{
