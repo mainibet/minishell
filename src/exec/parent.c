@@ -12,11 +12,10 @@
 
 #include "minishell.h"
 
-int	wait_children(t_program *program, pid_t left_pid, pid_t right_pid, int *right_status)
+int	wait_children(pid_t left_pid, pid_t right_pid, int *right_status)
 {
 	int	left_status;
 
-	(void) program; //check
 	waitpid(left_pid, &left_status, 0);
 	waitpid(right_pid, right_status, 0);
 	if (WIFEXITED(*right_status))
