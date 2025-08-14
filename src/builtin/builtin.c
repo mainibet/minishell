@@ -45,7 +45,7 @@ int	execute_builtin(t_program *program, t_node *node)
 	e_builtin_type = is_builtin(cmd->argv[0]);
 
 	if (e_builtin_type == BUILTIN_ECHO)
-		return (my_echo(node));
+		return (my_echo(program, node));
 	if (e_builtin_type == BUILTIN_ENV)
 		return (my_env(program, node));//implement program->envp-cpy
 	// else if (e_builtin_type == BUILTIN_CD)
