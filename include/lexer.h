@@ -1,0 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/15 08:36:45 by albetanc          #+#    #+#             */
+/*   Updated: 2025/07/23 12:00:07 by albetanc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef LEXER_H
+# define LEXER_H
+
+# include "minishell.h"
+
+// -----------------------------------------//
+//                  STRUCTS                 //
+// -----------------------------------------//
+
+
+// -----------------------------------------//
+//                PROTOTYPES                //
+// -----------------------------------------//
+
+t_token			*lex(char *s, char delim);
+// void			free_token(t_token *token);//moved to minishell.h for general cleanup
+enum e_toktype	token_type(t_token *token);
+t_token			*extract_token(char *s, size_t size);
+int				print_tokens(t_token *token);
+
+#endif
