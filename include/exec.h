@@ -41,22 +41,17 @@ char	*find_path(char *argv);
 
 // --- EXECUTION --- //
 //Parent cmd node
-// int		wait_one_child(pid_t pid, int *status);//included in exec_cmd_nopipe
 int		fork_handle(pid_t *token_headid, t_node *node, int i_cmd, int nb_cmd);
 int		setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
 int		execution(t_program *program, t_node *node, bool is_pipe_child);
 int		handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child);
-// int		execution(t_node *cmd);
 int		exec_cmd_nopipe(t_program *token_headromgra, t_node *node);
-// int		execute_simple_cmd(t_node *cmd_node);//when is in pipe to avoid double fork
-void	exec_cmd_inpipe(t_node *node);
 
 //child
-// void	child_process(t_node *node);
 void child_process(t_program *program, t_node *node);
-// void	exec_external_cmd(t_node *node);
 
 //pipelines
+void	exec_cmd_inpipe(t_node *node);
 int	execute_pipeline(t_program *program, t_node *node);
 int		wait_children(pid_t left_pid, pid_t right_pid, int *right_status);
 
