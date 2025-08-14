@@ -147,10 +147,16 @@ typedef struct s_program
 	t_node	*root;
 	t_token	*token_list;
 	int		last_exit_status;
-} t_program; (edited) 
+} t_program;
 
 // -----------------------------------------//
 //                PROTOTYPES                //
 // -----------------------------------------//
 
+// --- ERRORS_CLEAN-UP --- //
+// int		cleanup_fd(t_node *node, t_node_type type);
+int		cleanup_fd(t_node *node, int node_type);
+int		cleanup_cmd_node(t_node *node);
+void	cleanup_program(t_program *program);
+void	free_node(t_node *node);
 #endif
