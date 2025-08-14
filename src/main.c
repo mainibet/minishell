@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-// #include "../include/lexer.h"
-// #include "../include/parser.h"
 #include "../include/prexec.h"
 #include "../include/exec.h"
 
