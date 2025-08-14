@@ -20,6 +20,5 @@
 // -----------------------------------------//
 
 t_node  *parse(t_token *token_list);
-void	free_node(t_node *node);
 
 #endif
