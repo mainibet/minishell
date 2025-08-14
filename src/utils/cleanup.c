@@ -16,6 +16,15 @@
 int	cleanup_cmd_node(t_node *node);
 int	cleanup_operator_fd(t_node *node);
 
+
+void	free_token(t_token *token)
+{
+	if (token->next)
+		free_token(token->next);
+	free(token->txt);
+	free(token);
+}
+
 void	free_node(t_node *node)
 {
 	if (node->type == OPERATOR)
@@ -26,7 +35,7 @@ void	free_node(t_node *node)
 	free(node);
 }
 
-int	cleanup_fd(t_node *node, t_cmdtype type)
+int	cleanup_fd(t_node *node, t_nodetype type)
 {
 	if (!node)
 		return (-1);
