@@ -56,31 +56,6 @@ t_node	*token_parser_input(char *line, t_token **token_out)
 	return (root);
 }
 
-static void	process_cmdline(t_program *program, char *line)
-{
-	t_token	*token_list;
-	t_node	*root;
-
-	if (!line)
-		return ;
-	if (!*line)
-	{
-		free(line);
-		return ;
-	}
-	add_history(line);
-	root = token_parser_input(line, &token_list);
-	free(line);
-	if (!root)//if parsing failed
-		return ;
-	fprintf(stderr, BOLD MAGENTA "AST built. stating pre-execution \n" RESET);//TEST
-	pre_execution(program, root);
-	execution(program, root, false);
-	free_token(token_list);
-	free_node(root);
-	fprintf(stderr, BOLD MAGENTA "Command processed and cleaned up\n" RESET); //TEST
-}
-
 void	init_program(t_program *program, char **envp)
 {
 	program->line = NULL;
