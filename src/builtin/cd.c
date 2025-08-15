@@ -95,5 +95,7 @@ int	my_cd(t_program *program, t_node *node)
 	update_paths(program, old_pwd, new_cwd);
 	free_old_dest(old_pwd, dest_path);
 	free(new_cwd);
+	char *new_pwd = find_env_value(program->envp_cpy, "PWD");//test
+	fprintf(stderr, MAGENTA BOLD "DEBUG - new pwd is: %s\n" RESET, new_pwd);
 	return (0);
 }
