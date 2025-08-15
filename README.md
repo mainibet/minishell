@@ -33,7 +33,13 @@ provides an in-depth exploration of UNIX process management, pipes, signals, fil
 4. **Execution** – traverses the Abstract Syntax Tree (AST) node by node. For each node, it takes the corresponding action:
 - Executes external commands single and in pipes.
 - If it is operator node, it manages the execution flow. For example, for a pipe (|), it creates left and right child processes and handles communication between them.
-- Built-in commands are executed and is tracked their state and if they are a child process if they are part of a pipe.
+- Built-in commands are executed and is tracked their state and if they are a child process if they are part of a pipe. **Expected behavior:**
+
+   - **echo** – Print the given arguments to standard output, separated by spaces, optionally suppressing the trailing newline with **-n**.
+   - **env** – Display the list of environment variables.
+   - **pwd** – Print the current working directory.
+   - **export** – List or set environment variables in the shell.
+   - **exit** – Terminate the shell with the given or last exit status.
 
 This modular flow ensures predictable behavior and makes debugging easier.
 
