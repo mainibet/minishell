@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "exec.h"//TMP FOR TESTING
 
 /*
 *	@brief ends the progam and free resources needed: nodes, tokens, etc
@@ -20,6 +19,7 @@
 void	my_exit(t_program *program, t_node *node)
 {
 	(void) node;
+	fprintf(stderr, MAGENTA BOLD "MY EXIT is about to be run\n" RESET);
 	cleanup_program(program);
 	exit(program->last_exit_status);
 }

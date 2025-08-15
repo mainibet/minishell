@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "exec.h"//TMP FOR TESTING
 
 //return 0 for success
 // int	my_env(char **envp)
@@ -20,6 +19,7 @@ int	my_env(t_program *program, t_node *node)
 	int	i;
 
 	(void)node;
+	fprintf(stderr, MAGENTA BOLD "MY ENV is about to be run\n" RESET);
 	if (!program->envp_cpy)
 	{
 		fprintf(stderr, BLUE "env: no environment variables found\n");
