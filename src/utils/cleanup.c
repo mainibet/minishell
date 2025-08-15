@@ -74,9 +74,27 @@ int	cleanup_operator_fd(t_node *node)
 	return (0);
 }
 
-//To centralized cleanup
+//Cleaning after each cmd in cmd line
+//free tmp resources per each cmd like root and token list
+void	free_ast_tokens(t_program *program)
+{
+	if (program->token_list)
+	{
+		free_token(program->token_list);
+		program->token_list = NULL;
+	}
+	if (program->root)
+	{
+		free_node(program->root);
+		program->root = NULL;
+	}
+	fprintf(stderr, BOLD MAGENTA "Command processed and cleaned up\n" RESET); //TEST
+}
+
+//To centralized cleanup at the end of the program
+//to finish the program
 void	cleanup_program(t_program *program)
-{//probably includes prompt when is dynamic
+{//probably includes prompt when is dynamic or in free ast_tokens
 	if (program->line)
 		free(program->line);
 	if (program->token_list)
