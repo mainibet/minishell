@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "exec.h"
 
 pid_t	execute_left(t_program *program, t_node *left_node, int pipefd[2])
 {
