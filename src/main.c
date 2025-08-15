@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rococo <rococo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/11 13:59:45 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/15 11:48:41 by rococo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,16 +81,6 @@ static void	process_cmdline(t_program *program, char *line)
 	pre_execution(program, root);
 	program->last_exit_status = execution(program, root, false);
 	free_ast_tokens(program);
-}
-
-void	init_program(t_program *program, char **envp)
-{
-	program->line = NULL;
-	program->root = NULL;
-	program->token_list = NULL;
-	program->envp = envp;
-	program->envp_cpy = NULL;
-	program->last_exit_status = 0;
 }
 
 int	main(int argc, char **argv, char **envp)

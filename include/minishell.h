@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rococo <rococo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/23 11:59:27 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/15 11:48:45 by rococo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@
 // -----------------------------------------//
 //                PROTOTYPES                //
 // -----------------------------------------//
+
+// --- PROGRAM INITIALIZATION --- //
+void	init_program(t_program *program, char **envp);
 
 // --- ERRORS_CLEAN-UP --- //
 int		cleanup_fd(t_node *node, t_nodetype type);
