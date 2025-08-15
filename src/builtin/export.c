@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "exec.h"//TMP FOR TESTING
 
 /*
 *	@brief Prints all currently exported environment variables
@@ -23,9 +22,14 @@ int	my_export(t_program *program, t_node *node)
 {
 	int		i;
 	char	**args;
+	int		nb_args;
 
+	fprintf(stderr, MAGENTA BOLD "MY EXPORT is about to be run\n" RESET);
 	args = node->u_data.cmd.argv;
-	if (node->u_data.cmd.argv == 1)
+	nb_args = 0;
+	while (args && args[nb_args])
+		nb_args++;
+	if (nb_args == 1)
 	{
 		if (!program->envp_cpy)
 		{

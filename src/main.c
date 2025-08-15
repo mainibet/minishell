@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-#include "../include/prexec.h"
-#include "../include/exec.h"
+#include "minishell.h"
 
 //-------------------------------//
 //          V0: main             //
@@ -29,10 +27,10 @@
 //         V1: CURRENT           //
 //                               //
 // Calls lexer, parser, prexec   //
-// and execution.......          //
+// and execution, static prompt. //
 //-------------------------------//
 
-t_node	*token_parse_input(char *line, t_token **token_out)
+t_node	*token_parser_input(char *line, t_token **token_out)
 {
 	t_token	*token_list;
 	t_token	*parser_tokens;
@@ -49,7 +47,7 @@ t_node	*token_parse_input(char *line, t_token **token_out)
 	root = parse(parser_tokens);
 	if (!root)
 	{
-		fprintf(stderr, "Parsing failed\n");
+		fprintf(stderr, RED BOLD "Parsing failed\n" RESET);
 		free_token(token_list);
 		*token_out = NULL;
 		return (NULL);
@@ -71,16 +69,18 @@ static void	process_cmdline(t_program *program, char *line)
 		return ;
 	}
 	add_history(line);
-	root = parse_input(line, &token_list);
+	root = token_parser_input(line, &program->token_list);
+	program->root = root;
 	free(line);
-	if (!root)//if parsing failed
+	if (!program->root)//if parsing failed
+	{
+		fprintf(stderr, RED "Parsing failed\n" RESET);
 		return ;
+	}
 	fprintf(stderr, BOLD MAGENTA "AST built. stating pre-execution \n" RESET);//TEST
 	pre_execution(program, root);
-	execution(program, root, false);
-	free_token(token_list);
-	free_node(root);
-	fprintf(stderr, BOLD MAGENTA "Command processed and cleaned up\n" RESET); //TEST
+	program->last_exit_status = execution(program, root, false);
+	free_ast_tokens(program);
 }
 
 void	init_program(t_program *program, char **envp)
@@ -105,21 +105,15 @@ int	main(int argc, char **argv, char **envp)
 	prompt = BOLD GREEN "🐶🥕 Milanshell >" RESET;
 	while (1)
 	{
-		program.line = readline(prompt);//new program.
+		program.line = readline(prompt);
 		if (!program.line && isatty(STDIN_FILENO)) //if issaty returns 0 is in an fd
 		{
 			printf(BLUE "exit\n" RESET);
 			break ;
 		}
-		if (program.line && *program.line)
-		{
-			add_history(program.line);
-			printf(BOLD MAGENTA "Command received: %s\n" RESET, program.line);//test
-			process_node(&program);//this will be the root
-		}
-		else if (program.line)
-			free(program.line);
+		process_cmdline(&program, program.line);
 	}
 	cleanup_program(&program);
+	fprintf(stderr, MAGENTA BOLD "last program status: %d\n" RESET, program.last_exit_status);//new TEST
 	return (program.last_exit_status);
 }

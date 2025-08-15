@@ -16,16 +16,10 @@
 # include "minishell.h"
 
 // -----------------------------------------//
-//                  STRUCTS                 //
-// -----------------------------------------//
-
-
-// -----------------------------------------//
 //                PROTOTYPES                //
 // -----------------------------------------//
 
 t_token			*lex(char *s, char delim);
-// void			free_token(t_token *token);//moved to minishell.h for general cleanup
 enum e_toktype	token_type(t_token *token);
 t_token			*extract_token(char *s, size_t size);
 int				print_tokens(t_token *token);

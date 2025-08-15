@@ -11,23 +11,11 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "parser.h"
-#include "lexer.h"
 
 // --- FORWARD DECLARATIONS --- //
 t_node			*parse_command(t_token *token);
 static t_token	*next_operator(t_token *token);
 static int		precedence(t_token *token);
-
-void	free_node(t_node *node)
-{
-	if (node->type == OPERATOR)
-	{
-		free_node(node->u_data.op.left);
-		free_node(node->u_data.op.right);
-	}
-	free(node);
-}
 
 static t_token	*next_operator(t_token *token)
 {

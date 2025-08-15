@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "builtin.h"
 
 int	is_builtin(const char *cmd_name)
 {
@@ -43,7 +42,6 @@ int	execute_builtin(t_program *program, t_node *node)
 
 	cmd = &node->u_data.cmd;
 	e_builtin_type = is_builtin(cmd->argv[0]);
-
 	if (e_builtin_type == BUILTIN_ECHO)
 		return (my_echo(program, node));
 	if (e_builtin_type == BUILTIN_ENV)
@@ -55,7 +53,10 @@ int	execute_builtin(t_program *program, t_node *node)
 	else if (e_builtin_type == BUILTIN_EXPORT)
 		return (my_export(program, node));//implement program->envp-cpy
 	else if (e_builtin_type == BUILTIN_EXIT)
-		return (my_exit(program, node));
+	{
+		my_exit(program, node);
+		return (1);
+	}
 	fprintf(stderr, BOLD RED "Error: unknown builtin type for execution\n" RESET);//check if needed
 	return (1);
 }

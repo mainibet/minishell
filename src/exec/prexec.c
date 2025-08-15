@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "prexec.h"
-#include "builtin.h"
 
 static int	count_tokens(t_token *token)
 {
@@ -39,6 +37,19 @@ void	free_partial_arr(char **arr, int allocated_i)
 	free (arr);
 }
 
+
+static int is_operator_token(t_token *token)
+{
+	if (!token)
+		return (0);
+	if (token->type == PIPE ||
+		token->type == AND ||
+		token->type == OR ||
+		token->type == SEMICOLON)
+		return (1);
+	return (0);
+}
+
 static int copy_token_strings(char **argv, t_token *token)
 {
 	t_token	*current_token;
@@ -46,7 +57,7 @@ static int copy_token_strings(char **argv, t_token *token)
 
 	current_token = token;
 	i = 0;
-	while (current_token && current_token->type != OPERATOR)
+	while (current_token && !is_operator_token(current_token))
 	{
 		argv[i] = ft_strdup(current_token->txt);
 		if (!argv[i])
@@ -67,11 +78,10 @@ char	**token_to_argv(t_token *token)
 	char	**argv;
 	t_token	*current_token;
 	int		nb_token;
-	// int		i;
 
 	nb_token = 0;
 	current_token = token;
-	while (current_token && current_token->type != OPERATOR)
+	while (current_token && !is_operator_token(current_token))
 	{
 		nb_token++;
 		current_token = current_token->next;
@@ -103,33 +113,29 @@ char	**token_to_argv(t_token *token)
 	return (argv);
 }
 
-// void	pre_execution(t_node *node, char **envp)
 void	pre_execution(t_program *program, t_node *node)
 {
-	// t_token	*curren_token;
-	// int		i;
-	// int		nb_token;
-
 	if (!node)
 		return ;
 	if (node->type == OPERATOR)
 	{
-		pre_execution(node->u_data.op.left, program->envp);
-		pre_execution(node->u_data.op.right, program->envp);
+		pre_execution(program, node->u_data.op.left);
+		pre_execution(program, node->u_data.op.right);
 	}
 	else if (node->type == COMMAND)
 	{
-		node->u_data.cmd.argv = token_to_argv(node->u_data.cmd.tokens);////init node
+		node->u_data.cmd.argv = token_to_argv(node->u_data.cmd.tokens);//init node
 		if (!node->u_data.cmd.argv)
 		{
-			perror(BOLD RED "Failed to create argv" RESET); //check msg
+			perror("Failed to create token args");//check msg
+			cleanup_program(program);//check if smt else need to be clean
 			exit(EXIT_FAILURE);
 		}
 	node->u_data.cmd.env = program->envp;
 	if (node->u_data.cmd.argv[0] && is_builtin(node->u_data.cmd.argv[0]))
 		node->u_data.cmd.cmd_type = BUILTIN;
 	else
-		node->u_data.cmd.cmd_type = EXECUTABLE;//for this test
+		node->u_data.cmd.cmd_type = EXECUTABLE;
 	node->u_data.cmd.fd_in = STDIN_FILENO;
 	node->u_data.cmd.fd_out = STDOUT_FILENO;
 	}

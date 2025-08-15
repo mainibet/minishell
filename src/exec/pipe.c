@@ -13,17 +13,6 @@
 #include "minishell.h"
 #include "exec.h"
 
-int	wait_children(pid_t left_pid, pid_t right_pid, int *right_status)
-{
-	int	left_status;
-
-	waitpid(left_pid, &left_status, 0);
-	waitpid(right_pid, right_status, 0);
-	if (WIFEXITED(*right_status))
-		return (WEXITSTATUS(*right_status));
-	return (1);
-}
-
 pid_t	execute_left(t_program *program, t_node *left_node, int pipefd[2])
 {
 	pid_t	pid;
