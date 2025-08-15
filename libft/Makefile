@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+         #
+#    By: rococo <rococo@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/05 17:34:53 by albetanc          #+#    #+#              #
-#    Updated: 2025/05/06 12:58:23 by albetanc         ###   ########.fr        #
+#    Updated: 2025/08/15 12:47:20 by rococo           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,7 @@ ft_printf_hexa.c ft_printf_ptr.c ft_printf_unsign.c)
 SRC_GNL = $(addprefix $(GNL_DIR)/, \
 get_next_line.c get_next_line_utils.c)
 
-SRC_OTHERS = open_fd.c close_fd.c malloc_error.c free_array.c
+SRC_OTHERS = open_fd.c close_fd.c malloc_error.c free_array.c ft_strcmp.c
 
 SRC = $(SRC_LIBFT) $(SRC_PRINTF) $(SRC_GNL) $(SRC_OTHERS)
 
