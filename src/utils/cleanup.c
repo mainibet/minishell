@@ -27,10 +27,17 @@ void	free_token(t_token *token)
 
 void	free_node(t_node *node)
 {
+	if (!node)
+		return ;
 	if (node->type == OPERATOR)
 	{
 		free_node(node->u_data.op.left);
 		free_node(node->u_data.op.right);
+	}
+	else if (node->type == COMMAND)
+	{
+		if (node->u_data.cmd.argv)
+			free_array(node->u_data.cmd.argv);
 	}
 	free(node);
 }

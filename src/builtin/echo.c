@@ -11,16 +11,10 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "exec.h"//TMP FOR TESTING
 
 //echo - display a line of text
-//v0: no flags
-//v1: echo -n
 //-e enable interpretation of backslash escapes
-// - Execute the echo command with or without arguments or -n
 // - Repeat multiple times with different arguments
-// - if something crashes use the crash flag.
-// - if something is not working use the incomplete work flag.
 
 /*
 *   1. new_line with 1 means there is '\n' and 0 means no.
@@ -47,7 +41,7 @@ int	my_echo(t_program *program, t_node *node)
 	{
 		if (safe_write(node->u_data.cmd.fd_out, node->u_data.cmd.argv[i],
 				ft_strlen(node->u_data.cmd.argv[i])) == -1)//implement correctly
-			return (1);//1 means error
+			return (1);
 		if (node->u_data.cmd.argv[i + 1])
 		{
 			if (safe_write(node->u_data.cmd.fd_out, " ", 1) == -1)
