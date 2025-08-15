@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "exec.h"
-# include "builtin.h"
 
 //Executes a cmd with execve
 //doesn't fork
@@ -100,10 +98,11 @@ int	execution(t_program *program, t_node *node, bool is_pipe_child)
 {
 	int	status;
 
-	fprintf(stderr, MAGENTA BOLD "About to dispatch command\n" RESET);//test
+	fprintf(stderr, MAGENTA BOLD "About to dispatch a node execution\n" RESET);//test
 	if (!node)
 	{
 		program->last_exit_status = 0;
+		fprintf(stderr, MAGENTA BOLD "Lastcmd updated: %d\n" RESET, program->last_exit_status);//test
 		return (0);
 	}
 	if (node->type == COMMAND) 
@@ -123,14 +122,4 @@ int	execution(t_program *program, t_node *node, bool is_pipe_child)
 	}
 	program->last_exit_status = status;
 	return (status);
-}
-
-//to be called from main after parsing
-// will prepare the cmds for execution and executions
-int	process_node(t_program *program)//better to make it with all the node life cycle
-{
-	pre_execution(program, program->root);
-	program->last_exit_status = execution(program, program->root, false);
-//TODO cleanup cmd
-	return (program->last_exit_status);
 }
