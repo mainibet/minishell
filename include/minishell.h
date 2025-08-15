@@ -59,5 +59,6 @@ int		cleanup_cmd_node(t_node *node);
 void	cleanup_program(t_program *program);
 void	free_node(t_node *node);
 void	free_token(t_token *token);
+void	free_ast_tokens(t_program *program);
 
 #endif
