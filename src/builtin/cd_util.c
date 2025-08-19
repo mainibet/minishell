@@ -1,73 +1,64 @@
-//42 HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd_util.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/19 14:04:53 by albetanc          #+#    #+#             */
+/*   Updated: 2025/08/19 15:27:04 by albetanc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
-static char	*create_env_entry(const char *key, const char *value)
+static void	free_old_dest(char *old_pwd, char *dest_path)
 {
-	char	*tmp_str;
-	char	*new_entry;
-
-	tmp_str = ft_strjoin(key, "=");//check where to free
-	if (!tmp_str)
-		return NULL;
-	new_entry = ft_strjoin(tmp_str, value);//check where to free
-	free(tmp_str);
-	return new_entry;
+	free(old_pwd);
+	free(dest_path);
 }
 
-static void add_env_var(t_program *program, const char *key, const char *value)
+static int	handle_cwd_error(char *dest_path)
 {
-	char	**envp;
-	int		count;
-	int		i;
-
-	count = 0;
-	envp = program->envp_cpy;
-	while (envp[count])
-		count++;
-	char **new_envp = malloc(sizeof(char *) * (count + 2));
-	if (!new_envp)
-		return;
-	i = 0;
-	while (envp[i])
-	{
-		new_envp[i] = envp[i];
-		i++;
-	}
-	new_envp[count] = create_env_entry(key, value);
-	if (!new_envp[count])
-	{
-		free(new_envp);
-		return;
-	}
-	new_envp[count + 1] = NULL;
-	free(program->envp_cpy);
-	program->envp_cpy = new_envp;
+	fprintf(stderr, RED BOLD "cd: getcwd error to get path\n" RESET);
+	if (dest_path)
+		free(dest_path);
+	return (1);
 }
 
-void update_env_var(t_program *program, const char *key, const char *value)
+static void	update_paths(t_program *program, char *old_pwd, char *new_path)
 {
-	char	**envp;
-	int		i;
-	int		len;
+	update_env_var(program, "OLDPWD", old_pwd);
+	update_env_var(program, "PWD", new_path);
+}
 
-	if (!program || !program->envp_cpy || !key || !value)
-		return;
-	envp = program->envp_cpy;
-	len = ft_strlen(key);
-	i = 0;
-	while (envp[i])
+void	update_free_paths(t_program *program, 
+	char *old_pwd, char *new_cwd, char *dest_path)
+{
+	update_paths(program, old_pwd, new_cwd);
+	if (old_pwd)
+		free(old_pwd);
+	if (new_cwd)
+		free(new_cwd);
+	if (dest_path)
+		free(dest_path);
+}
+
+int	handle_env_path(t_program *program, char *key, char **dest_path)
+{
+	char	*tmp_path;
+
+	tmp_path = find_env_value(program->envp_cpy, key);
+	if (!tmp_path)
 	{
-		if (ft_strncmp(envp[i], key, len) == 0 && envp[i][len] == '=')
-		{
-			char *new_entry = create_env_entry(key, value);
-			if (!new_entry)
-				return;
-			free(envp[i]);
-			envp[i] = new_entry;
-			return;
-		}
-		i++;
+		fprintf(stderr, "cd: %s not set\n", key);
+		return (1);
 	}
-	add_env_var(program, key, value);
+	*dest_path = ft_strdup(tmp_path);
+	if (!*dest_path)
+	{
+		fprintf(stderr, RED BOLD "cd: memory error in handl env path\n" RESET);
+		return (1);
+	}
+	return (0);
 }

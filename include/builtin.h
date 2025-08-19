@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rococo <rococo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:54:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/15 13:42:46 by rococo           ###   ########.fr       */
+/*   Updated: 2025/08/19 15:23:38 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTIN_H
-#define BUILTIN_H
+# define BUILTIN_H
 
 # include "minishell.h"
 
@@ -41,8 +41,12 @@ void	update_env_var(t_program *program, const char *key, const char *value);
 int		my_echo(t_program *program, t_node *node);
 int		my_pwd(t_program *program, t_node *node);
 int		my_env(t_program *program, t_node *node);
+void	update_env_var(t_program *program, const char *key, const char *value);
 int		my_export(t_program *program, t_node *node);
 void	my_exit(t_program *program, t_node *node);
 int		my_cd(t_program *program, t_node *node);
+void	update_free_paths(t_program *program,
+			char *old_pwd, char *new_cwd, char *dest_path);
+int		handle_env_path(t_program *program, char *key, char **dest_path);
 
 #endif
