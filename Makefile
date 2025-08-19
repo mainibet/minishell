@@ -3,7 +3,7 @@ CC = cc
 # -g is to debug
 # -lreadline to link with the readline library
 # -Iinclude to include the header files in the include directory
-CFLAGS = -Wall -Wextra -Werror -g -Iinclude
+CFLAGS = -Wall -Wextra -g -Iinclude -fsanitize=address -fno-omit-frame-pointer 
 
 LIBFT_DIR = ./libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
@@ -11,7 +11,7 @@ SRC_DIR = src # NEW
 
 NAME = minishell
 
-SRC = $(wildcard $(SRC_DIR)/**/*.c) $(wildcard $(SRC_DIR)/*.c) # NEW
+SRC = $(shell find $(SRC_DIR) -name "*.c") # NEW
 
 OBJ_DIR = ./obj
 # OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
