@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:54:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/19 15:23:38 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/19 16:03:26 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,6 @@ int		my_cd(t_program *program, t_node *node);
 void	update_free_paths(t_program *program,
 			char *old_pwd, char *new_cwd, char *dest_path);
 int		handle_env_path(t_program *program, char *key, char **dest_path);
+int		handle_cwd_error(char *dest_path);
 
 #endif

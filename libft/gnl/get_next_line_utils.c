@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 16:08:51 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/11 08:37:04 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/19 16:05:10 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ size_t	ft_str_utils(char *dst, const char *src, size_t dst_size, int flag)
 	return (src_len);
 }
 
-char	*ft_strchr(const char *str, int c)
+char	*gnl_ft_strchr(const char *str, int c)
 {
 	if (!str || !c)
 		return (NULL);
