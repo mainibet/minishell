@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rococo <rococo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:27:29 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/15 15:31:02 by rococo           ###   ########.fr       */
+/*   Updated: 2025/08/19 15:08:48 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	my_pwd(t_program *program, t_node *node)
 	char	*cwd_path;
 
 	(void) node;
-	cwd_path = getcwd(NULL, 0);	
+	cwd_path = getcwd(NULL, 0);
 	if (cwd_path)
 	{
 		printf("%s\n", cwd_path);
