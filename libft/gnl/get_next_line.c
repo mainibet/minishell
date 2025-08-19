@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albetanc <albetanc@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 16:30:35 by albetanc          #+#    #+#             */
-/*   Updated: 2025/01/22 14:23:32 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/19 16:05:47 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static char	*ft_handle_eof(char **lefto, char *buf, char c)
 		*lefto = tmp;
 		return (free(buf), line);
 	}
-	if (*lefto && **lefto && ft_strchr(*lefto, c) == NULL)
+	if (*lefto && **lefto && gnl_ft_strchr(*lefto, c) == NULL)
 		return (line = *lefto, free (buf), *lefto = NULL, line);
 	return (free (buf), line);
 }
@@ -64,8 +64,8 @@ static int	handle_leftover_line(char **lefto, char *join, char c, char **line)
 	else
 	{
 		free(*lefto);
-		*lefto = ft_process_str(join, ft_strchr(join, c), 1);
-		*line = ft_process_str(join, ft_strchr(join, c), 0);
+		*lefto = ft_process_str(join, gnl_ft_strchr(join, c), 1);
+		*line = ft_process_str(join, gnl_ft_strchr(join, c), 0);
 		free(join);
 		return (1);
 	}

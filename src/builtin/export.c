@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rococo <rococo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 11:12:31 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/11 13:59:45 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/15 15:20:08 by rococo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	my_export(t_program *program, t_node *node)
 	int		i;
 	char	**args;
 	int		nb_args;
+	char	*equals_sign;
 
 	fprintf(stderr, MAGENTA BOLD "MY EXPORT is about to be run\n" RESET);
 	args = node->u_data.cmd.argv;
@@ -39,12 +40,18 @@ int	my_export(t_program *program, t_node *node)
 		i = 0;
 		while (program->envp_cpy[i])
 		{
-			printf(GREEN "declare -x %s\n" RESET, program->envp_cpy[i]);
+			equals_sign = ft_strchr(program->envp_cpy[i], '=');;
+			if (equals_sign)
+			{
+				*equals_sign = '\0';
+				printf("declare -x %.*s=\"%s\"\n", (int)(equals_sign - program->envp_cpy[i]), program->envp_cpy[i], equals_sign + 1);
+				*equals_sign = '=';
+			}
+			else
+				printf("declare -x %s\n", program->envp_cpy[i]);
 			i++;
 		}
 	}
-	// else
-	//TODOL export VAR=value and others args and update program envp cpyif needed
 	return (0);
 }
 
