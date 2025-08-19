@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 15:08:10 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/19 15:23:52 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/19 16:58:31 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ static void	add_env_var(t_program *program, const char *key, const char *value)
 	new_envp[count] = create_env_entry(key, value);
 	if (!new_envp[count])
 	{
-		free(new_envp);
+		// free(new_envp);
+		free_array(new_envp);
 		return ;
 	}
 	new_envp[count + 1] = NULL;

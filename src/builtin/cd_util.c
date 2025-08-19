@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 14:04:53 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/19 15:27:04 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/19 16:53:05 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	free_old_dest(char *old_pwd, char *dest_path)
 	free(dest_path);
 }
 
-static int	handle_cwd_error(char *dest_path)
+int	handle_cwd_error(char *dest_path)
 {
 	fprintf(stderr, RED BOLD "cd: getcwd error to get path\n" RESET);
 	if (dest_path)
@@ -52,6 +52,8 @@ int	handle_env_path(t_program *program, char *key, char **dest_path)
 	if (!tmp_path)
 	{
 		fprintf(stderr, "cd: %s not set\n", key);
+		if (*dest_path)
+			free(*dest_path);
 		return (1);
 	}
 	*dest_path = ft_strdup(tmp_path);

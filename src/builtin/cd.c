@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 14:04:46 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/19 15:26:48 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/19 16:43:02 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,17 @@ int	my_cd(t_program *program, t_node *node)
 	bool	print_path;
 
 	print_path = false;
+	fprintf(stderr, MAGENTA BOLD "MY CD is about to be run\n" RESET);
 	if (node->u_data.cmd.argv[1] 
 		&& ft_strcmp(node->u_data.cmd.argv[1], "-") == 0)
 		print_path = true;
 	if (get_dest_path(program, node, &dest_path) != 0)
 		return (1);
 	if (get_old_pwd(&old_pwd, dest_path) != 0)
+	{
+		free(dest_path);
 		return (1);
+	}
 	if (change_dir(dest_path) != 0)
 	{
 		update_free_paths(program, old_pwd, NULL, dest_path);

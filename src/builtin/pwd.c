@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:27:29 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/19 15:08:48 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/19 16:44:44 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,13 @@ int	my_pwd(t_program *program, t_node *node)
 	if (cwd_path)
 	{
 		printf("%s\n", cwd_path);
+		free(cwd_path);
 		return (0);
 	}
 	else
 	{
 		fprintf(stderr, BLUE "pwd: current directory not found\n" RESET);
+		free(cwd_path);
 		return (1);
 	}
 }
