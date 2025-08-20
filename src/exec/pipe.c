@@ -6,11 +6,12 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/20 14:22:21 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/20 14:47:41 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 
 //uses pipdefd[1] to write
 pid_t	execute_left(t_program *program, t_node *left_node, int pipefd[2])
