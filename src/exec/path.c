@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:13:58 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/23 14:46:21 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/20 14:58:51 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static char	*check_path(char **dir, char *file_path, int i)
 		}
 		free (dir);
 		return (file_path);
-	}
+	}//check if here need to free_file_path before NULL
 	return (NULL);
 }
 
