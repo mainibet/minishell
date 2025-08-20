@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/11 14:11:04 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/20 09:49:50 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,10 @@
 # include <stdbool.h> //bool
 
 // -----------------------------------------//
-//                 STRUCTS                  //
-// -----------------------------------------//
-
-/**
- *  @brief stores duplicated fd for tmp redirection
- *  -Use: to hold tmp compies of STDIN_FILENO/ STDOU_FILENO
-*/
-typedef struct s_fd_dup
-{
-	int	input_dup;
-	int	output_dup;
-}t_fd_dup;
-
-
-// -----------------------------------------//
 //                PROTOTYPES                //
 // -----------------------------------------//
 
-int	process_node(t_program *program);
+int		process_node(t_program *program);
 
 // --- ABSOLUTE PATH --- //
 
@@ -50,7 +35,7 @@ int		handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child);
 int		exec_cmd_nopipe(t_program *token_headromgra, t_node *node);
 
 //child
-void child_process(t_program *program, t_node *node);
+void	child_process(t_program *program, t_node *node);
 
 //pipelines
 void	exec_cmd_inpipe(t_node *node);
