@@ -1,10 +1,20 @@
-
-
-
-//PENDING 42 HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   structs.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/20 09:56:45 by albetanc          #+#    #+#             */
+/*   Updated: 2025/08/20 10:22:20 by albetanc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef STRUCTS_H
-#define STRUCTS_H
+# define STRUCTS_H
+
+// --- FORWARD DECLARACTIONS ---//
+typedef struct s_redir	t_redir;
 
 // -----------------------------------------//
 //            GLOBAL ENUMS                  //
@@ -15,10 +25,10 @@
 typedef enum e_toktype
 {
 	WORD = 1,
-	//HEREDOC,
-	//REDIR_IN
-	//REDIR_OUT
-	//APPEND
+	HEREDOC,
+	REDIR_IN,
+	REDIR_OUT,
+	APPEND,
 	OPEN,
 	CLOSE,
 	PIPE,
@@ -41,9 +51,19 @@ typedef enum e_cmdtype
 typedef enum e_nodetype
 {
 	OPERATOR,
-	COMMAND//CHANGED IT WAS TERMINAL
+	COMMAND
 	// MAX_NODETYPE
 }t_nodetype;
+
+// --- EXECUTION REDIR --- //
+
+typedef enum e_redir_type
+{
+	REDIR_IN,
+	REDIR_OUT,
+	APPEND,
+	HERE_DOC
+}t_redir_type;
 
 // -----------------------------------------//
 //                AST STRUCTS               //
@@ -62,14 +82,15 @@ typedef struct s_token
 
 // --- COMMAND NODE --- //
 
-typedef struct s_cmd_data//possible include struct with redirections
+typedef struct s_cmd_data
 {
 	t_token		*tokens;
-	char		**argv;//processed args for execution
+	char		**argv;
 	char		**env;
-	int			fd_in;//check if this is the strategy
-	int			fd_out;//check if this is the strategy
+	t_redir		*redir;//redir struct in cmd_node
 	t_cmdtype	cmd_type;
+	int			fd_in;
+	int			fd_out;
 }	t_cmd_data;
 
 // --- OPERATOR DATA ---//
@@ -104,6 +125,24 @@ typedef struct s_program
 	t_node	*root;
 	t_token	*token_list;
 	int		last_exit_status;
-} t_program;
+}t_program;
+
+// --- STRUCT FOR EXECUTION --- //
+/**
+ *  @brief stores duplicated fd for tmp redirection
+ *  -Use: to hold tmp compies of STDIN_FILENO/ STDOU_FILENO
+*/
+typedef struct s_fd_dup
+{
+	int	input_dup;
+	int	output_dup;
+}t_fd_dup;
+
+typedef struct s_redir//struct for redirections
+{
+	t_redir_type	type;//specific redir for the node
+	char			*file;//file name associated to the redir
+	struct s_redir	*next;//linked list of redirections
+}t_redir;
 
 #endif
