@@ -6,12 +6,13 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/11 14:11:48 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/20 14:22:21 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//uses pipdefd[1] to write
 pid_t	execute_left(t_program *program, t_node *left_node, int pipefd[2])
 {
 	pid_t	pid;
@@ -22,9 +23,9 @@ pid_t	execute_left(t_program *program, t_node *left_node, int pipefd[2])
 		perror("Error: Fork failed for left cmd");
 		return (-1);
 	}
-	else if (pid == 0)//child left cmd
+	else if (pid == 0)
 	{
-		if (dup2(pipefd[1], STDOUT_FILENO) == -1)//uses pipdefd[1] to write
+		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 		{
 			perror("Error: dup2 failed for left cmd");
 			exit(1);
@@ -47,9 +48,9 @@ pid_t	execute_right(t_program *program, t_node *right_node, int pipefd[2])
 		perror("Error: Fork failed for right cmd");
 		return (-1);
 	}
-	else if (pid == 0)//child right cmd
+	else if (pid == 0)
 	{
-		if (dup2(pipefd[0], STDIN_FILENO) == -1)//uses pipde[0] to read
+		if (dup2(pipefd[0], STDIN_FILENO) == -1)
 		{
 			perror("Error: dup2 failed for right cmd");
 			exit(1);
@@ -62,36 +63,42 @@ pid_t	execute_right(t_program *program, t_node *right_node, int pipefd[2])
 	return (pid);
 }
 
-//this consider left and right child
-int	execute_pipeline(t_program *program, t_node *node)//make it shorter
+int	close_all_pipefd(int *pipefd_in, int *pipefd_out)
 {
-	pid_t	left_pid;
-	pid_t	right_pid;
+	close_fd(pipefd_in);
+	close_fd(pipefd_out);
+	return (1);
+}
+
+//this consider left and right child
+//in waitpid 0 makes wait child
+//pids[0] is left_pid
+//pids[1] is right pid
+int	execute_pipeline(t_program *program, t_node *node)
+{
+	pid_t	pids[2];
 	int		pipefd[2];
-	// int		left_status;
-	int		right_status;
+	int		status;
 
 	if (pipe(pipefd) == -1)
 	{
 		perror("Error: Pipe failed");
 		return (1);
 	}
-	left_pid = execute_left(program, node->u_data.op.left, pipefd);
-	if (left_pid == -1)
+	pids[0] = execute_left(program, node->u_data.op.left, pipefd);
+	if (pids[0] == -1)
 	{
-		close_fd(pipefd[0]);
-		close_fd(pipefd[1]);
+		close_all_pipefd(&pipefd[0], &pipefd[1]);
 		return (1);
 	}
-	right_pid = execute_right(program, node->u_data.op.right, pipefd);
-	if (right_pid == -1)
+	close_fd(&pipefd[1]);
+	pids[1] = execute_right(program, node->u_data.op.right, pipefd);
+	if (pids[1] == -1)
 	{
-		close_fd(pipefd[0]);
-		close_fd(pipefd[1]);
-		waitpid(left_pid, NULL, 0);//0 makes wait child
+		close_fd(&pipefd[0]);
+		waitpid(pids[0], NULL, 0);
 		return (1);
 	}
-	close(pipefd[0]);
-	close(pipefd[1]);
-	return (wait_children(left_pid, right_pid, &right_status));//right as the last one comd to execute
+	close_fd(&pipefd[0]);
+	return (wait_children(pids[0], pids[1], &status));
 }
