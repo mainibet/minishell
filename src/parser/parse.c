@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:35:57 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/23 14:47:54 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/21 07:30:23 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
 		free_node(right);
 	}
 	node->type = OPERATOR;
-	node->u_data.op.type = token_type(op);
+	node->u_data.op.type = token_type(op->txt);
 	node->u_data.op.left = left;
 	node->u_data.op.right = right;
 	return (node);
