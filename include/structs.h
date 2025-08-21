@@ -1,10 +1,20 @@
-
-
-
-//PENDING 42 HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   structs.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/20 09:56:45 by albetanc          #+#    #+#             */
+/*   Updated: 2025/08/21 08:17:27 by albetanc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef STRUCTS_H
-#define STRUCTS_H
+# define STRUCTS_H
+
+// --- FORWARD DECLARACTIONS ---//
+typedef struct s_redir	t_redir;
 
 // -----------------------------------------//
 //            GLOBAL ENUMS                  //
@@ -45,9 +55,19 @@ typedef enum e_cmdtype
 typedef enum e_nodetype
 {
 	OPERATOR,
-	COMMAND//CHANGED IT WAS TERMINAL
+	COMMAND
 	// MAX_NODETYPE
 }t_nodetype;
+
+// --- EXECUTION REDIR --- //
+
+typedef enum e_redir_type
+{
+	RED_IN,
+	RED_OUT,
+	RED_APPEND,
+	RED_HERE_DOC
+}t_redir_type;
 
 // -----------------------------------------//
 //                AST STRUCTS               //
@@ -66,14 +86,15 @@ typedef struct s_token
 
 // --- COMMAND NODE --- //
 
-typedef struct s_cmd_data//possible include struct with redirections
+typedef struct s_cmd_data
 {
 	t_token		*tokens;
-	char		**argv;//processed args for execution
+	char		**argv;
 	char		**env;
-	int			fd_in;//check if this is the strategy
-	int			fd_out;//check if this is the strategy
+	t_redir		*redir;//redir struct in cmd_node
 	t_cmdtype	cmd_type;
+	int			fd_in;
+	int			fd_out;
 }	t_cmd_data;
 
 // --- OPERATOR DATA ---//
