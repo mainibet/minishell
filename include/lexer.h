@@ -20,8 +20,11 @@
 // -----------------------------------------//
 
 t_token			*lex(char *s, char delim);
-enum e_toktype	token_type(t_token *token);
+enum e_toktype token_type(char *s);
+char	*consume_whitespace(char *head_token);
+int is_operator_char(char c);
+t_token *lex_quoted(char *s, char quote);
+t_token *lex_unquoted(char *s);
 t_token			*extract_token(char *s, size_t size);
-int				print_tokens(t_token *token);
 
 #endif

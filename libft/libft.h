@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 17:47:06 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/19 16:02:08 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/20 11:38:01 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int		ft_putnbr_base_un(unsigned long n, char *base);
 int		safe_write(int fd, const void *buf, size_t count);
 int		ft_printf(const char *input, ...);
 int		open_fd(char *file_name);
-int		close_fd(int fd);
+int		close_fd(int *fd);
 void	malloc_error(void);
 void	free_array(char **arr);
 int		ft_strcmp(const char *s1, const char *s2);

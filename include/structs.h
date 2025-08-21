@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 09:56:45 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/21 08:09:36 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/21 08:17:27 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,12 @@ typedef enum e_toktype
 	AND,
 	OR,
 	SEMICOLON,
-	MAX_TYPE
+	MAX_TYPE,
+	NO_Q,
+	SINGLE_Q,
+	DOUBLE_Q
 }	t_toktype;
+
 
 // --- COMMAND TYPE --//
 
@@ -120,29 +124,13 @@ typedef struct s_node
 typedef struct s_program
 {
 	char	*line;
-	char	**envp_cpy;
 	char	**envp;
+	char	**envp_cpy;
 	t_node	*root;
 	t_token	*token_list;
+	int		fd_in_orig;//fix pipes fd
+	int		fd_out_orig;//fix pipes fd
 	int		last_exit_status;
 }t_program;
-
-// --- STRUCT FOR EXECUTION --- //
-/**
- *  @brief stores duplicated fd for tmp redirection
- *  -Use: to hold tmp compies of STDIN_FILENO/ STDOU_FILENO
-*/
-typedef struct s_fd_dup
-{
-	int	input_dup;
-	int	output_dup;
-}t_fd_dup;
-
-typedef struct s_redir//struct for redirections
-{
-	t_redir_type	type;//specific redir for the node
-	char			*file;//file name associated to the redir
-	struct s_redir	*next;//linked list of redirections
-}t_redir;
 
 #endif
