@@ -11,16 +11,12 @@
 /* ************************************************************************** */
 
 
-
 #include "minishell.h"
-
-
 
 int is_operator_char(char c)
 {
 	return (c == '|' || c == '&' || c == '>' || c == '<' || c == ';' || c == '(' || c == ')');
 }
-
 
 enum e_toktype token_type(char *s)
 {
@@ -126,46 +122,110 @@ char	*consume_whitespace(char *head_token)
 // 		return (token);
 // }
 
-
-
-
-
-t_token *lex_quoted(char *s, char quote)
+static int	ft_isspace(char c)
 {
-	char *start = s;
-	char *end = s;
+	return (c == ' ' || c == '\t' || c == '\n'
+			|| c == '\v' || c == '\f' || c == '\r');
+}
 
+static t_token *join_tokens(t_token *a, t_token *b)
+{
+	if (!a) return b;
+	if (!b) return a;
+
+	size_t len_a = strlen(a->txt);
+	size_t len_b = strlen(b->txt);
+
+	char *joined = malloc(len_a + len_b + 1);
+	if (!joined) return a; // fallback, leak risk if malloc fails
+
+	strcpy(joined, a->txt);
+	strcat(joined, b->txt);
+
+	free(a->txt);
+	a->txt = joined;
+
+	a->next = b->next;
+	free(b->txt);
+	free(b);
+
+	return a;
+}
+
+
+t_token	*lex_quoted(char *s, char quote)
+{
+	t_token	*token;
+	t_token	*next;
+	char	*start;
+	char	*end;
+	char	*rest;
+
+	start = s;
+	end = s;
 	while (*end && *end != quote)
 		end++;
-
 	if (!*end)
 	{
 		perror("Unclosed quote");
-		return NULL;
+		return (NULL);
 	}
-
-	t_token *token = extract_token(start, end - start);
-	if (!token) return NULL;
-
-	token->type = (quote == '\'') ? SINGLE_Q : DOUBLE_Q;
-	token->next = lex(consume_whitespace(end + 1), ' ');
-	return token;
+	token = extract_token(start, end - start);
+	if (!token)
+		return (NULL);
+	if (quote == '\'')
+		token->type = SINGLE_Q;
+	else
+		token->type = DOUBLE_Q;
+	rest = end + 1;
+	if (*rest && !ft_isspace(*rest) && !is_operator_char(*rest))
+	{
+		if (*rest == '\'' || *rest == '"')
+			next = lex_quoted(rest + 1, *rest);
+		else
+			next = lex_unquoted(rest);
+		if (!next)
+			return (NULL);
+		token = join_tokens(token, next);
+	}
+	else
+		token->next = lex(consume_whitespace(rest), ' ');
+	return (token);
 }
 
-t_token *lex_unquoted(char *s)
+t_token	*lex_unquoted(char *s)
 {
-	char *start = s;
-	char *end = s;
+	char	*start;
+	char	*end;
+	char	*rest;
+	t_token	*token;
+	t_token	*next;
 
-	while (*end && !(*end == ' ' || *end == '\t' || *end == '\'' || *end == '"' || is_operator_char(*end)))
+	start = s;
+	end = s;
+	while (*end && !(*end == ' ' || *end == '\t'
+				|| *end == '\'' || *end == '"'
+				|| is_operator_char(*end)))
 		end++;
-
-	t_token *token = extract_token(start, end - start);
-	if (!token) return NULL;
-
+	token = extract_token(start, end - start);
+	if (!token)
+		return (NULL);
 	token->type = WORD;
-	token->next = lex(consume_whitespace(end), ' ');
-	return token;
+	rest = end;
+	if (*rest && !ft_isspace(*rest) && !is_operator_char(*rest))
+	{
+		if (*rest == '\'' || *rest == '"')
+			next = lex_quoted(rest + 1, *rest);
+		else
+			next = lex_unquoted(rest);
+		if (next)
+			token = join_tokens(token, next);
+		else
+			return (NULL);
+	}
+	else
+		token->next = lex(consume_whitespace(rest), ' ');
+	return (token);
 }
 
 t_token *lex(char *s, char delim)
