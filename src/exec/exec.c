@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/11 14:04:30 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/20 15:43:50 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	exec_cmd_inpipe(t_node *node)
 		exit(EXIT_FAILURE);
 	}
 	execve(cmd_path, node->u_data.cmd.argv, node->u_data.cmd.env);
+	perror("Error: execve failed");
 	free(cmd_path);
 	exit(EXIT_FAILURE);
 }
@@ -102,7 +103,7 @@ int	execution(t_program *program, t_node *node, bool is_pipe_child)
 	if (!node)
 	{
 		program->last_exit_status = 0;
-		fprintf(stderr, MAGENTA BOLD "Lastcmd updated: %d\n" RESET, program->last_exit_status);//test
+		fprintf(stderr, MAGENTA BOLD "Last cmd updated: %d\n" RESET, program->last_exit_status);//test
 		return (0);
 	}
 	if (node->type == COMMAND) 

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:20:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/06 10:35:40 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/20 15:50:53 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,10 @@ int	cleanup_cmd_node(t_node *node)
 	if (!node || node->type != COMMAND)
 		return (-1);
 	cmd = &node->u_data.cmd;
-	close_fd(node->u_data.cmd.fd_in);
-	close_fd(node->u_data.cmd.fd_out);
+	if (cmd->fd_in != STDIN_FILENO)
+		close_fd(&node->u_data.cmd.fd_in);
+	if (cmd->fd_out != STDOUT_FILENO)
+		close_fd(&node->u_data.cmd.fd_out);
 	return (0);
 }
 

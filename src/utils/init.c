@@ -30,14 +30,38 @@ static char	**ft_dup_env(char **envp)
 	return (envp_cpy);
 }
 
+static int	init_fd_origin(const char *err_msg, int orig_fd)
+{
+	int	new_fd;
+
+	new_fd = dup(orig_fd);
+	if (new_fd == -1)
+		perror(err_msg);
+	return (new_fd);
+}
+
+static void	handle_init_error(t_program *program)
+{
+	fprintf(stderr, BOLD RED "Fatal initialization error\n" RESET);
+	cleanup_program(program);
+	exit(1);
+}
+
 void	init_program(t_program *program, char **envp)
 {
 	program->line = NULL;
-	program->root = NULL;
-	program->token_list = NULL;
 	program->envp = envp;
 	program->envp_cpy = ft_dup_env(envp);
+	program->root = NULL;
+	program->token_list = NULL;
+	program->fd_in_orig = init_fd_origin
+		("dup failes for STDIN init", STDIN_FILENO);//fix pipes
+	program->fd_out_orig = init_fd_origin
+		("dup failes for STDOUT init", STDOUT_FILENO);//fix pipes
 	program->last_exit_status = 0;
 	if (!program->envp_cpy)
 		malloc_error();
+	if (!program->envp_cpy || program->fd_in_orig == -1 
+		|| program->fd_out_orig == -1)
+		handle_init_error(program);
 }

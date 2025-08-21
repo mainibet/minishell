@@ -103,11 +103,13 @@ typedef struct s_node
 typedef struct s_program
 {
 	char	*line;
-	char	**envp_cpy;
 	char	**envp;
+	char	**envp_cpy;
 	t_node	*root;
 	t_token	*token_list;
+	int		fd_in_orig;//fix pipes fd
+	int		fd_out_orig;//fix pipes fd
 	int		last_exit_status;
-} t_program;
+}t_program;
 
 #endif
