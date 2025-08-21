@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 09:56:45 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/20 10:22:20 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/21 08:09:36 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,10 @@ typedef enum e_nodetype
 
 typedef enum e_redir_type
 {
-	REDIR_IN,
-	REDIR_OUT,
-	APPEND,
-	HERE_DOC
+	RED_IN,
+	RED_OUT,
+	RED_APPEND,
+	RED_HERE_DOC
 }t_redir_type;
 
 // -----------------------------------------//
