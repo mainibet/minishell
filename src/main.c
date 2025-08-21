@@ -30,7 +30,7 @@
 // and execution, static prompt. //
 //-------------------------------//
 
-t_node	*token_parser_input(char *line, t_token **token_out)
+t_node	*token_parser_input(char *line, t_token **token_out, int last_exit)
 {
 	t_token	*token_list;
 	t_token	*parser_tokens;
@@ -43,6 +43,7 @@ t_node	*token_parser_input(char *line, t_token **token_out)
 		*token_out = NULL;
 		return (NULL);
 	}
+	expand(token_list, last_exit) ;
 	parser_tokens = token_list;
 	root = parse(parser_tokens);
 	if (!root)
@@ -69,7 +70,7 @@ static void	process_cmdline(t_program *program, char *line)
 		return ;
 	}
 	add_history(line);
-	root = token_parser_input(line, &program->token_list);
+	root = token_parser_input(line, &program->token_list, program->last_exit_status);
 	program->root = root;
 	free(line);
 	if (!program->root)//if parsing failed
