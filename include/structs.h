@@ -15,18 +15,22 @@
 typedef enum e_toktype
 {
 	WORD = 1,
-	//HEREDOC,
-	//REDIR_IN
-	//REDIR_OUT
-	//APPEND
+	HEREDOC,
+	REDIR_IN,
+	REDIR_OUT,
+	APPEND,
 	OPEN,
 	CLOSE,
 	PIPE,
 	AND,
 	OR,
 	SEMICOLON,
-	MAX_TYPE
+	MAX_TYPE,
+	NO_Q,
+	SINGLE_Q,
+	DOUBLE_Q
 }	t_toktype;
+
 
 // --- COMMAND TYPE --//
 
