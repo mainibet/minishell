@@ -24,8 +24,8 @@ int	is_builtin(const char *cmd_name)
 		return (BUILTIN_PWD);
 	if (ft_strcmp(cmd_name, "export") == 0)
 		return (BUILTIN_EXPORT);
-	// if (ft_strcmp(cmd_name, "unset") == 0)
-	// 	return (BUILTIN_UNSET);
+	if (ft_strcmp(cmd_name, "unset") == 0)
+	 	return (BUILTIN_UNSET);
 	if (ft_strcmp(cmd_name, "env") == 0)
 		return (BUILTIN_ENV);
 	if (ft_strcmp(cmd_name, "exit") == 0)
@@ -50,6 +50,8 @@ int	execute_builtin(t_program *program, t_node *node)
 		return (my_pwd(program, node));
 	else if (e_builtin_type == BUILTIN_EXPORT)
 		return (my_export(program, node));
+	else if (e_builtin_type == BUILTIN_UNSET)
+		return (my_unset(program, node));
 	else if (e_builtin_type == BUILTIN_EXIT)
 	{
 		my_exit(program, node);

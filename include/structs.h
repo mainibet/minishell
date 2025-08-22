@@ -143,13 +143,13 @@ typedef struct s_program
 
 // --- STRUCT FOR REDIR --- //
 
-typedef struct s_redir
+struct s_redir
 {
 	enum e_redir_type	type;
 	char				*target;//filename for < > >> and delimiter for <<
 	int					fd;//associated with the redir
 	struct t_redir		*next;//linkedlist
-}	t_redir;
+};
 
 
 #endif
