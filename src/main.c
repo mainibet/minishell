@@ -43,7 +43,7 @@ t_node	*token_parser_input(char *line, t_token **token_out, int last_exit)
 		*token_out = NULL;
 		return (NULL);
 	}
-	expand(token_list, last_exit) ;
+	expand(token_list, last_exit);   // Expansion Function <<<<<<-----------
 	parser_tokens = token_list;
 	root = parse(parser_tokens);
 	if (!root)
