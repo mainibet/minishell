@@ -6,11 +6,34 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/20 15:48:41 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/22 09:45:34 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_redir	*create_redir_node(char *target, enum e_redir_type type)
+{
+	t_redir	*new_redir;
+
+	new_redir = malloc(sizeof(t_redir));
+	if (!new_redir)
+	{
+		malloc_error();//check
+		return (NULL);
+	}
+	new_redir->target = ft_strdup(target);//check where to free
+	if (!new_redir->target)
+	{
+		free(new_redir);
+		perror("ft_strdup failed redir target");
+		return (NULL);
+	}
+	new_redir->type = type;
+	new_redir->fd = -1;//init with a non valid fd
+	new_redir->next = NULL;
+	return (new_redir);
+}
 
 /**
  * @brief Redirects STDIN_FILENO to a specified fd
