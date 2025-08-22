@@ -6,57 +6,11 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 15:49:45 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/22 18:19:01 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_redir	*create_redir_node(char *target, enum e_redir_type type)
-{
-	t_redir	*new_redir;
-
-	new_redir = malloc(sizeof(t_redir));
-	if (!new_redir)
-	{
-		malloc_error();//check
-		return (NULL);
-	}
-	new_redir->target = ft_strdup(target);//check where to free
-	if (!new_redir->target)
-	{
-		free(new_redir);
-		perror("ft_strdup failed redir target");
-		return (NULL);
-	}
-	new_redir->type = type;
-	new_redir->fd = -1;//init with a non valid fd
-	new_redir->next = NULL;
-	return (new_redir);
-}
-
-//when target is file name
-//only for < > >>
-//to set the flags when open redir type
-//permissions 0644 due to flag O_CREAT
-int	open_redir_filename(t_redir *redir)
-{
-	int	open_flags;
-
-	if (redir->type == RED_IN)
-		open_flags = O_RDONLY;
-	else if (redir->type == RED_OUT)
-		open_flags = O_WRONLY | O_CREAT | O_TRUNC;
-	else if (redir->type == RED_APPEND)
-		open_flags = O_WRONLY | O_CREAT | O_APPEND;
-	redir->fd = open(redir->target, open_flags, 0644);
-	if (redir->fd < 0)
-	{
-		perror("Error: openfd filed in redir");
-		return (1);
-	}
-	return (0);
-}
 
 /**
  * @brief Redirects STDIN_FILENO to a specified fd
@@ -113,7 +67,7 @@ int	setup_redir(t_cmd_data *cmd)
 			close_fd(&cmd_fd_in);
 			return (perror("Failed redir_input: "), 1);
 		}
-		close_fd(&cmd_fd_in);//new
+		close_fd(&cmd_fd_in);
 	}
 	if (cmd_fd_out != -1)
 	{
@@ -123,6 +77,46 @@ int	setup_redir(t_cmd_data *cmd)
 			return (perror("Failed redir_out: "), 1);
 		}
 		close_fd(&cmd_fd_out);
+	}
+	return (0);
+}
+
+// To update the command's file descriptors.
+static void	update_redir_fd(int new_fd, int *cmd_fd)
+{
+	if (*cmd_fd != STDIN_FILENO && *cmd_fd != STDOUT_FILENO)
+		close_fd(cmd_fd);
+	*cmd_fd = new_fd;
+}
+
+//iterates over the command’s linked list of redirections
+//to open target files and set cmd_fdin and cmd_fdout 
+//after all redir
+// 1. Open the file and check for errors immediately.
+// If open fails, close all previously opened FDs.
+// 3. Close the previous output FD if it's not STDOUT.
+int	process_redir(t_cmd_data *cmd)
+{
+	t_redir	*current_redir;
+
+	current_redir = cmd->redir;
+	cmd->fd_in = STDIN_FILENO;
+	cmd->fd_out = STDOUT_FILENO;
+	while (current_redir)
+	{
+		if (open_redir_filename(current_redir) != 0)
+		{
+			if (cmd->fd_in != STDIN_FILENO)
+				close_fd(&cmd->fd_in);
+			if (cmd->fd_out != STDOUT_FILENO)
+				close_fd(&cmd->fd_out);
+			return (1);
+		}
+		if (current_redir->type == RED_IN)
+			update_redir_fd(current_redir->fd, &cmd->fd_in);
+		else
+			update_redir_fd(current_redir->fd, &cmd->fd_out);
+		current_redir = current_redir->next;
 	}
 	return (0);
 }

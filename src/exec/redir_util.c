@@ -6,12 +6,17 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 13:33:32 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 16:09:06 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/22 18:20:07 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	restore_std(t_program *program)
+{
+	dup2(program->fd_in_orig, STDIN_FILENO);
+	dup2(program->fd_out_orig, STDOUT_FILENO);
+}
 
 t_redir	*create_redir_node(char *target, enum e_redir_type type)
 {

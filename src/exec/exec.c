@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 16:13:42 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/22 18:07:44 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static int	handle_operator(t_program *program, t_node *node, bool is_pipe_child)
 int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make it shorter
 {
 	int	status;
-	char *cmd_name;
+	char	*cmd_name;
 
 	if (!node || !node->u_data.cmd.argv
 		|| process_redir(&node->u_data.cmd) != 0)
@@ -74,7 +74,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 	{
 		if (is_builtin(cmd_name))
 		{
-			status = execute_builtin(program, node);
+			status = execute_builtin(program, node, true);
 			exit (status);
 		}
 		else
@@ -87,7 +87,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 	{
 		if (is_builtin(cmd_name))
 		{
-			status = execute_builtin(program, node);
+			status = execute_builtin(program, node, false);
 			program->last_exit_status = status;
 			return (status);
 		}
