@@ -1,33 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   close_fd.c                                         :+:      :+:    :+:   */
+/*   redir.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/02 13:53:41 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 12:47:25 by albetanc         ###   ########.fr       */
+/*   Created: 2025/08/22 11:31:14 by albetanc          #+#    #+#             */
+/*   Updated: 2025/08/22 11:36:37 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef REDIR_H
+# define REDIR_H
 
-/*
-*   Closes a given file descriptor if valid and marks it as closed.
-*   1. return 0 if there is nothing to close
-*/
-int	close_fd(int *fd)
-{
-	if (!fd || *fd < 0)
-		return (-1);
-	if (*fd == STDIN_FILENO 
-		|| *fd == STDOUT_FILENO || *fd == STDERR_FILENO)
-		return (0); 
-	if (close(*fd) == -1)
-	{
-		perror ("Error closing fd");
-		return (1);
-	}
-	*fd = -1;
-	return (0);
-}
+// # include "minishell.h"//check if needed
+
+// -----------------------------------------//
+//                PROTOTYPES                //
+// -----------------------------------------//
+
+t_redir	*create_redir_node(char *target, enum e_redir_type type);
+int		open_redir_filename(t_redir *redir);
+
+#endif
