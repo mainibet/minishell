@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 13:08:28 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/22 13:20:46 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,8 @@ int	setup_redir(int fd)
 }
 
 /**
-* @brief Sets up both standard input and standard 
-* output redirections for a command.
+* @brief S to apply the final file descriptors to the 
+* standard I/O streams using dup2
 * Uses cmd->fd_in and cmd->fd_out, closes the temporary fds
 * after duplicating them to STDIN_FILENO and STDOUT_FILENO.
 */
