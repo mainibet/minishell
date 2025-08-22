@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 13:20:46 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/22 15:49:45 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	open_redir_filename(t_redir *redir)
 /**
  * @brief Redirects STDIN_FILENO to a specified fd
 */
-static int	redir_input(int fd)
+static int	redir_in(int fd)
 {
 	int	result;
 
@@ -78,7 +78,7 @@ static int	redir_input(int fd)
 /**
 * @brief Redirects STDOUT_FILENO to a specified fd
 */
-int	setup_redir(int fd)
+static int	redir_out(int fd)
 {
 	int	result;
 
@@ -108,7 +108,7 @@ int	setup_redir(t_cmd_data *cmd)
 	cmd_fd_out = cmd ->fd_out;
 	if (cmd_fd_in != -1)
 	{
-		if (redir_input(cmd_fd_in) == -1)
+		if (redir_in(cmd_fd_in) == -1)
 		{
 			close_fd(&cmd_fd_in);
 			return (perror("Failed redir_input: "), 1);
@@ -117,7 +117,7 @@ int	setup_redir(t_cmd_data *cmd)
 	}
 	if (cmd_fd_out != -1)
 	{
-		if (redir_output(cmd_fd_out) == -1)
+		if (redir_out(cmd_fd_out) == -1)
 		{
 			close_fd(&cmd_fd_out);
 			return (perror("Failed redir_out: "), 1);
