@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 13:33:32 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 15:20:16 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/22 15:22:53 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static void	update_redir_fd(int new_fd, int *cmd_fd)
 		close_fd(cmd_fd);
 	*cmd_fd = new_fd;
 }
+
 //iterates over the command’s linked list of redirections
 //to open target files and set cmd_fdin and cmd_fdout 
 //after all redir
