@@ -49,7 +49,8 @@
 # include "exec.h"
 # include "redir.h"
 # include "builtin.h"
-
+# include "expansion.h"
+# include "export.h"
 // -----------------------------------------//
 //                PROTOTYPES                //
 // -----------------------------------------//
