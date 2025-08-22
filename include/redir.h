@@ -1,34 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_utils.c                                    :+:      :+:    :+:   */
+/*   redir.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/19 14:05:02 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 18:33:21 by albetanc         ###   ########.fr       */
+/*   Created: 2025/08/22 11:31:14 by albetanc          #+#    #+#             */
+/*   Updated: 2025/08/22 18:34:41 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef REDIR_H
+# define REDIR_H
+
 # include "minishell.h"
 
-char	*find_env_value(char **envp, const char *key)
-{
-	int	i;
-	int	len;
+// -----------------------------------------//
+//                PROTOTYPES                //
+// -----------------------------------------//
 
-	fprintf(stderr, MAGENTA BOLD "MY PWD or CD is about to be run\n" RESET);
-	if (!envp || !key)
-		return (NULL);
-	len = ft_strlen(key);
-	i = 0;
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], key, len) == 0 && envp[i][len] == '=')
-			return (&envp[i][len + 1]);
-		i++;
-	}
-	return (NULL);
-}
+t_redir	*create_redir_node(char *target, enum e_redir_type type);
+int		open_redir_filename(t_redir *redir);
+int		process_redir(t_cmd_data *cmd);
+void	restore_std(t_program *program);
+int		setup_redir(t_cmd_data *cmd);
 
-
+#endif

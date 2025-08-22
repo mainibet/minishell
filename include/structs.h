@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 09:56:45 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 09:35:06 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/22 18:23:05 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,13 +143,13 @@ typedef struct s_program
 
 // --- STRUCT FOR REDIR --- //
 
-struct s_redir
+typedef struct s_redir
 {
 	enum e_redir_type	type;
 	char				*target;//filename for < > >> and delimiter for <<
 	int					fd;//associated with the redir
-	struct t_redir		*next;//linkedlist
-};
+	struct s_redir		*next;//linkedlist
+}	t_redir;
 
 
 #endif

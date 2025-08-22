@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:15:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/11 14:13:21 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/22 18:19:48 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	exec_cmd_nopipe(t_program *program, t_node *node)
 	pid = fork();
 	if (pid == -1)
 	{
-		perror(BOLD RED "Fork failed for top-level command" RESET);
+		perror("Fork failedcmd no pipe");
 		return (1);
 	}
 	else if (pid == 0)//child
