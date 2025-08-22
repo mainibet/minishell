@@ -48,6 +48,7 @@
 # include "prexec.h"
 # include "exec.h"
 # include "builtin.h"
+# include "expansion.h"
 
 // -----------------------------------------//
 //                PROTOTYPES                //
