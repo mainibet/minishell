@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:10:28 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/19 15:26:19 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:46:42 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,28 +33,54 @@ int	is_builtin(const char *cmd_name)
 	return (BUILTIN_NONE);
 }
 
-int	execute_builtin(t_program *program, t_node *node)
+void	apply_redir(t_cmd_data *cmd)
+{
+	if (cmd->fd_in != STDIN_FILENO)
+	{
+		dup2(cmd->fd_in, STDIN_FILENO);
+		close_fd(&cmd->fd_in);
+	}
+	if (cmd->fd_out != STDOUT_FILENO)
+	{
+		dup2(cmd->fd_out, STDOUT_FILENO);
+		close_fd(&cmd->fd_out);
+	}
+}
+
+static void	restore_std(t_program *program)
+{
+	dup2(program->fd_in_orig, STDIN_FILENO);
+	dup2(program->fd_out_orig, STDOUT_FILENO);
+}
+
+int	execute_builtin(t_program *program, t_node *node, bool is_pipe_child)
 {
 	t_cmd_data		*cmd;
 	t_builtin_type	e_builtin_type;
+	int				status;
 
+	apply_redir(cmd);
 	cmd = &node->u_data.cmd;
+	status = 0;
 	e_builtin_type = is_builtin(cmd->argv[0]);
 	if (e_builtin_type == BUILTIN_ECHO)
-		return (my_echo(program, node));
-	if (e_builtin_type == BUILTIN_ENV)
-		return (my_env(program, node));
+		status = my_echo(program, node);
+	else if (e_builtin_type == BUILTIN_ENV)
+		status = my_env(program, node);
 	else if (e_builtin_type == BUILTIN_CD)
-		return (my_cd(program, node)); 
+		status = my_cd(program, node); 
 	else if (e_builtin_type == BUILTIN_PWD)
-		return (my_pwd(program, node));
+		status = my_pwd(program, node);
 	else if (e_builtin_type == BUILTIN_EXPORT)
-		return (my_export(program, node));
+		status = my_export(program, node);
 	else if (e_builtin_type == BUILTIN_EXIT)
-	{
 		my_exit(program, node);
-		return (1);
+	else
+	{
+		fprintf(stderr, BOLD RED "Error: unknown builtin\n" RESET);
+		status = 1;
 	}
-	fprintf(stderr, BOLD RED "Error: unknown builtin\n" RESET);
-	return (1);
+	if (!is_pipe_child)
+		restore_std(program);
+	return (status);
 }
