@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:10:28 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 17:57:45 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/22 18:35:10 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,33 +33,13 @@ int	is_builtin(const char *cmd_name)
 	return (BUILTIN_NONE);
 }
 
-void	apply_redir(t_cmd_data *cmd)
-{
-	if (cmd->fd_in != STDIN_FILENO)
-	{
-		dup2(cmd->fd_in, STDIN_FILENO);
-		close_fd(&cmd->fd_in);
-	}
-	if (cmd->fd_out != STDOUT_FILENO)
-	{
-		dup2(cmd->fd_out, STDOUT_FILENO);
-		close_fd(&cmd->fd_out);
-	}
-}
-
-static void	restore_std(t_program *program)
-{
-	dup2(program->fd_in_orig, STDIN_FILENO);
-	dup2(program->fd_out_orig, STDOUT_FILENO);
-}
-
 int	execute_builtin(t_program *program, t_node *node, bool is_pipe_child)
 {
 	t_cmd_data		*cmd;
 	t_builtin_type	e_builtin_type;
 	int				status;
 
-	apply_redir(cmd);
+	setup_redir(cmd);
 	cmd = &node->u_data.cmd;
 	status = 0;
 	e_builtin_type = is_builtin(cmd->argv[0]);

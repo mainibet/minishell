@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:07:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 18:19:13 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/22 18:31:45 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void child_process(t_program *program, t_node *node)
 	setup_redir(&node->u_data.cmd);
 	if (is_builtin(cmd->argv[0]))//might change if declared $ARG in cmd line
 	{
-		status = execute_builtin(program, node);
+		status = execute_builtin(program, node, true);
 		exit(status);//some exit status
 	}
 	else
