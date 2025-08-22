@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 09:56:45 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 15:51:20 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/22 17:41:42 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ typedef struct s_program
 
 // --- STRUCT FOR REDIR --- //
 
-typedef struct s_redir
+struct s_redir
 {
 	enum e_redir_type	type;
 	char				*target;//filename for < > >> and delimiter for <<

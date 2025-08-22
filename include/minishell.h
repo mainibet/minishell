@@ -51,6 +51,7 @@
 # include "builtin.h"
 # include "expansion.h"
 # include "export.h"
+# include "unset.h"
 // -----------------------------------------//
 //                PROTOTYPES                //
 // -----------------------------------------//
