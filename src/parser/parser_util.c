@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 08:22:30 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/23 12:04:24 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/23 12:52:59 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,61 @@ int	split_cmd_arg(t_token **current, t_cmd_data *cmd_data)
 	*current = (*current)->next->next;
 	return (0);
 }
+char	**copy_token_strings(t_token *cmd_tokens, char **argv)
+{
+	t_token	*current;
+	int		i;
+
+	i = 0;
+	current = cmd_tokens;
+	while (current)
+	{
+		argv[i] = ft_strdup(current->txt);
+		if (!argv[i])
+		{
+			free_array(argv);
+			perror("Failed ft_strdup for argv");
+			return (NULL);
+		}
+		i++;
+		current = current->next;
+	}
+	argv[i] = NULL;
+	return (argv);
+}
+
+int	ft_lstsize(t_token *lst)
+{
+	int	count;
+
+	count = 0;
+	while (lst)
+	{
+		count++;
+		lst = lst->next;
+	}
+	return (count);
+}
+
+char	**build_argv_from_tokens(t_token *cmd_tokens)
+{
+	char	**argv;
+
+	argv = malloc(sizeof(char *) * (ft_lstsize(cmd_tokens) + 1));
+	if (!argv)
+	{
+		free_token(cmd_tokens);
+		perror("Failed to allocate argv");
+		return (NULL);
+	}
+	argv = copy_token_strings(cmd_tokens, argv); 
+	if (!argv)
+	{
+		free_token(cmd_tokens);
+		return (NULL);
+	}
+	return (argv);
+}
 
 
 int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
@@ -108,5 +163,11 @@ int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
 		}
 	}
 	cmd_data->tokens = cmd_tokens;
+	cmd_data->argv = build_argv_from_tokens(cmd_tokens);
+	if (!cmd_data->argv)
+	{
+		perror("Failed to allocate argv");
+		return (1);
+	}
 	return (0);
 }
