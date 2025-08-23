@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 13:33:32 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 18:34:25 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/23 07:30:37 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,19 @@ void	restore_std(t_program *program)
 {
 	dup2(program->fd_in_orig, STDIN_FILENO);
 	dup2(program->fd_out_orig, STDOUT_FILENO);
+}
+
+t_redir_type	map_type(t_toktype token_type)
+{
+	if (token_type == REDIR_IN)
+		return (RED_IN);
+	if (token_type == REDIR_OUT)
+		return (RED_OUT);
+	if (token_type == APPEND)
+		return (RED_APPEND);
+	if (token_type == HEREDOC)
+		return (RED_HERE_DOC);
+	return (RED_UNKNOW);
 }
 
 t_redir	*create_redir_node(char *target, enum e_redir_type type)
@@ -39,6 +52,23 @@ t_redir	*create_redir_node(char *target, enum e_redir_type type)
 	new_redir->fd = -1;//init with a non valid fd
 	new_redir->next = NULL;
 	return (new_redir);
+}
+
+void	add_redir(t_redir **list, t_redir *new_redir)
+{
+	t_redir	*tmp;
+
+	if (!new_redir)
+		return ;
+	if (!*list)
+	{
+		*list = new_redir;
+		return ;
+	}
+	tmp = *list;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new_redir;
 }
 
 //when target is file name
