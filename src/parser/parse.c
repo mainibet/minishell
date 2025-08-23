@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:35:57 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/23 09:20:08 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/23 12:03:02 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,40 +36,6 @@ static int	precedence(t_token *token)
 		return (3);
 	return (0);
 }
-
-// int	parse_redir_error(t_token *token)
-// {
-// 	if (!token->next || token->next->type != WORD)
-// 	{
-// 		if (token->next)
-// 			fprintf(stderr, BOLD RED
-// 				"syntax error near '%s'\n" RESET, token->next->txt);
-// 		else
-// 			fprintf(stderr, RED BOLD
-// 				"syntax error near a new line\n" RESET);
-// 		return (1);
-// 	}
-// 	return (0);
-// }
-
-// int	parse_redir(t_cmd_data *cmd, t_token *token)
-// {
-// 	while (token)
-// 	{
-// 		if (token->type == REDIR_IN || token->type == REDIR_OUT
-// 			|| token->type == APPEND || token->type == HEREDOC)
-// 		{
-// 			if (parse_redir_error(token))
-// 				return (1);
-// 			add_redir(&cmd->redir,
-// 				create_redir_node(token->next->txt, map_type(token->type)));
-// 			token = token->next->next;
-// 			continue ;//check if can be used (the norm)
-// 		}
-// 		token = token->next;
-// 	}
-// 	return (0);
-// }
 
 t_node	*parse_command(t_token *token)
 {
