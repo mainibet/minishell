@@ -35,6 +35,9 @@
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
+# include <sys/ioctl.h>
+# include <termios.h>
 
 // -----------------------------------------//
 //             MODULE HEADERS               //
@@ -52,6 +55,9 @@
 # include "expansion.h"
 # include "export.h"
 # include "unset.h"
+# include "signall.h"
+
+
 // -----------------------------------------//
 //                PROTOTYPES                //
 // -----------------------------------------//
@@ -67,4 +73,6 @@ void	free_node(t_node *node);
 void	free_token(t_token *token);
 void	free_ast_tokens(t_program *program);
 
+// ---PRINT AST TREE --- //
+void	print_ast(t_node *node, int level);
 #endif

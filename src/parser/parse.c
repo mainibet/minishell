@@ -28,10 +28,10 @@ static int	precedence(t_token *token)
 {
 	if(!token)
 		return (0);
-	// if (token->type == SEMICOLON)
-	// 	return (1);
-	// if (token->type == AND || token->type == OR)
-	// 	return (2);
+	if (token->type == SEMICOLON)
+		return (1);
+	if (token->type == AND || token->type == OR)
+	 	return (2);
 	if (token->type == PIPE)
 		return (3);
 	return (0);
@@ -63,6 +63,7 @@ t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
 	{
 		free_node(left);
 		free_node(right);
+		return (NULL);
 	}
 	node->type = OPERATOR;
 	node->u_data.op.type = token_type(op->txt);
@@ -74,44 +75,60 @@ t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
 //precedence
 //NEEDS TO BE IMPROVED FOR LEFT ASSOCIATIVE
 //now if ok for right, then for pipes
-static t_token	*find_lowest_operator(t_token *token)
+// Find the lowest precedence operator for left-associativity
+static t_token *find_lowest_operator(t_token *token)
 {
-	t_token	*lowest_op;
-	t_token	*current;
+    t_token *lowest_op = NULL;
+    t_token *current = token;
 
-	lowest_op = NULL;
-	current = token;
-
-	while (current)
-	{
-		if (precedence(current) > 0 && (!lowest_op
-				|| precedence(current) < precedence(lowest_op)))
-			lowest_op = current;
-		current = current->next;
-	}
-	return (lowest_op);
+    while (current)
+    {
+        int curr_prec = precedence(current);
+        if (curr_prec > 0)
+        {
+            if (!lowest_op || curr_prec < precedence(lowest_op)
+                || (curr_prec == precedence(lowest_op) && current < lowest_op))
+            {
+                lowest_op = current;
+            }
+        }
+        current = current->next;
+    }
+    return lowest_op;
 }
 
-t_node	*parse(t_token *token_list)
+t_node *parse(t_token *token_list)
 {
-	t_token	*op_token;
-	t_token	*current;
-	t_node	*left;
-	t_node	*right;
-	t_token	*right_list;
+    if (!token_list)
+        return NULL;
 
-	if (!token_list)
-		return (NULL);
-	op_token = find_lowest_operator(token_list);
-	if (!op_token)
-		return (parse_command(token_list));
-	right_list = op_token->next;
-	current = token_list;
-	while (current && current->next != op_token)
-		current = current->next;
-	if (current)
-		current->next = NULL;
-	left = parse(token_list);
-	right = parse(right_list);
-	return (parse_operator(op_token, left, right));
+    // 1. Find operator of lowest precedence (leftmost for left-associativity)
+    t_token *op_token = find_lowest_operator(token_list);
+
+    // 2. No operator -> just a command node
+    if (!op_token)
+        return parse_command(token_list);
+
+    // 3. Split tokens into left and right lists
+    t_token *left_list = token_list;
+    t_token *right_list = op_token->next;
+    t_token *current = left_list;
+
+    // Cut the left list at op_token
+    if (current == op_token)
+        left_list = NULL;
+    else
+    {
+        while (current && current->next != op_token)
+            current = current->next;
+        if (current)
+            current->next = NULL;
+    }
+
+    // 4. Recursively parse left and right
+    t_node *left = parse(left_list);
+    t_node *right = parse(right_list);
+
+    // 5. Create operator node
+    return parse_operator(op_token, left, right);
 }

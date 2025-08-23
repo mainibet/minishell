@@ -78,6 +78,7 @@ static void	process_cmdline(t_program *program, char *line)
 		fprintf(stderr, RED "Parsing failed\n" RESET);
 		return ;
 	}
+	print_ast(root, 0); // might be useful for debugging
 	fprintf(stderr, BOLD MAGENTA "AST built. stating pre-execution \n" RESET);//TEST
 	pre_execution(program, root);
 	program->last_exit_status = execution(program, root, false);
@@ -94,6 +95,7 @@ int	main(int argc, char **argv, char **envp)
 
 	init_program(&program, envp);
 	prompt = BOLD GREEN "🐶🥕 Milanshell >" RESET;
+	set_signal_prompt();
 	while (1)
 	{
 		program.line = readline(prompt);
