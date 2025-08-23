@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/23 09:48:04 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/23 11:43:36 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,18 @@ static int	handle_operator(t_program *program, t_node *node, bool is_pipe_child)
 	return (1);
 }
 
+int	is_operator_str(const char *str)
+{
+	if (!str)
+		return (0);
+	if (ft_strcmp(str, "|") == 0
+		|| ft_strcmp(str, "&&") == 0
+		|| ft_strcmp(str, "||") == 0
+		|| ft_strcmp(str, ";") == 0)
+		return (1);
+	return (0);
+}
+
 //decides cmd execution
 int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make it shorter
 {
@@ -70,6 +82,12 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 		|| process_redir(&node->u_data.cmd) != 0)
 		return (1);
 	cmd_name = node->u_data.cmd.argv[0];
+	if (is_operator_str(cmd_name))
+	{
+		fprintf(stderr, RED BOLD
+			"Syntax error near unexpected token `%s`\n" RESET, cmd_name);
+		return (1);//syntax error can be 2?
+	}
 	if (is_pipe_child)
 	{
 		if (is_builtin(cmd_name))
@@ -93,10 +111,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 			return (status);
 		}
 		else
-		{
 			return (exec_cmd_nopipe(program, node));
-			restore_std(program);
-		}
 	}
 }
 
