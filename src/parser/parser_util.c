@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 08:22:30 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/23 09:48:59 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/23 10:18:35 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,10 @@ void	add_token(t_token **list, t_token *new_token)
 
 void	error_split_arg(t_token *current)
 {
-	if ((current)->next)
+	if (current->next)
 		fprintf(stderr, BOLD RED
 			"syntax error near unexpected token '%s'\n" RESET,
-			(current)->next->txt);
+			current->next->txt);
 	else
 		fprintf(stderr, BOLD RED
 			"syntax error near unexpected token 'newline'\n" RESET);
