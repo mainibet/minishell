@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 09:56:45 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 18:23:05 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/23 07:30:20 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ typedef enum e_redir_type
 	RED_IN,
 	RED_OUT,
 	RED_APPEND,
-	RED_HERE_DOC
+	RED_HERE_DOC,
+	RED_UNKNOW
 }t_redir_type;
 
 // -----------------------------------------//

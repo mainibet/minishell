@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 18:24:33 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/23 09:48:04 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 		else
 		{
 			exec_cmd_inpipe(node);
+			restore_std(program);
 			exit (1);
 		}
 	}
@@ -92,7 +93,10 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 			return (status);
 		}
 		else
+		{
 			return (exec_cmd_nopipe(program, node));
+			restore_std(program);
+		}
 	}
 }
 
@@ -125,3 +129,4 @@ int	execution(t_program *program, t_node *node, bool is_pipe_child)
 	program->last_exit_status = status;
 	return (status);
 }
+
