@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:35:57 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/21 07:30:23 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/23 09:20:08 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,54 @@ static int	precedence(t_token *token)
 	return (0);
 }
 
-t_node	*parse_command(t_token *token)//name changed from parse terminal to parse command
+// int	parse_redir_error(t_token *token)
+// {
+// 	if (!token->next || token->next->type != WORD)
+// 	{
+// 		if (token->next)
+// 			fprintf(stderr, BOLD RED
+// 				"syntax error near '%s'\n" RESET, token->next->txt);
+// 		else
+// 			fprintf(stderr, RED BOLD
+// 				"syntax error near a new line\n" RESET);
+// 		return (1);
+// 	}
+// 	return (0);
+// }
+
+// int	parse_redir(t_cmd_data *cmd, t_token *token)
+// {
+// 	while (token)
+// 	{
+// 		if (token->type == REDIR_IN || token->type == REDIR_OUT
+// 			|| token->type == APPEND || token->type == HEREDOC)
+// 		{
+// 			if (parse_redir_error(token))
+// 				return (1);
+// 			add_redir(&cmd->redir,
+// 				create_redir_node(token->next->txt, map_type(token->type)));
+// 			token = token->next->next;
+// 			continue ;//check if can be used (the norm)
+// 		}
+// 		token = token->next;
+// 	}
+// 	return (0);
+// }
+
+t_node	*parse_command(t_token *token)
 {
 	t_node	*node;
 
 	node = malloc(sizeof(t_node));
 	if (!node)
+		return (NULL);//check malloc error and free
+	init_cmd_node(NULL, node);
+	if (process_cmd_tokens(token, &node->u_data.cmd) != 0)
+	{
+		// free_token(token);//check
+		free(node);//check
 		return (NULL);
-	node->type = COMMAND;
-	node->u_data.cmd.tokens = token;
+	}
 	return (node);
 }
 
@@ -67,9 +106,9 @@ t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
 }
 
 //precedence
-static t_token *find_lowest_operator(t_token *token)
 //NEEDS TO BE IMPROVED FOR LEFT ASSOCIATIVE
 //now if ok for right, then for pipes
+static t_token	*find_lowest_operator(t_token *token)
 {
 	t_token	*lowest_op;
 	t_token	*current;
@@ -79,7 +118,8 @@ static t_token *find_lowest_operator(t_token *token)
 
 	while (current)
 	{
-		if (precedence(current) > 0 && (!lowest_op || precedence(current) < precedence(lowest_op)))
+		if (precedence(current) > 0 && (!lowest_op
+				|| precedence(current) < precedence(lowest_op)))
 			lowest_op = current;
 		current = current->next;
 	}
@@ -92,13 +132,14 @@ t_node	*parse(t_token *token_list)
 	t_token	*current;
 	t_node	*left;
 	t_node	*right;
+	t_token	*right_list;
 
 	if (!token_list)
 		return (NULL);
 	op_token = find_lowest_operator(token_list);
 	if (!op_token)
 		return (parse_command(token_list));
-	t_token *right_list = op_token->next;
+	right_list = op_token->next;
 	current = token_list;
 	while (current && current->next != op_token)
 		current = current->next;
