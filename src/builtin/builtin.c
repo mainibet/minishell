@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:10:28 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/23 13:12:13 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/25 10:58:02 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,7 @@ int	execute_builtin(t_program *program, t_node *node, bool is_pipe_child)
 	cmd = &node->u_data.cmd;
 	status = 0;
 	if (cmd->redir)
-	{
-		if (process_redir(cmd) != 0)
-			return (1);
 		setup_redir(cmd);
-	}
 	e_builtin_type = is_builtin(cmd->argv[0]);
 	if (e_builtin_type == BUILTIN_ECHO)
 		status = my_echo(program, node);
