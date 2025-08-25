@@ -23,36 +23,53 @@
 *   4. Includes '\n' if there is no -n in the args
 */
 // int	my_echo(t_node *node)
-int	my_echo(t_program *program, t_node *node)
-{
-	int		i;
-	int		new_line;
 
-	(void) program;
-	fprintf(stderr, MAGENTA BOLD "MY ECHO is about to be run\n" RESET);
-	i = 1;//from 1 are the cmd's arg
-	new_line = 1;
-	if (node->u_data.cmd.argv[i] && ft_strncmp(node->u_data.cmd.argv[i], "-n", 3) == 0)//3 including '\0'
-	{
-		new_line = 0;
-		i++;
-	}
-	while (node->u_data.cmd.argv[i])//loop to str per str
-	{
-		if (safe_write(node->u_data.cmd.fd_out, node->u_data.cmd.argv[i],
-				ft_strlen(node->u_data.cmd.argv[i])) == -1)//implement correctly
-			return (1);
-		if (node->u_data.cmd.argv[i + 1])
-		{
-			if (safe_write(node->u_data.cmd.fd_out, " ", 1) == -1)
-				return (1);
-		}
-		i++;
-	}
-	if (new_line)//handles -n
-	{
-		if (safe_write(node->u_data.cmd.fd_out, "\n", 1) == -1)
-			return (1);
-	}
-	return (0);
+
+// ---->> udated my echo function to also read from STDIN so that it can also support heredoc
+int my_echo(t_program *program, t_node *node)
+{
+    int i;
+    int new_line;
+
+    (void) program;
+    fprintf(stderr, MAGENTA BOLD "MY ECHO is about to be run\n" RESET);
+
+    i = 1; // starts after command name
+    new_line = 1;
+
+    // Handle -n option
+    if (node->u_data.cmd.argv[i] && ft_strncmp(node->u_data.cmd.argv[i], "-n", 3) == 0)
+    {
+        new_line = 0;
+        i++;
+    }
+
+    if (!node->u_data.cmd.argv[i]) // No args: read from STDIN
+    {
+        char buf[1024];
+        ssize_t n;
+        while ((n = read(STDIN_FILENO, buf, sizeof(buf))) > 0)
+            if (safe_write(node->u_data.cmd.fd_out, buf, n) == -1)
+                return 1;
+        if (new_line)
+            safe_write(node->u_data.cmd.fd_out, "\n", 1);
+        return 0;
+    }
+
+    // Print args
+    while (node->u_data.cmd.argv[i])
+    {
+        if (safe_write(node->u_data.cmd.fd_out, node->u_data.cmd.argv[i],
+                ft_strlen(node->u_data.cmd.argv[i])) == -1)
+            return 1;
+        if (node->u_data.cmd.argv[i + 1])
+            if (safe_write(node->u_data.cmd.fd_out, " ", 1) == -1)
+                return 1;
+        i++;
+    }
+    if (new_line)
+        safe_write(node->u_data.cmd.fd_out, "\n", 1);
+
+    return 0;
 }
+

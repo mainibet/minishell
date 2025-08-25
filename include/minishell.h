@@ -38,6 +38,7 @@
 # include <signal.h>
 # include <sys/ioctl.h>
 # include <termios.h>
+# include <stdbool.h>
 
 // -----------------------------------------//
 //             MODULE HEADERS               //
@@ -56,7 +57,7 @@
 # include "export.h"
 # include "unset.h"
 # include "signall.h"
-
+# include "heredoc.h"
 
 // -----------------------------------------//
 //                PROTOTYPES                //

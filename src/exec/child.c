@@ -39,7 +39,7 @@ void child_process(t_program *program, t_node *node)
 	fprintf(stderr, "\033[1;36m[DEBUG] child_process: cmd->redir is %s (%d redirs)\033[0m\n", cmd->redir ? "NOT NULL" : "NULL", redir_count);
 	if (cmd->redir)
 	{
-		if (process_redir(cmd) != 0)
+		if (process_redir(cmd, program) != 0)
 			exit(EXIT_FAILURE);
 		setup_redir(cmd);
 	}

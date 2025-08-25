@@ -114,7 +114,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 			if (cmd->redir) {
 				saved_in = dup(STDIN_FILENO);
 				saved_out = dup(STDOUT_FILENO);
-				if (process_redir(cmd) == 0)
+				if (process_redir(cmd, program) == 0)
 					setup_redir(cmd);
 				cmd->fd_out = STDOUT_FILENO;
 			}
