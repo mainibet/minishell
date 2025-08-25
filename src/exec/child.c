@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:07:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/25 14:07:34 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/25 18:12:38 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,27 @@
 void child_process(t_program *program, t_node *node)
 {
 	t_cmd_data		*cmd;
-	t_builtin_type	builtin_id;
+	// t_builtin_type	builtin_id;
 	int				status;
 
 	cmd = &node->u_data.cmd;
-	int redir_count = 0;
-	t_redir *tmp_redir = cmd->redir;
-	while (tmp_redir) { redir_count++; tmp_redir = tmp_redir->next; }
-	fprintf(stderr, "\033[1;36m[DEBUG] child_process: cmd->redir is %s (%d redirs)\033[0m\n", cmd->redir ? "NOT NULL" : "NULL", redir_count);
+	// int redir_count = 0;
+	// t_redir *tmp_redir = cmd->redir;
+	// while (tmp_redir) { redir_count++; tmp_redir = tmp_redir->next; }
+	// fprintf(stderr, "\033[1;36m[DEBUG] child_process: cmd->redir is %s (%d redirs)\033[0m\n", cmd->redir ? "NOT NULL" : "NULL", redir_count);
 	if (cmd->redir)
 	{
-		if (process_redir(cmd, program) != 0)
+		// if (!is_pipe_child)//new
+		// {//new
+		// 	if (process_redir(cmd, program) != 0)
+		// 		exit(EXIT_FAILURE);
+		// }//new
+		if (cmd->pipefd[0] > 2)
+			cmd->fd_in = cmd->pipefd[0];
+		if (cmd->pipefd[1] > 2)
+			cmd->fd_out = cmd->pipefd[1];
+		if (setup_redir(cmd) != 0)//new handling error
 			exit(EXIT_FAILURE);
-		setup_redir(cmd);
 	}
 	if (is_builtin(cmd->argv[0]))//might change if declared $ARG in cmd line
 	{

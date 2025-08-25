@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/25 14:03:23 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/25 18:27:21 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	is_operator_str(const char *str)
 }
 
 //decides cmd execution
-int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make it shorter
+int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 {
 	int	status;
 	char	*cmd_name;
@@ -89,6 +89,12 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 	}
 	if (is_pipe_child)
 	{
+		if (process_redir(&node->u_data.cmd, program) != 0)//new
+			exit(EXIT_FAILURE);//new
+		if (node->u_data.cmd.pipefd[0] > 2 && node->u_data.cmd.fd_in == STDIN_FILENO)
+			node->u_data.cmd.fd_in = node->u_data.cmd.pipefd[0];
+		if (node->u_data.cmd.pipefd[1] > 2 && node->u_data.cmd.fd_out == STDOUT_FILENO)
+			node->u_data.cmd.fd_out = node->u_data.cmd.pipefd[1];
 		if (is_builtin(cmd_name))
 		{
 			status = execute_builtin(program, node, true);

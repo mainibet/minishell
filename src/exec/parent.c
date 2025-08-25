@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:15:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/23 07:45:14 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:13:05 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ int	exec_cmd_nopipe(t_program *program, t_node *node)
 	else if (pid == 0)//child
 	{
 		//CHECK FD TO CLOSE
+		if (process_redir(&node->u_data.cmd, program) != 0)//new
+			exit(EXIT_FAILURE);//new
 		child_process(program, node);
 		exit(EXIT_FAILURE);
 	}
