@@ -78,8 +78,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 	int	status;
 	char	*cmd_name;
 
-	if (!node || !node->u_data.cmd.argv
-		|| process_redir(&node->u_data.cmd) != 0)
+	if (!node || !node->u_data.cmd.argv)
 		return (1);
 	cmd_name = node->u_data.cmd.argv[0];
 	if (is_operator_str(cmd_name))
@@ -106,7 +105,24 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 	{
 		if (is_builtin(cmd_name))
 		{
+			int saved_in = -1, saved_out = -1;
+			t_cmd_data *cmd = &node->u_data.cmd;
+			int redir_count = 0;
+			t_redir *tmp_redir = cmd->redir;
+			while (tmp_redir) { redir_count++; tmp_redir = tmp_redir->next; }
+			fprintf(stderr, "\033[1;36m[DEBUG] handle_cmd_exec: cmd->redir is %s (%d redirs)\033[0m\n", cmd->redir ? "NOT NULL" : "NULL", redir_count);
+			if (cmd->redir) {
+				saved_in = dup(STDIN_FILENO);
+				saved_out = dup(STDOUT_FILENO);
+				if (process_redir(cmd) == 0)
+					setup_redir(cmd);
+				cmd->fd_out = STDOUT_FILENO;
+			}
 			status = execute_builtin(program, node, false);
+			if (cmd->redir) {
+				if (saved_in != -1) { dup2(saved_in, STDIN_FILENO); close(saved_in); }
+				if (saved_out != -1) { dup2(saved_out, STDOUT_FILENO); close(saved_out); }
+			}
 			program->last_exit_status = status;
 			return (status);
 		}

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 18:19:01 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/25 09:42:29 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,9 @@ int	setup_redir(t_cmd_data *cmd)
 
 	cmd_fd_in = cmd->fd_in;
 	cmd_fd_out = cmd ->fd_out;
-	if (cmd_fd_in != -1)
+	if (cmd_fd_in > 2 && cmd_fd_in != STDIN_FILENO)
 	{
+		fprintf(stderr, "\033[1;36m[DEBUG] setup_redir: dup2(%d -> STDIN_FILENO)\033[0m\n", cmd_fd_in);
 		if (redir_in(cmd_fd_in) == -1)
 		{
 			close_fd(&cmd_fd_in);
@@ -69,8 +70,9 @@ int	setup_redir(t_cmd_data *cmd)
 		}
 		close_fd(&cmd_fd_in);
 	}
-	if (cmd_fd_out != -1)
+	if (cmd_fd_out > 2 && cmd_fd_out != STDOUT_FILENO)
 	{
+		fprintf(stderr, "\033[1;36m[DEBUG] setup_redir: dup2(%d -> STDOUT_FILENO)\033[0m\n", cmd_fd_out);
 		if (redir_out(cmd_fd_out) == -1)
 		{
 			close_fd(&cmd_fd_out);
@@ -104,6 +106,7 @@ int	process_redir(t_cmd_data *cmd)
 	cmd->fd_out = STDOUT_FILENO;
 	while (current_redir)
 	{
+		fprintf(stderr, "\033[1;36m[DEBUG] process_redir: about to open '%s' (type %d)\033[0m\n", current_redir->target, current_redir->type);
 		if (open_redir_filename(current_redir) != 0)
 		{
 			if (cmd->fd_in != STDIN_FILENO)
@@ -112,6 +115,7 @@ int	process_redir(t_cmd_data *cmd)
 				close_fd(&cmd->fd_out);
 			return (1);
 		}
+		fprintf(stderr, "\033[1;36m[DEBUG] process_redir: opened '%s' -> fd %d\033[0m\n", current_redir->target, current_redir->fd);
 		if (current_redir->type == RED_IN)
 			update_redir_fd(current_redir->fd, &cmd->fd_in);
 		else
