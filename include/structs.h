@@ -75,7 +75,8 @@ typedef enum e_redir_type
 	RED_OUT,
 	RED_APPEND,
 	RED_HERE_DOC,
-	RED_UNKNOW
+	RED_UNKNOW,
+	RED_QUOTED
 }t_redir_type;
 
 // -----------------------------------------//
@@ -150,7 +151,8 @@ typedef struct s_redir
 	enum e_redir_type	type;
 	char				*target;//filename for < > >> and delimiter for <<
 	int					fd;//associated with the redir
-	struct s_redir		*next;//linkedlist
+	struct s_redir		*next; //linkedlist
+	bool	hd_expand;
 }	t_redir;
 
 

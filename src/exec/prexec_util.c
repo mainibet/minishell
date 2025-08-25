@@ -117,19 +117,25 @@ int	clean_redir_target(t_redir *redir, char **envp_cpy, int last_exit)
 	return (0);
 }
 
-void	apply_redir(t_program *program, t_node *node)
+void apply_redir(t_program *program, t_node *node)
 {
-	t_redir	*redir;
+    t_redir *redir = node->u_data.cmd.redir;
 
-	redir = node->u_data.cmd.redir;
-	while (redir)
-	{
-		if (clean_redir_target(redir, program->envp_cpy,
-				program ->last_exit_status) != 0)
-		{
-			cleanup_program(program);
-			exit(EXIT_FAILURE);
-		}
-		redir = redir->next;
-	}
+    while (redir)
+    {
+        if (redir->type == RED_HERE_DOC)
+        {
+            /* ensure proper delimiter + hd_expand flag */
+            heredoc_normalize_delimiter(redir);
+        }
+        else
+        {
+            if (clean_redir_target(redir, program->envp_cpy, program->last_exit_status) != 0)
+            {
+                cleanup_program(program);
+                exit(EXIT_FAILURE);
+            }
+        }
+        redir = redir->next;
+    }
 }
