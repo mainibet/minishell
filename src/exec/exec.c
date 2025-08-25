@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/23 11:43:36 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/25 14:03:23 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 //Executes a cmd with execve
 //doesn't fork
-void	exec_cmd_inpipe(t_node *node)
+void	exec_cmd_inchild(t_node *node)
 {
 	char	*cmd_path;
 
@@ -36,7 +36,7 @@ static int	handle_operator(t_program *program, t_node *node, bool is_pipe_child)
 	int	right_status;
 
 	if (node->u_data.op.type == PIPE)
-		return (execute_pipeline(program, node));//TODO connect with pipe.c and program
+		return (execute_pipeline(program, node));
 	else if (node->u_data.op.type == AND)
 	{
 		left_status = execution(program, node->u_data.op.left, true);
@@ -96,7 +96,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 		}
 		else
 		{
-			exec_cmd_inpipe(node);
+			exec_cmd_inchild(node);
 			restore_std(program);
 			exit (1);
 		}

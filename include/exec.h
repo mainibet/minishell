@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 11:30:42 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/25 14:03:48 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int		exec_cmd_nopipe(t_program *token_headromgra, t_node *node);
 void	child_process(t_program *program, t_node *node);
 
 //pipelines
-void	exec_cmd_inpipe(t_node *node);
+void	exec_cmd_inchild(t_node *node);
 int		execute_pipeline(t_program *program, t_node *node);
 int		wait_children(pid_t left_pid, pid_t right_pid, int *right_status);
 

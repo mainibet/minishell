@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:07:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/23 12:08:58 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/25 14:02:33 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void child_process(t_program *program, t_node *node)
 	}
 	else
 	{
-		exec_cmd_inpipe(node);//this was to execute only single external cmd
+		exec_cmd_child(node);//this was to execute only single external cmd
 		perror (BOLD RED "Exec/Builtin failed" RESET);
 		// cleanup_fd(node, node->type);// Only cleanup FDs opened by this child. CHECK IF W OTHERS
 		exit(EXIT_FAILURE);
