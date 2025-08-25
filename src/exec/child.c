@@ -33,8 +33,16 @@ void child_process(t_program *program, t_node *node)
 	int				status;
 
 	cmd = &node->u_data.cmd;
+	int redir_count = 0;
+	t_redir *tmp_redir = cmd->redir;
+	while (tmp_redir) { redir_count++; tmp_redir = tmp_redir->next; }
+	fprintf(stderr, "\033[1;36m[DEBUG] child_process: cmd->redir is %s (%d redirs)\033[0m\n", cmd->redir ? "NOT NULL" : "NULL", redir_count);
 	if (cmd->redir)
+	{
+		if (process_redir(cmd) != 0)
+			exit(EXIT_FAILURE);
 		setup_redir(cmd);
+	}
 	if (is_builtin(cmd->argv[0]))//might change if declared $ARG in cmd line
 	{
 		status = execute_builtin(program, node, true);

@@ -72,6 +72,7 @@ void	error_split_arg(t_token *current)
 
 int	split_cmd_arg(t_token **current, t_cmd_data *cmd_data)
 {
+	fprintf(stderr, "\033[1;36m[DEBUG] split_cmd_arg: called on token '%s' type %d\033[0m\n", (*current)->txt, (*current)->type);
 	if (!(*current)->next || (*current)->next->type != WORD)
 	{
 		error_split_arg(*current);
@@ -79,6 +80,11 @@ int	split_cmd_arg(t_token **current, t_cmd_data *cmd_data)
 	}
 	add_redir(&cmd_data->redir,
 		create_redir_node((*current)->next->txt, map_type((*current)->type)));
+	// Count redirs after adding
+	int redir_count = 0;
+	t_redir *tmp_redir = cmd_data->redir;
+	while (tmp_redir) { redir_count++; tmp_redir = tmp_redir->next; }
+	fprintf(stderr, "\033[1;36m[DEBUG] split_cmd_arg: cmd_data->redir now has %d redirs\033[0m\n", redir_count);
 	*current = (*current)->next->next;
 	return (0);
 }
@@ -141,33 +147,42 @@ char	**build_argv_from_tokens(t_token *cmd_tokens)
 
 int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
 {
-	t_token	*current;
-	t_token	*cmd_tokens;
-
-	cmd_tokens = NULL;
-	current = token;
-	while (current)
-	{
-		if (current ->type >= REDIR_IN && current->type <= HEREDOC)
-		{
-			if (split_cmd_arg(&current, cmd_data) != 0)
-			{
-				free_token(cmd_tokens);
-				return (1);
-			}
-		}
-		else
-		{
-			add_token(&cmd_tokens, token_cpy(current));
-			current = current->next;
-		}
-	}
-	cmd_data->tokens = cmd_tokens;
-	cmd_data->argv = build_argv_from_tokens(cmd_tokens);
-	if (!cmd_data->argv)
-	{
-		perror("Failed to allocate argv");
-		return (1);
-	}
-	return (0);
+    t_token *current;
+    t_token *cmd_tokens;
+    // Print enum values for debugging
+    fprintf(stderr, "\033[1;36m[DEBUG] REDIR_IN=%d REDIR_OUT=%d APPEND=%d HEREDOC=%d\033[0m\n", REDIR_IN, REDIR_OUT, APPEND, HEREDOC);
+    // Debug print: list all tokens and their types
+    fprintf(stderr, "\033[1;36m[DEBUG] process_cmd_tokens: tokens received:\033[0m\n");
+    current = token;
+    while (current) {
+        fprintf(stderr, "\033[1;36m  token: '%s' type: %d\033[0m\n", current->txt, current->type);
+        current = current->next;
+    }
+    // Reset current for actual processing
+    current = token;
+    cmd_tokens = NULL;
+    while (current)
+    {
+        if (current->type == REDIR_IN || current->type == REDIR_OUT ||
+            current->type == APPEND || current->type == HEREDOC)
+        {
+            if (split_cmd_arg(&current, cmd_data) != 0)
+            {
+                free_token(cmd_tokens);
+                return (1);
+            }
+            // split_cmd_arg already advances current
+            continue;
+        }
+        add_token(&cmd_tokens, token_cpy(current));
+        current = current->next;
+    }
+    cmd_data->tokens = cmd_tokens;
+    cmd_data->argv = build_argv_from_tokens(cmd_tokens);
+    if (!cmd_data->argv)
+    {
+        perror("Failed to allocate argv");
+        return (1);
+    }
+    return (0);
 }
