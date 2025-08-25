@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 09:56:45 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/25 13:21:08 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/25 15:10:53 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ typedef struct s_cmd_data
 	t_cmdtype	cmd_type;
 	int			fd_in;
 	int			fd_out;
-	int			pipefd[2];
 }	t_cmd_data;
 
 // --- OPERATOR DATA ---//

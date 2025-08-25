@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 08:22:30 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/25 13:19:09 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/25 15:11:35 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ void	init_cmd_node(t_token *token, t_node *node)
 	node->u_data.cmd.cmd_type = EXECUTABLE;
 	node->u_data.cmd.fd_in = STDIN_FILENO;
 	node->u_data.cmd.fd_out = STDOUT_FILENO;
-	node->u_data.cmd.pipefd[0] = -1;
-	node->u_data.cmd.pipefd[1] = -1;
 }
 
 t_token	*token_cpy(t_token *token)
