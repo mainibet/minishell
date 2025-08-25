@@ -3,3 +3,6 @@ libft/obj/
 .vscode/settings.json
 **/.DS_Store
 minishell_test
+src/file
+src/hello
+.vscode/
