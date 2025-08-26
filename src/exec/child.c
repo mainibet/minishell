@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:07:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/25 18:12:38 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 06:50:34 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 *   @note v0: execute single external cmd: no pipes no builtins
 */
 // void	child_process(t_node *node)
-void child_process(t_program *program, t_node *node)
+void	child_process(t_program *program, t_node *node)
 {
 	t_cmd_data		*cmd;
 	// t_builtin_type	builtin_id;
@@ -44,9 +44,9 @@ void child_process(t_program *program, t_node *node)
 		// 	if (process_redir(cmd, program) != 0)
 		// 		exit(EXIT_FAILURE);
 		// }//new
-		if (cmd->pipefd[0] > 2)
-			cmd->fd_in = cmd->pipefd[0];
-		if (cmd->pipefd[1] > 2)
+		if (node->u_data.cmd.pipefd[0] > 2)
+			node->u_data.cmd.fd_in = node->u_data.cmd.pipefd[0];
+		if (node->u_data.cmd.pipefd[1] > 2)
 			cmd->fd_out = cmd->pipefd[1];
 		if (setup_redir(cmd) != 0)//new handling error
 			exit(EXIT_FAILURE);

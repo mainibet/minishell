@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/25 18:30:22 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 06:51:40 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 
 //uses pipdefd[1] to write
-pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
+
 pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 {
 	pid_t	pid;
@@ -45,7 +45,6 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 	return (pid);
 }
 
-pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 {
 	pid_t	pid;
@@ -88,7 +87,7 @@ int	close_all_pipefd(int *pipefd_in, int *pipefd_out)
 //in waitpid 0 makes wait child
 //pids[0] is left_pid
 //pids[1] is right pid
-int	execute_pipeline(t_program *program, t_node *node, int pipefd[2])
+int	execute_pipeline(t_program *program, t_node *node)
 {
 	pid_t	pids[2];
 	int		pipefd[2];
