@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/23 12:01:14 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 06:51:40 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 
 
 //uses pipdefd[1] to write
-pid_t	execute_left(t_program *program, t_node *left_node, int pipefd[2])
+
+pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 {
 	pid_t	pid;
 
+	left_node->u_data.cmd.pipefd[0] = pipefd[0];
+	left_node->u_data.cmd.pipefd[1] = pipefd[1];
 	pid = fork();
 	if (pid == -1)
 	{
@@ -27,10 +30,13 @@ pid_t	execute_left(t_program *program, t_node *left_node, int pipefd[2])
 	else if (pid == 0)
 	{
 		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 		{
 			perror("Error: dup2 failed for left cmd");
 			exit(1);
 		}
+		close_fd(&pipefd[0]);
+		close_fd(&pipefd[1]);
 		close_fd(&pipefd[0]);
 		close_fd(&pipefd[1]);
 		execution(program, left_node, true);
@@ -39,10 +45,13 @@ pid_t	execute_left(t_program *program, t_node *left_node, int pipefd[2])
 	return (pid);
 }
 
-pid_t	execute_right(t_program *program, t_node *right_node, int pipefd[2])
+pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 {
 	pid_t	pid;
 
+
+	right_node->u_data.cmd.pipefd[0] = pipefd[0];
+	right_node->u_data.cmd.pipefd[1] = pipefd[1];
 	pid = fork();
 	if (pid == -1)
 	{
@@ -52,10 +61,13 @@ pid_t	execute_right(t_program *program, t_node *right_node, int pipefd[2])
 	else if (pid == 0)
 	{
 		if (dup2(pipefd[0], STDIN_FILENO) == -1)
+		if (dup2(pipefd[0], STDIN_FILENO) == -1)
 		{
 			perror("Error: dup2 failed for right cmd");
 			exit(1);
 		}
+		close_fd(&pipefd[0]);
+		close_fd(&pipefd[1]);
 		close_fd(&pipefd[0]);
 		close_fd(&pipefd[1]);
 		execution(program, right_node, true);
@@ -87,12 +99,14 @@ int	execute_pipeline(t_program *program, t_node *node)
 		return (1);
 	}
 	pids[0] = execute_left(program, node->u_data.op.left, pipefd);
+	pids[0] = execute_left(program, node->u_data.op.left, pipefd);
 	if (pids[0] == -1)
 	{
 		close_all_pipefd(&pipefd[0], &pipefd[1]);
 		return (1);
 	}
 	close_fd(&pipefd[1]);
+	pids[1] = execute_right(program, node->u_data.op.right, pipefd);
 	pids[1] = execute_right(program, node->u_data.op.right, pipefd);
 	if (pids[1] == -1)
 	{

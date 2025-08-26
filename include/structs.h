@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 09:56:45 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/23 07:30:20 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 06:50:08 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,11 @@ typedef struct s_cmd_data
 	t_token		*tokens;
 	char		**argv;
 	char		**env;
-	t_redir		*redir;//redir struct in cmd_node
+	t_redir		*redir;
 	t_cmdtype	cmd_type;
 	int			fd_in;
 	int			fd_out;
+	int			pipefd[2];
 }	t_cmd_data;
 
 // --- OPERATOR DATA ---//

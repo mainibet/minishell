@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/23 11:43:36 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 08:58:30 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 //Executes a cmd with execve
 //doesn't fork
-void	exec_cmd_inpipe(t_node *node)
+void	exec_cmd_inchild(t_node *node)
 {
 	char	*cmd_path;
 
@@ -36,7 +36,7 @@ static int	handle_operator(t_program *program, t_node *node, bool is_pipe_child)
 	int	right_status;
 
 	if (node->u_data.op.type == PIPE)
-		return (execute_pipeline(program, node));//TODO connect with pipe.c and program
+		return (execute_pipeline(program, node));
 	else if (node->u_data.op.type == AND)
 	{
 		left_status = execution(program, node->u_data.op.left, true);
@@ -72,11 +72,32 @@ int	is_operator_str(const char *str)
 	return (0);
 }
 
-//decides cmd execution
-int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make it shorter
+// in child before executing cmd
+//connect pipes if there is no redir
+void	set_final_fds(t_cmd_data *cmd)
 {
-	int	status;
-	char	*cmd_name;
+	if (cmd->fd_in == STDIN_FILENO && cmd->pipefd[0] > 2)
+		cmd->fd_in = cmd->pipefd[0];
+	if (cmd->fd_out == STDOUT_FILENO && cmd->pipefd[1] > 2)
+		cmd->fd_out = cmd->pipefd[1];
+	if (cmd->fd_in != STDIN_FILENO)
+	{
+		redir_in(cmd->fd_in);
+		close_fd(&cmd->fd_in);
+	}
+	if (cmd->fd_out != STDOUT_FILENO)
+	{
+		redir_out(cmd->fd_out);
+		close_fd(&cmd->fd_out);
+	}
+}
+
+// decides cmd execution
+int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
+{
+	int			status;
+	char		*cmd_name;
+	t_cmd_data	*cmd;
 
 	if (!node || !node->u_data.cmd.argv)
 		return (1);
@@ -87,8 +108,11 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 			"Syntax error near unexpected token `%s`\n" RESET, cmd_name);
 		return (1);//syntax error can be 2?
 	}
+	if (process_redir(&node->u_data.cmd, program) != 0)//NEEDED
+		exit(EXIT_FAILURE);//NEEDED
 	if (is_pipe_child)
 	{
+		set_final_fds(cmd);
 		if (is_builtin(cmd_name))
 		{
 			status = execute_builtin(program, node, true);
@@ -96,7 +120,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 		}
 		else
 		{
-			exec_cmd_inpipe(node);
+			exec_cmd_inchild(node);
 			restore_std(program);
 			exit (1);
 		}
@@ -105,24 +129,16 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)//make 
 	{
 		if (is_builtin(cmd_name))
 		{
-			int saved_in = -1, saved_out = -1;
-			t_cmd_data *cmd = &node->u_data.cmd;
-			int redir_count = 0;
-			t_redir *tmp_redir = cmd->redir;
-			while (tmp_redir) { redir_count++; tmp_redir = tmp_redir->next; }
-			fprintf(stderr, "\033[1;36m[DEBUG] handle_cmd_exec: cmd->redir is %s (%d redirs)\033[0m\n", cmd->redir ? "NOT NULL" : "NULL", redir_count);
-			if (cmd->redir) {
-				saved_in = dup(STDIN_FILENO);
-				saved_out = dup(STDOUT_FILENO);
+			cmd = &node->u_data.cmd;
+			if (cmd->redir) 
+			{
 				if (process_redir(cmd, program) == 0)
 					setup_redir(cmd);
 				cmd->fd_out = STDOUT_FILENO;
 			}
 			status = execute_builtin(program, node, false);
-			if (cmd->redir) {
-				if (saved_in != -1) { dup2(saved_in, STDIN_FILENO); close(saved_in); }
-				if (saved_out != -1) { dup2(saved_out, STDOUT_FILENO); close(saved_out); }
-			}
+			if (cmd->redir)
+				restore_std(program);
 			program->last_exit_status = status;
 			return (status);
 		}
