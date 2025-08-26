@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 09:53:57 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 13:38:34 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,19 +73,23 @@ int	is_operator_str(const char *str)
 }
 
 // in child before executing cmd
-//connect pipes if there is no redir
+// connect pipes if there is no redir
 void	set_final_fds(t_cmd_data *cmd)
 {
-	if (cmd->fd_in == STDIN_FILENO && cmd->pipefd[0] > 2)
+	// if (cmd->fd_in == STDIN_FILENO && cmd->pipefd[0] > 2)
+	if (cmd->fd_in == STDIN_FILENO && cmd->pipefd[0] >= 0)
 		cmd->fd_in = cmd->pipefd[0];
-	if (cmd->fd_out == STDOUT_FILENO && cmd->pipefd[1] > 2)
+	// if (cmd->fd_out == STDOUT_FILENO && cmd->pipefd[1] > 2)
+	if (cmd->fd_out == STDOUT_FILENO && cmd->pipefd[1] >= 0)
 		cmd->fd_out = cmd->pipefd[1];
-	if (cmd->fd_in != STDIN_FILENO)
+	// if (cmd->fd_in != STDIN_FILENO)
+	if (cmd->fd_in != STDIN_FILENO && cmd->fd_in >= 0)
 	{
 		redir_in(cmd->fd_in);
 		close_fd(&cmd->fd_in);
 	}
-	if (cmd->fd_out != STDOUT_FILENO)
+	if (cmd->fd_out != STDOUT_FILENO && cmd->fd_out >= 0)
+	// if (cmd->fd_out != STDOUT_FILENO)
 	{
 		redir_out(cmd->fd_out);
 		close_fd(&cmd->fd_out);
@@ -102,6 +106,8 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 	if (!node || !node->u_data.cmd.argv)
 		return (1);
 	cmd_name = node->u_data.cmd.argv[0];
+	if (is_pipe_child && node->u_data.cmd.redir == NULL)
+		cmd = &node->u_data.cmd;
 	if (is_operator_str(cmd_name))
 	{
 		fprintf(stderr, RED BOLD
@@ -121,7 +127,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 		else
 		{
 			exec_cmd_nopipe(program, node);
-			restore_std(program);
+			restore_std(program);//NEEDED
 			exit (1);
 		}
 	}
