@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 06:51:40 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 09:52:08 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,13 @@ int	execute_pipeline(t_program *program, t_node *node)
 		perror("Error: Pipe failed");
 		return (1);
 	}
+    node->u_data.op.left->u_data.cmd.pipefd[0] = -1;//new
+    node->u_data.op.left->u_data.cmd.pipefd[1] = pipefd[1];//new
+    node->u_data.op.right->u_data.cmd.pipefd[0] = pipefd[0];//new
+    node->u_data.op.right->u_data.cmd.pipefd[1] = -1;//new
 	pids[0] = execute_left(program, node->u_data.op.left, pipefd);
 	pids[0] = execute_left(program, node->u_data.op.left, pipefd);
-	if (pids[0] == -1)
+	if (pids[0] == -1)//check
 	{
 		close_all_pipefd(&pipefd[0], &pipefd[1]);
 		return (1);
