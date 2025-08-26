@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:10:28 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 13:33:51 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 14:42:37 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,13 @@ int	is_builtin(const char *cmd_name)
 
 int	execute_builtin(t_program *program, t_node *node, bool is_pipe_child)
 {
-	t_cmd_data *cmd;
-	t_builtin_type e_builtin_type;
-	int status;
+	t_cmd_data		*cmd;
+	t_builtin_type	e_builtin_type;
+	int				status;
 
 	cmd = &node->u_data.cmd;
 	status = 0;
-	// if (cmd->redir)
-	// 	setup_redir(cmd);
+
 	e_builtin_type = is_builtin(cmd->argv[0]);
 	if (e_builtin_type == BUILTIN_ECHO)
 		status = my_echo(program, node);
@@ -61,7 +60,5 @@ int	execute_builtin(t_program *program, t_node *node, bool is_pipe_child)
 		fprintf(stderr, BOLD RED "Error: unknown builtin\n" RESET);
 		status = 1;
 	}
-	// if (!is_pipe_child)
-	// 	restore_std(program);
 	return (status);
 }

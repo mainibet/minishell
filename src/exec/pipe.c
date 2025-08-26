@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 13:22:31 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 14:45:02 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 				exit(1);
 			}
 		}
-		// close_fd(&pipefd[0]);
+		close_fd(&pipefd[0]);
 		close_fd(&pipefd[1]);
 		execution(program, left_node, true);
 		exit(EXIT_FAILURE);
@@ -68,7 +68,7 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 				exit(1);
 			}
 			close_fd(&pipefd[0]);
-			// close_fd(&pipefd[1]);
+			close_fd(&pipefd[1]);
 			execution(program, right_node, true);
 			exit(EXIT_FAILURE);
 		}
