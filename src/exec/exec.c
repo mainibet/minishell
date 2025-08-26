@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 08:58:30 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 09:53:57 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 		return (1);//syntax error can be 2?
 	}
 	if (process_redir(&node->u_data.cmd, program) != 0)//NEEDED
-		exit(EXIT_FAILURE);//NEEDED
+		exit(EXIT_FAILURE);//NEEDED check if return (1) instead
 	if (is_pipe_child)
 	{
 		set_final_fds(cmd);
@@ -120,7 +120,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 		}
 		else
 		{
-			exec_cmd_inchild(node);
+			exec_cmd_nopipe(program, node);
 			restore_std(program);
 			exit (1);
 		}
