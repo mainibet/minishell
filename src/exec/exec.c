@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 08:31:39 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 08:58:30 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	set_final_fds(t_cmd_data *cmd)
 	}
 }
 
-//decides cmd execution
+// decides cmd execution
 int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 {
 	int			status;
