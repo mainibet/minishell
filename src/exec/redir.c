@@ -6,20 +6,20 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/25 17:47:40 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 08:31:02 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	redir_in(int fd)
+int	redir_in(int fd)
 {
 	if (dup2(fd, STDIN_FILENO) == -1)
 		perror("dup2 redir_in");
 	return (0);
 }
 
-static int	redir_out(int fd)
+int	redir_out(int fd)
 {
 	if (dup2(fd, STDOUT_FILENO) == -1)
 		perror("dup2 redir_out");

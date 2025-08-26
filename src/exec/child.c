@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:07:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 06:50:34 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 07:48:37 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ void	child_process(t_program *program, t_node *node)
 		// 	if (process_redir(cmd, program) != 0)
 		// 		exit(EXIT_FAILURE);
 		// }//new
-		if (node->u_data.cmd.pipefd[0] > 2)
-			node->u_data.cmd.fd_in = node->u_data.cmd.pipefd[0];
-		if (node->u_data.cmd.pipefd[1] > 2)
-			cmd->fd_out = cmd->pipefd[1];
+		// if (node->u_data.cmd.pipefd[0] > 2)
+		// 	node->u_data.cmd.fd_in = node->u_data.cmd.pipefd[0];
+		// if (node->u_data.cmd.pipefd[1] > 2)
+		// 	cmd->fd_out = cmd->pipefd[1];
 		if (setup_redir(cmd) != 0)//new handling error
 			exit(EXIT_FAILURE);
 	}
