@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:02:07 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 09:54:16 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 15:17:49 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	child_process(t_program *program, t_node *node);
 void	exec_cmd_inchild(t_node *node);
 int		execute_pipeline(t_program *program, t_node *node);
 int		wait_children(pid_t left_pid, pid_t right_pid, int *right_status);
+void	set_final_fds(t_cmd_data *cmd);
 
 /**
 Left-associative

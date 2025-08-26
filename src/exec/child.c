@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:07:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 08:59:14 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/26 15:32:08 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,6 @@ void	child_process(t_program *program, t_node *node)
 	// fprintf(stderr, "\033[1;36m[DEBUG] child_process: cmd->redir is %s (%d redirs)\033[0m\n", cmd->redir ? "NOT NULL" : "NULL", redir_count);
 	if (cmd->redir)
 	{
-		// if (!is_pipe_child)//new
-		// {//new
-		// 	if (process_redir(cmd, program) != 0)
-		// 		exit(EXIT_FAILURE);
-		// }//new
-		// if (node->u_data.cmd.pipefd[0] > 2)
-		// 	node->u_data.cmd.fd_in = node->u_data.cmd.pipefd[0];
-		// if (node->u_data.cmd.pipefd[1] > 2)
-		// 	cmd->fd_out = cmd->pipefd[1];
 		if (setup_redir(cmd) != 0)//new handling error
 			exit(EXIT_FAILURE);
 	}
