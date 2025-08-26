@@ -75,13 +75,17 @@ void	error_split_arg(t_token *current)
 int	split_cmd_arg(t_token **current, t_cmd_data *cmd_data)
 {
 	fprintf(stderr, "\033[1;36m[DEBUG] split_cmd_arg: called on token '%s' type %d\033[0m\n", (*current)->txt, (*current)->type);
-	if (!(*current)->next || (*current)->next->type != WORD)
+	if (!(*current)->next ||
+		((*current)->next->type != WORD &&
+		 (*current)->next->type != SINGLE_Q &&
+		 (*current)->next->type != DOUBLE_Q))
 	{
 		error_split_arg(*current);
 		return (1);
 	}
+	bool quoted = ((*current)->next->type == SINGLE_Q || (*current)->next->type == DOUBLE_Q);
 	add_redir(&cmd_data->redir,
-		create_redir_node((*current)->next->txt, map_type((*current)->type)));
+		create_redir_node((*current)->next->txt, map_type((*current)->type), quoted));
 	// Count redirs after adding
 	int redir_count = 0;
 	t_redir *tmp_redir = cmd_data->redir;

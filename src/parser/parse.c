@@ -54,24 +54,21 @@ t_node	*parse_command(t_token *token)
 	return (node);
 }
 
-t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
+t_node *parse_operator(t_token *op, t_node *left, t_node *right)
 {
-	t_node	*node;
-
-	node = malloc(sizeof(t_node));
-	if (!node)
-	{
-		free_node(left);
-		free_node(right);
-		return (NULL);
-	}
-	node->type = OPERATOR;
-	node->u_data.op.type = token_type(op->txt);
-	node->u_data.op.left = left;
-	node->u_data.op.right = right;
-	return (node);
+    t_node *node = malloc(sizeof(t_node));
+    if (!node)
+    {
+        free_node(left);
+        free_node(right);
+        return NULL;
+    }
+    node->type = OPERATOR;
+    node->u_data.op.type = op->type; // directly use token type
+    node->u_data.op.left = left;
+    node->u_data.op.right = right;
+    return node;
 }
-
 //precedence
 //NEEDS TO BE IMPROVED FOR LEFT ASSOCIATIVE
 //now if ok for right, then for pipes
@@ -79,23 +76,20 @@ t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
 static t_token *find_lowest_operator(t_token *token)
 {
     t_token *lowest_op = NULL;
-    t_token *current = token;
 
-    while (current)
+    while (token)
     {
-        int curr_prec = precedence(current);
+        int curr_prec = precedence(token);
         if (curr_prec > 0)
         {
-            if (!lowest_op || curr_prec < precedence(lowest_op)
-                || (curr_prec == precedence(lowest_op) && current < lowest_op))
-            {
-                lowest_op = current;
-            }
+            if (!lowest_op || curr_prec < precedence(lowest_op))
+                lowest_op = token; // leftmost wins automatically
         }
-        current = current->next;
+        token = token->next;
     }
     return lowest_op;
 }
+
 
 t_node *parse(t_token *token_list)
 {

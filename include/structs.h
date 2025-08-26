@@ -153,7 +153,8 @@ typedef struct s_redir
 	int					fd;//associated with the redir
 	struct s_redir		*next; //linkedlist
 	bool	hd_expand;
-}	t_redir;
+	bool	quoted;
+} t_redir;
 
 
 #endif

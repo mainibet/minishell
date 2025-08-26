@@ -4,7 +4,7 @@
 
 /* ---- local helpers ----------------------------------------------------- */
 
-static int is_quoted(const char *s)
+int is_quoted(const char *s)
 {
     if (!s) return 0;
     size_t len = ft_strlen(s);
@@ -12,7 +12,7 @@ static int is_quoted(const char *s)
                          (s[0] == '"'  && s[len-1] == '"')));
 }
 
-static char *strip_outer_quotes(const char *s)
+char *strip_outer_quotes(const char *s)
 {
     if (!s) return NULL;
     size_t len = ft_strlen(s);
@@ -35,8 +35,8 @@ void heredoc_normalize_delimiter(t_redir *redir)
 {
     if (!redir || !redir->target) return;
 
-    int quoted = is_quoted(redir->target);
-    redir->hd_expand = !quoted;
+    // Use quoted field from redir struct
+    redir->hd_expand = !redir->quoted;
 
     char *clean = strip_outer_quotes(redir->target);
     if (clean)
@@ -49,14 +49,20 @@ void heredoc_normalize_delimiter(t_redir *redir)
 /* prepare heredoc: create a pipe, read user input until delimiter */
 int heredoc_prepare(t_redir *redir, char **envp, int last_exit)
 {
+
     int pipefd[2];
     char *line;
+
 
     if (!redir || pipe(pipefd) == -1)
     {
         perror("heredoc: pipe failed");
         return 1;
     }
+
+    // Always normalize delimiter before heredoc input
+    heredoc_normalize_delimiter(redir);
+    fprintf(stderr, "[DEBUG] heredoc_prepare: delimiter='%s', hd_expand=%d\n", redir->target, redir->hd_expand);
 
     redir->fd = pipefd[0]; // read end for child/STDIN
 
@@ -74,9 +80,19 @@ int heredoc_prepare(t_redir *redir, char **envp, int last_exit)
             break;
         }
 
-        char *to_write = redir->hd_expand
-                          ? expand_token_text(line, envp, last_exit)
-                          : ft_strdup(line);
+        char *to_write;
+        if (redir->hd_expand)
+        {
+            // Debug: print expansion
+            fprintf(stderr, "[DEBUG] heredoc_prepare: expanding line '%s'\n", line);
+            to_write = expand_token_text(line, envp, last_exit);
+        }
+        else
+        {
+            // Debug: print no expansion
+            fprintf(stderr, "[DEBUG] heredoc_prepare: no expansion for line '%s'\n", line);
+            to_write = ft_strdup(line);
+        }
 
         free(line);
 
