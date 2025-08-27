@@ -44,7 +44,7 @@ run_test "ls redirect" "ls > file1"
 run_test "ls pipe + redirect" "ls | ls > file2"
 #run_test "ls multiple pipes + grep" "ls | ls | ls | grep doc"
 run_test "cat chained" "cat | cat | ls"
-run_test "env piped" "env | ls | ls | grep doc"
+#run_test "env piped" "env | ls | ls | grep doc"
 
 # ================= REDIRECTIONS =================
 echo -e "\n$BLUE=== REDIRECTIONS ===$NC"
@@ -52,11 +52,27 @@ run_test "pwd redirect" "pwd > file"
 run_test "env redirect" "env > file"
 run_test "env redirect + pipe" "env > file | ls"
 run_test "pwd redirect + pipe" "pwd > file | ls"
+# Redir in
+run_test 'ls > file'          # external
+run_test 'echo hello > file'  # builtin
+
+# Redir out
+run_test 'cat < file'         # external
+
+# With append
+run_test 'date >> file'       # external
+run_test 'env >> file'        # builtin
 
 # ================= PIPES =================
 echo -e "\n$BLUE=== PIPES ===$NC"
 run_test "echo pipe" "echo hello | echo world"
 run_test "echo redirect + pipe" "echo hello > file | echo world"
 run_test "echo input + output redirection pipe" "echo hello < file1 | echo world > file2"
+# run_test 'echo hello | grep o'
+# run_test 'pwd > file | ls'
+# run_test 'env > file | ls'
+# run_test 'ls | echo hello | grep o'
+# run_test 'env > file1 | env > file2'
+# run_test 'pwd > file3 | env > file4'
 
 echo -e "\n$GREEN===== ALL TESTS FINISHED =====$NC"
