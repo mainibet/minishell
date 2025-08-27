@@ -157,6 +157,7 @@ void	pre_execution(t_program *program, t_node *node)
 	else if (node->type == COMMAND)
 	{
 		setup_cmd_arg(program, node);
+		apply_redir(program, node);
 		node->u_data.cmd.env = program->envp;
 		node->u_data.cmd.fd_in = STDIN_FILENO;
 		node->u_data.cmd.fd_out = STDOUT_FILENO;

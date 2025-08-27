@@ -110,7 +110,8 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 			"Syntax error near unexpected token `%s`\n" RESET, cmd_name);
 		return (1);//syntax error can be 2?
 	}
-	// Only call process_redir in the correct execution block below
+	if (process_redir(&node->u_data.cmd, program) != 0)//NEEDED
+		exit(EXIT_FAILURE);//NEEDED check if return (1) instead
 	if (is_pipe_child)
 	{
 		set_final_fds(cmd);
@@ -131,19 +132,15 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 		if (is_builtin(cmd_name))
 		{
 			cmd = &node->u_data.cmd;
-			if (cmd->redir)
+			if (cmd->redir) 
 			{
 				if (process_redir(cmd, program) == 0)
 					setup_redir(cmd);
 				cmd->fd_out = STDOUT_FILENO;
 			}
-			else
-			{
-				// Always set up redir for builtins, even if no explicit redir
-				setup_redir(cmd);
-			}
 			status = execute_builtin(program, node, false);
-			restore_std(program);
+			if (cmd->redir)
+				restore_std(program);
 			program->last_exit_status = status;
 			return (status);
 		}
