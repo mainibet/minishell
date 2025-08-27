@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 15:29:42 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/27 13:51:50 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 	else if (pid == 0)
 	{
 		if (pipefd[1] >= 0)
+		// if (left_node->u_data.cmd.fd_out == STDOUT_FILENO && pipefd[1] >= 0)
 		{
 			if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 			{
@@ -37,8 +38,8 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 				exit(1);
 			}
 		}
-		close_fd(&pipefd[0]);
-		close_fd(&pipefd[1]);
+		// close_fd(&pipefd[0]);
+		// close_fd(&pipefd[1]);
 		execution(program, left_node, true);
 		exit(EXIT_FAILURE);
 	}
@@ -61,14 +62,15 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 	else if (pid == 0)
 	{
 		if (pipefd[0] >= 0)
+		// if (right_node->u_data.cmd.fd_in == STDIN_FILENO && pipefd[0] >= 0)
 		{
 			if (dup2(pipefd[0], STDIN_FILENO) == -1)
 			{
 				perror("Error: dup2 failed for right cmd");
 				exit(1);
 			}
-			close_fd(&pipefd[0]);
-			close_fd(&pipefd[1]);
+			// close_fd(&pipefd[0]);
+			// close_fd(&pipefd[1]);
 			execution(program, right_node, true);
 			exit(EXIT_FAILURE);
 		}
@@ -83,6 +85,42 @@ int	close_all_pipefd(int *pipefd_in, int *pipefd_out)
 	return (1);
 }
 
+bool	has_redir_out(t_redir *redir)//new
+{
+	while (redir)
+	{
+		if (redir->type == RED_OUT || redir->type == RED_APPEND)
+			return (true);
+		redir = redir->next;
+	}
+	return (false);
+}
+
+bool	has_redir_in(t_redir *redir)//new
+{
+	while (redir)
+	{
+		if (redir->type == RED_IN || redir->type == RED_HERE_DOC)
+			return (true);
+		redir = redir->next;
+	}
+	return (false);
+}
+
+//decides how to connect pipe
+//1. LEFT: writes in pipe only if there are not output redir
+//2. RIGHT: reads from pipe only if there is not a redir intput explicit
+static void	assign_pipefd(t_node *node, int pipefd[2])
+{
+	if (!has_redir_out(node->u_data.op.left->u_data.cmd.redir))
+		node->u_data.op.left->u_data.cmd.pipefd[1] = pipefd[1];
+	else
+		node->u_data.op.left->u_data.cmd.pipefd[1] = -1;
+	if (!has_redir_in(node->u_data.op.right->u_data.cmd.redir))
+		node->u_data.op.right->u_data.cmd.pipefd[0] = pipefd[0];
+	else
+		node->u_data.op.right->u_data.cmd.pipefd[0] = -1;
+}
 //this consider left and right child
 //in waitpid 0 makes wait child
 //pids[0] is left_pid
@@ -98,10 +136,11 @@ int	execute_pipeline(t_program *program, t_node *node)
 		perror("Error: Pipe failed");
 		return (1);
 	}
-	node->u_data.op.left->u_data.cmd.pipefd[0] = -1;//new
-	node->u_data.op.left->u_data.cmd.pipefd[1] = pipefd[1];//new
-	node->u_data.op.right->u_data.cmd.pipefd[0] = pipefd[0];//new
-	node->u_data.op.right->u_data.cmd.pipefd[1] = -1;//new
+	// node->u_data.op.left->u_data.cmd.pipefd[0] = -1;//new
+	// node->u_data.op.left->u_data.cmd.pipefd[1] = pipefd[1];//new
+	// node->u_data.op.right->u_data.cmd.pipefd[0] = pipefd[0];//new
+	// node->u_data.op.right->u_data.cmd.pipefd[1] = -1;//new
+	assign_pipefd(node, pipefd);//new
 	pids[0] = execute_left(program, node->u_data.op.left, pipefd);
 	if (pids[0] == -1)//check
 	{

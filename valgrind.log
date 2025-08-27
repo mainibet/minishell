@@ -1,0 +1,343 @@
+==201358== Memcheck, a memory error detector
+==201358== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==201358== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==201358== Command: ./minishell_test grep -i file\ descriptor valgrind.log
+==201358== Parent PID: 162000
+==201358== 
+==201417== Use of uninitialised value of size 8
+==201417==    at 0x404580: set_final_fds (exec.c:79)
+==201417==    by 0x404722: handle_cmd_exec (exec.c:117)
+==201417==    by 0x4048C3: execution (exec.c:165)
+==201417==    by 0x404B13: execute_left (pipe.c:43)
+==201417==    by 0x404D7E: execute_pipeline (pipe.c:144)
+==201417==    by 0x4049A1: handle_operator (exec.c:39)
+==201417==    by 0x404906: execution (exec.c:170)
+==201417==    by 0x407BAE: process_cmdline (main.c:84)
+==201417==    by 0x407A94: main (main.c:107)
+==201417== 
+==201417== Invalid read of size 4
+==201417==    at 0x404580: set_final_fds (exec.c:79)
+==201417==    by 0x404722: handle_cmd_exec (exec.c:117)
+==201417==    by 0x4048C3: execution (exec.c:165)
+==201417==    by 0x404B13: execute_left (pipe.c:43)
+==201417==    by 0x404D7E: execute_pipeline (pipe.c:144)
+==201417==    by 0x4049A1: handle_operator (exec.c:39)
+==201417==    by 0x404906: execution (exec.c:170)
+==201417==    by 0x407BAE: process_cmdline (main.c:84)
+==201417==    by 0x407A94: main (main.c:107)
+==201417==  Address 0x24 is not stack'd, malloc'd or (recently) free'd
+==201417== 
+==201417== 
+==201417== Process terminating with default action of signal 11 (SIGSEGV)
+==201417==  Access not within mapped region at address 0x24
+==201417==    at 0x404580: set_final_fds (exec.c:79)
+==201417==    by 0x404722: handle_cmd_exec (exec.c:117)
+==201417==    by 0x4048C3: execution (exec.c:165)
+==201417==    by 0x404B13: execute_left (pipe.c:43)
+==201417==    by 0x404D7E: execute_pipeline (pipe.c:144)
+==201417==    by 0x4049A1: handle_operator (exec.c:39)
+==201417==    by 0x404906: execution (exec.c:170)
+==201417==    by 0x407BAE: process_cmdline (main.c:84)
+==201417==    by 0x407A94: main (main.c:107)
+==201417==  If you believe this happened as a result of a stack
+==201417==  overflow in your program's main thread (unlikely but
+==201417==  possible), you can try to increase the size of the
+==201417==  main thread stack using the --main-stacksize= flag.
+==201417==  The main thread stack size used in this run was 8388608.
+==201417== 
+==201417== FILE DESCRIPTORS: 12 open (3 std) at exit.
+==201417== Open file descriptor 6: file
+==201417==    at 0x49D953B: open (open64.c:41)
+==201417==    by 0x405142: open_redir_filename (redir_util.c:91)
+==201417==    by 0x4042C8: process_redir (redir.c:91)
+==201417==    by 0x4046FC: handle_cmd_exec (exec.c:113)
+==201417==    by 0x4048C3: execution (exec.c:165)
+==201417==    by 0x404B13: execute_left (pipe.c:43)
+==201417==    by 0x404D7E: execute_pipeline (pipe.c:144)
+==201417==    by 0x4049A1: handle_operator (exec.c:39)
+==201417==    by 0x404906: execution (exec.c:170)
+==201417==    by 0x407BAE: process_cmdline (main.c:84)
+==201417==    by 0x407A94: main (main.c:107)
+==201417== 
+==201417== Open file descriptor 5: /dev/pts/4
+==201417==    at 0x49D9FEB: dup (syscall-template.S:120)
+==201417==    by 0x406E16: init_fd_origin (init.c:37)
+==201417==    by 0x406C80: init_program (init.c:59)
+==201417==    by 0x407A36: main (main.c:96)
+==201417== 
+==201417== Open file descriptor 4: /dev/pts/4
+==201417==    at 0x49D9FEB: dup (syscall-template.S:120)
+==201417==    by 0x406E16: init_fd_origin (init.c:37)
+==201417==    by 0x406C63: init_program (init.c:57)
+==201417==    by 0x407A36: main (main.c:96)
+==201417== 
+==201417== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
+==201417==    <inherited from parent>
+==201417== 
+==201417== Open file descriptor 43: /dev/ptmx
+==201417==    <inherited from parent>
+==201417== 
+==201417== Open file descriptor 42: /dev/ptmx
+==201417==    <inherited from parent>
+==201417== 
+==201417== Open AF_UNIX socket 41: <unknown>
+==201417==    <inherited from parent>
+==201417== 
+==201417== Open file descriptor 40: /home/albetanc/.config/Code/logs/20250827T074300/ptyhost.log
+==201417==    <inherited from parent>
+==201417== 
+==201417== Open file descriptor 3: /home/albetanc/Documents/albetanc/github_repos/new_minishell/valgrind.log
+==201417==    <inherited from parent>
+==201417== 
+==201417== 
+==201417== HEAP SUMMARY:
+==201417==     in use at exit: 220,054 bytes in 353 blocks
+==201417==   total heap usage: 556 allocs, 203 frees, 234,557 bytes allocated
+==201417== 
+==201417== 19 (16 direct, 3 indirect) bytes in 1 blocks are definitely lost in loss record 27 of 108
+==201417==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==201417==    by 0x4065C3: build_argv_from_tokens (parser_util.c:137)
+==201417==    by 0x40679F: process_cmd_tokens (parser_util.c:187)
+==201417==    by 0x405DBF: parse_command (parse.c:48)
+==201417==    by 0x405ED4: parse (parse.c:104)
+==201417==    by 0x405F81: parse (parse.c:123)
+==201417==    by 0x40799A: token_parser_input (main.c:48)
+==201417==    by 0x407B28: process_cmdline (main.c:73)
+==201417==    by 0x407A94: main (main.c:107)
+==201417== 
+==201417== 19 (16 direct, 3 indirect) bytes in 1 blocks are definitely lost in loss record 28 of 108
+==201417==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==201417==    by 0x4065C3: build_argv_from_tokens (parser_util.c:137)
+==201417==    by 0x40679F: process_cmd_tokens (parser_util.c:187)
+==201417==    by 0x405DBF: parse_command (parse.c:48)
+==201417==    by 0x405ED4: parse (parse.c:104)
+==201417==    by 0x405F8E: parse (parse.c:124)
+==201417==    by 0x40799A: token_parser_input (main.c:48)
+==201417==    by 0x407B28: process_cmdline (main.c:73)
+==201417==    by 0x407A94: main (main.c:107)
+==201417== 
+==201417== 69 (32 direct, 37 indirect) bytes in 1 blocks are definitely lost in loss record 51 of 108
+==201417==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==201417==    by 0x405449: extract_token (lex.c:64)
+==201417==    by 0x405C90: lex (lex.c:269)
+==201417==    by 0x405A0B: lex_unquoted (lex.c:245)
+==201417==    by 0x405CFC: lex (lex.c:277)
+==201417==    by 0x405CDB: lex (lex.c:273)
+==201417==    by 0x405A0B: lex_unquoted (lex.c:245)
+==201417==    by 0x405CFC: lex (lex.c:277)
+==201417==    by 0x407931: token_parser_input (main.c:39)
+==201417==    by 0x407B28: process_cmdline (main.c:73)
+==201417==    by 0x407A94: main (main.c:107)
+==201417== 
+==201417== LEAK SUMMARY:
+==201417==    definitely lost: 64 bytes in 3 blocks
+==201417==    indirectly lost: 43 bytes in 5 blocks
+==201417==      possibly lost: 0 bytes in 0 blocks
+==201417==    still reachable: 219,947 bytes in 345 blocks
+==201417==         suppressed: 0 bytes in 0 blocks
+==201417== Reachable blocks (those to which a pointer was found) are not shown.
+==201417== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==201417== 
+==201417== Use --track-origins=yes to see where uninitialised values come from
+==201417== For lists of detected and suppressed errors, rerun with: -s
+==201417== ERROR SUMMARY: 5 errors from 5 contexts (suppressed: 0 from 0)
+==201418== 
+==201418== FILE DESCRIPTORS: 11 open (3 std) at exit.
+==201418== Open file descriptor 5: /dev/pts/4
+==201418==    at 0x49D9FEB: dup (syscall-template.S:120)
+==201418==    by 0x406E16: init_fd_origin (init.c:37)
+==201418==    by 0x406C80: init_program (init.c:59)
+==201418==    by 0x407A36: main (main.c:96)
+==201418== 
+==201418== Open file descriptor 4: /dev/pts/4
+==201418==    at 0x49D9FEB: dup (syscall-template.S:120)
+==201418==    by 0x406E16: init_fd_origin (init.c:37)
+==201418==    by 0x406C63: init_program (init.c:57)
+==201418==    by 0x407A36: main (main.c:96)
+==201418== 
+==201418== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
+==201418==    <inherited from parent>
+==201418== 
+==201418== Open file descriptor 43: /dev/ptmx
+==201418==    <inherited from parent>
+==201418== 
+==201418== Open file descriptor 42: /dev/ptmx
+==201418==    <inherited from parent>
+==201418== 
+==201418== Open AF_UNIX socket 41: <unknown>
+==201418==    <inherited from parent>
+==201418== 
+==201418== Open file descriptor 40: /home/albetanc/.config/Code/logs/20250827T074300/ptyhost.log
+==201418==    <inherited from parent>
+==201418== 
+==201418== Open file descriptor 3: /home/albetanc/Documents/albetanc/github_repos/new_minishell/valgrind.log
+==201418==    <inherited from parent>
+==201418== 
+==201418== 
+==201418== HEAP SUMMARY:
+==201418==     in use at exit: 213,847 bytes in 328 blocks
+==201418==   total heap usage: 556 allocs, 228 frees, 234,557 bytes allocated
+==201418== 
+==201418== 19 (16 direct, 3 indirect) bytes in 1 blocks are definitely lost in loss record 23 of 94
+==201418==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==201418==    by 0x4065C3: build_argv_from_tokens (parser_util.c:137)
+==201418==    by 0x40679F: process_cmd_tokens (parser_util.c:187)
+==201418==    by 0x405DBF: parse_command (parse.c:48)
+==201418==    by 0x405ED4: parse (parse.c:104)
+==201418==    by 0x405F81: parse (parse.c:123)
+==201418==    by 0x40799A: token_parser_input (main.c:48)
+==201418==    by 0x407B28: process_cmdline (main.c:73)
+==201418==    by 0x407A94: main (main.c:107)
+==201418== 
+==201418== 19 (16 direct, 3 indirect) bytes in 1 blocks are definitely lost in loss record 24 of 94
+==201418==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==201418==    by 0x4065C3: build_argv_from_tokens (parser_util.c:137)
+==201418==    by 0x40679F: process_cmd_tokens (parser_util.c:187)
+==201418==    by 0x405DBF: parse_command (parse.c:48)
+==201418==    by 0x405ED4: parse (parse.c:104)
+==201418==    by 0x405F8E: parse (parse.c:124)
+==201418==    by 0x40799A: token_parser_input (main.c:48)
+==201418==    by 0x407B28: process_cmdline (main.c:73)
+==201418==    by 0x407A94: main (main.c:107)
+==201418== 
+==201418== 69 (32 direct, 37 indirect) bytes in 1 blocks are definitely lost in loss record 44 of 94
+==201418==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==201418==    by 0x405449: extract_token (lex.c:64)
+==201418==    by 0x405C90: lex (lex.c:269)
+==201418==    by 0x405A0B: lex_unquoted (lex.c:245)
+==201418==    by 0x405CFC: lex (lex.c:277)
+==201418==    by 0x405CDB: lex (lex.c:273)
+==201418==    by 0x405A0B: lex_unquoted (lex.c:245)
+==201418==    by 0x405CFC: lex (lex.c:277)
+==201418==    by 0x407931: token_parser_input (main.c:39)
+==201418==    by 0x407B28: process_cmdline (main.c:73)
+==201418==    by 0x407A94: main (main.c:107)
+==201418== 
+==201418== LEAK SUMMARY:
+==201418==    definitely lost: 64 bytes in 3 blocks
+==201418==    indirectly lost: 43 bytes in 5 blocks
+==201418==      possibly lost: 0 bytes in 0 blocks
+==201418==    still reachable: 213,740 bytes in 320 blocks
+==201418==         suppressed: 0 bytes in 0 blocks
+==201418== Reachable blocks (those to which a pointer was found) are not shown.
+==201418== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==201418== 
+==201418== For lists of detected and suppressed errors, rerun with: -s
+==201418== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
+==201358== 
+==201358== FILE DESCRIPTORS: 11 open (3 std) at exit.
+==201358== Open file descriptor 5: /dev/pts/4
+==201358==    at 0x49D9FEB: dup (syscall-template.S:120)
+==201358==    by 0x406E16: init_fd_origin (init.c:37)
+==201358==    by 0x406C80: init_program (init.c:59)
+==201358==    by 0x407A36: main (main.c:96)
+==201358== 
+==201358== Open file descriptor 4: /dev/pts/4
+==201358==    at 0x49D9FEB: dup (syscall-template.S:120)
+==201358==    by 0x406E16: init_fd_origin (init.c:37)
+==201358==    by 0x406C63: init_program (init.c:57)
+==201358==    by 0x407A36: main (main.c:96)
+==201358== 
+==201358== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
+==201358==    <inherited from parent>
+==201358== 
+==201358== Open file descriptor 43: /dev/ptmx
+==201358==    <inherited from parent>
+==201358== 
+==201358== Open file descriptor 42: /dev/ptmx
+==201358==    <inherited from parent>
+==201358== 
+==201358== Open AF_UNIX socket 41: <unknown>
+==201358==    <inherited from parent>
+==201358== 
+==201358== Open file descriptor 40: /home/albetanc/.config/Code/logs/20250827T074300/ptyhost.log
+==201358==    <inherited from parent>
+==201358== 
+==201358== Open file descriptor 3: /home/albetanc/Documents/albetanc/github_repos/new_minishell/valgrind.log
+==201358==    <inherited from parent>
+==201358== 
+==201358== 
+==201358== HEAP SUMMARY:
+==201358==     in use at exit: 208,500 bytes in 239 blocks
+==201358==   total heap usage: 559 allocs, 320 frees, 234,635 bytes allocated
+==201358== 
+==201358== 19 (16 direct, 3 indirect) bytes in 1 blocks are definitely lost in loss record 17 of 80
+==201358==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==201358==    by 0x4065C3: build_argv_from_tokens (parser_util.c:137)
+==201358==    by 0x40679F: process_cmd_tokens (parser_util.c:187)
+==201358==    by 0x405DBF: parse_command (parse.c:48)
+==201358==    by 0x405ED4: parse (parse.c:104)
+==201358==    by 0x405F81: parse (parse.c:123)
+==201358==    by 0x40799A: token_parser_input (main.c:48)
+==201358==    by 0x407B28: process_cmdline (main.c:73)
+==201358==    by 0x407A94: main (main.c:107)
+==201358== 
+==201358== 19 (16 direct, 3 indirect) bytes in 1 blocks are definitely lost in loss record 18 of 80
+==201358==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==201358==    by 0x4065C3: build_argv_from_tokens (parser_util.c:137)
+==201358==    by 0x40679F: process_cmd_tokens (parser_util.c:187)
+==201358==    by 0x405DBF: parse_command (parse.c:48)
+==201358==    by 0x405ED4: parse (parse.c:104)
+==201358==    by 0x405F8E: parse (parse.c:124)
+==201358==    by 0x40799A: token_parser_input (main.c:48)
+==201358==    by 0x407B28: process_cmdline (main.c:73)
+==201358==    by 0x407A94: main (main.c:107)
+==201358== 
+==201358== 35 (32 direct, 3 indirect) bytes in 1 blocks are definitely lost in loss record 26 of 80
+==201358==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==201358==    by 0x406175: token_cpy (parser_util.c:33)
+==201358==    by 0x40676E: process_cmd_tokens (parser_util.c:183)
+==201358==    by 0x405DBF: parse_command (parse.c:48)
+==201358==    by 0x405ED4: parse (parse.c:104)
+==201358==    by 0x405F81: parse (parse.c:123)
+==201358==    by 0x40799A: token_parser_input (main.c:48)
+==201358==    by 0x407B28: process_cmdline (main.c:73)
+==201358==    by 0x407A94: main (main.c:107)
+==201358== 
+==201358== 35 (32 direct, 3 indirect) bytes in 1 blocks are definitely lost in loss record 27 of 80
+==201358==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==201358==    by 0x406175: token_cpy (parser_util.c:33)
+==201358==    by 0x40676E: process_cmd_tokens (parser_util.c:183)
+==201358==    by 0x405DBF: parse_command (parse.c:48)
+==201358==    by 0x405ED4: parse (parse.c:104)
+==201358==    by 0x405F8E: parse (parse.c:124)
+==201358==    by 0x40799A: token_parser_input (main.c:48)
+==201358==    by 0x407B28: process_cmdline (main.c:73)
+==201358==    by 0x407A94: main (main.c:107)
+==201358== 
+==201358== 45 (40 direct, 5 indirect) bytes in 1 blocks are definitely lost in loss record 28 of 80
+==201358==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==201358==    by 0x404F9F: create_redir_node (redir_util.c:39)
+==201358==    by 0x40640C: split_cmd_arg (parser_util.c:88)
+==201358==    by 0x406742: process_cmd_tokens (parser_util.c:175)
+==201358==    by 0x405DBF: parse_command (parse.c:48)
+==201358==    by 0x405ED4: parse (parse.c:104)
+==201358==    by 0x405F81: parse (parse.c:123)
+==201358==    by 0x40799A: token_parser_input (main.c:48)
+==201358==    by 0x407B28: process_cmdline (main.c:73)
+==201358==    by 0x407A94: main (main.c:107)
+==201358== 
+==201358== 69 (32 direct, 37 indirect) bytes in 1 blocks are definitely lost in loss record 32 of 80
+==201358==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==201358==    by 0x405449: extract_token (lex.c:64)
+==201358==    by 0x405C90: lex (lex.c:269)
+==201358==    by 0x405A0B: lex_unquoted (lex.c:245)
+==201358==    by 0x405CFC: lex (lex.c:277)
+==201358==    by 0x405CDB: lex (lex.c:273)
+==201358==    by 0x405A0B: lex_unquoted (lex.c:245)
+==201358==    by 0x405CFC: lex (lex.c:277)
+==201358==    by 0x407931: token_parser_input (main.c:39)
+==201358==    by 0x407B28: process_cmdline (main.c:73)
+==201358==    by 0x407A94: main (main.c:107)
+==201358== 
+==201358== LEAK SUMMARY:
+==201358==    definitely lost: 168 bytes in 6 blocks
+==201358==    indirectly lost: 54 bytes in 8 blocks
+==201358==      possibly lost: 0 bytes in 0 blocks
+==201358==    still reachable: 208,278 bytes in 225 blocks
+==201358==         suppressed: 0 bytes in 0 blocks
+==201358== Reachable blocks (those to which a pointer was found) are not shown.
+==201358== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==201358== 
+==201358== For lists of detected and suppressed errors, rerun with: -s
+==201358== ERROR SUMMARY: 6 errors from 6 contexts (suppressed: 0 from 0)

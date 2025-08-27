@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 08:31:02 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/27 14:24:55 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,42 @@
 
 int	redir_in(int fd)
 {
-	if (dup2(fd, STDIN_FILENO) == -1)
-		perror("dup2 redir_in");
+	if (fd >= 0)
+	{
+		if (dup2(fd, STDIN_FILENO) == -1)
+		{
+			perror("dup2 redir_in");
+			return (1);
+		}
+	}
 	return (0);
 }
 
 int	redir_out(int fd)
 {
-	if (dup2(fd, STDOUT_FILENO) == -1)
-		perror("dup2 redir_out");
+	if (fd >= 0)
+	{
+		if (dup2(fd, STDOUT_FILENO) == -1)
+		{
+			perror("dup2 redir_out");
+			return (1);
+		}
+	}
 	return (0);
 }
 
 int	setup_redir(t_cmd_data *cmd)
 {
-	if (cmd->fd_in != STDIN_FILENO)
+	// if (cmd->fd_in != STDIN_FILENO)
+	if (cmd->fd_in != STDIN_FILENO && cmd->fd_in >= 0)//new
 	{
 		fprintf(stderr, "[DEBUG] setup_redir: dup2(%d -> STDIN_FILENO)\n", cmd->fd_in);//test
 		if (redir_in(cmd->fd_in) != 0)
 			return (1);
 		close_fd(&cmd->fd_in);
 	}
-	if (cmd->fd_out != STDOUT_FILENO)
+	// if (cmd->fd_out != STDOUT_FILENO)
+	if (cmd->fd_out != STDOUT_FILENO && cmd->fd_out >= 0)
 	{
 		fprintf(stderr, "[DEBUG] setup_redir: dup2(%d -> STDOUT_FILENO)\n", cmd->fd_out);//test
 		if (redir_out(cmd->fd_out) != 0)
