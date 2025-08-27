@@ -29,6 +29,8 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 	}
 	else if (pid == 0)
 	{
+		// Setup redirections for left side before pipe
+		process_redir(&left_node->u_data.cmd, program);
 		if (pipefd[1] >= 0)
 		{
 			if (dup2(pipefd[1], STDOUT_FILENO) == -1)
@@ -60,6 +62,8 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 	}
 	else if (pid == 0)
 	{
+		// Setup redirections for right side before pipe
+		process_redir(&right_node->u_data.cmd, program);
 		if (pipefd[0] >= 0)
 		{
 			if (dup2(pipefd[0], STDIN_FILENO) == -1)

@@ -139,7 +139,6 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 			}
 			else
 			{
-				// Always set up redir for builtins, even if no explicit redir
 				setup_redir(cmd);
 			}
 			status = execute_builtin(program, node, false);
@@ -148,7 +147,12 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 			return (status);
 		}
 		else
+		{
+			// For external commands, always process redir before execution
+			if (process_redir(&node->u_data.cmd, program) != 0)
+				return 1;
 			return (exec_cmd_nopipe(program, node));
+		}
 	}
 }
 
