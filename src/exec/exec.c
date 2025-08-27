@@ -138,6 +138,10 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 					setup_redir(cmd);
 				cmd->fd_out = STDOUT_FILENO;
 			}
+			else
+			{
+				setup_redir(cmd);
+			}
 			status = execute_builtin(program, node, false);
 			if (cmd->redir)
 				restore_std(program);
@@ -145,7 +149,12 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 			return (status);
 		}
 		else
+		{
+			// For external commands, always process redir before execution
+			if (process_redir(&node->u_data.cmd, program) != 0)
+				return 1;
 			return (exec_cmd_nopipe(program, node));
+		}
 	}
 }
 
