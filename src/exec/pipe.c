@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 13:04:48 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/28 13:47:01 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 	}
 	else if (pid == 0)
 	{
-		// Setup redirections for left side before pipe
-		// process_redir(&left_node->u_data.cmd, program);
 		// if (pipefd[1] >= 0)
 		if (left_node->u_data.cmd.fd_out == STDOUT_FILENO && pipefd[1] >= 0)
 		{
@@ -40,10 +38,8 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 				exit(1);
 			}
 		}
-		// close_fd(&pipefd[0]);
-		// close_fd(&pipefd[1]);
-		if (pipefd[1] != left_node->u_data.cmd.fd_out)
-			close_fd(&pipefd[1]);
+		close_fd(&pipefd[0]);//needed
+		close_fd(&pipefd[1]);//needed
 		execution(program, left_node, true);
 		exit(EXIT_FAILURE);
 	}
@@ -65,8 +61,6 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 	}
 	else if (pid == 0)
 	{
-		// Setup redirections for right side before pipe
-		// process_redir(&right_node->u_data.cmd, program);
 		// if (pipefd[0] >= 0)
 		if (right_node->u_data.cmd.fd_in == STDIN_FILENO && pipefd[0] >= 0)
 		{
@@ -76,10 +70,8 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 				exit(1);
 			}
 		}
-		// close_fd(&pipefd[0]);
-		// close_fd(&pipefd[1]);
-		if (pipefd[0] != right_node->u_data.cmd.fd_in)
-			close_fd(&pipefd[0]);
+		close_fd(&pipefd[0]);
+		close_fd(&pipefd[1]);
 		execution(program, right_node, true);
 		exit(EXIT_FAILURE);
 	}
@@ -118,14 +110,21 @@ bool	has_redir_in(t_redir *redir)//new
 void	assign_pipefd(t_node *node, int pipefd[2])
 {
 	if (!has_redir_out(node->u_data.op.left->u_data.cmd.redir))
+	{
 		node->u_data.op.left->u_data.cmd.pipefd[1] = pipefd[1];
+		node->u_data.op.left->u_data.cmd.fd_out = STDOUT_FILENO; // dejar que el child decida
+	}
 	else
 		node->u_data.op.left->u_data.cmd.pipefd[1] = -1;
+
+	// Right command: si no tiene redir de entrada, usar pipe
 	if (!has_redir_in(node->u_data.op.right->u_data.cmd.redir))
+	{
 		node->u_data.op.right->u_data.cmd.pipefd[0] = pipefd[0];
+		node->u_data.op.right->u_data.cmd.fd_in = STDIN_FILENO; // dejar que el child decida
+	}
 	else
 		node->u_data.op.right->u_data.cmd.pipefd[0] = -1;
-	return ;
 }
 //this consider left and right child
 //in waitpid 0 makes wait child
