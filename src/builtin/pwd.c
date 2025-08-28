@@ -21,16 +21,16 @@ int	my_pwd(t_program *program, t_node *node)
 
 	(void) node;
 	cwd_path = getcwd(NULL, 0);
-	if (cwd_path)
-	{
-		printf("%s\n", cwd_path);
-		free(cwd_path);
-		return (0);
-	}
-	else
-	{
-		fprintf(stderr, BLUE "pwd: current directory not found\n" RESET);
-		free(cwd_path);
-		return (1);
-	}
+       if (cwd_path)
+       {
+	       ft_putendl_fd(cwd_path, node->u_data.cmd.fd_out);
+	       free(cwd_path);
+	       return (0);
+       }
+       else
+       {
+	       ft_putendl_fd("pwd: current directory not found", STDERR_FILENO);
+	       free(cwd_path);
+	       return (1);
+       }
 }

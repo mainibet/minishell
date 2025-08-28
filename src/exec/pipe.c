@@ -29,20 +29,21 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 	}
 	else if (pid == 0)
 	{
-		// if (pipefd[1] >= 0)
-		if (left_node->u_data.cmd.fd_out == STDOUT_FILENO && pipefd[1] >= 0)
-		{
-			if (dup2(pipefd[1], STDOUT_FILENO) == -1)
-			{
-				perror("Error: dup2 failed for left cmd");
-				exit(1);
-			}
-			left_node->u_data.cmd.fd_out = STDOUT_FILENO;
-		}
-		// close_fd(&pipefd[0]);//needed
-		// close_fd(&pipefd[1]);//needed
-		execution(program, left_node, true);
-		exit(EXIT_FAILURE);
+		// Setup redirections for left side before pipe
+	       process_redir(&left_node->u_data.cmd, program);
+	       // Only connect pipe if no output redirection
+	       if (pipefd[1] >= 0 && left_node->u_data.cmd.fd_out == STDOUT_FILENO)
+	       {
+		       if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+		       {
+			       perror("Error: dup2 failed for left cmd");
+			       exit(1);
+		       }
+	       }
+	       close_fd(&pipefd[0]);
+	       close_fd(&pipefd[1]);
+	       execution(program, left_node, true);
+	       exit(EXIT_FAILURE);
 	}
 	return (pid);
 }
