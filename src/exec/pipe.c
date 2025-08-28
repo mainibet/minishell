@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 13:47:01 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/28 18:05:13 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,10 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 				perror("Error: dup2 failed for left cmd");
 				exit(1);
 			}
+			left_node->u_data.cmd.fd_out = STDOUT_FILENO;
 		}
-		close_fd(&pipefd[0]);//needed
-		close_fd(&pipefd[1]);//needed
+		// close_fd(&pipefd[0]);//needed
+		// close_fd(&pipefd[1]);//needed
 		execution(program, left_node, true);
 		exit(EXIT_FAILURE);
 	}
@@ -69,9 +70,10 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 				perror("Error: dup2 failed for right cmd");
 				exit(1);
 			}
+			right_node->u_data.cmd.fd_in = STDIN_FILENO;
 		}
-		close_fd(&pipefd[0]);
-		close_fd(&pipefd[1]);
+		// close_fd(&pipefd[0]);
+		// close_fd(&pipefd[1]);
 		execution(program, right_node, true);
 		exit(EXIT_FAILURE);
 	}

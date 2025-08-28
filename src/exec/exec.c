@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 17:43:20 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/28 17:56:06 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,6 @@ void	set_final_fds(t_cmd_data *cmd)
 		redir_out(cmd->fd_out);
 		close_fd(&cmd->fd_out);
 	}
-	if (cmd->pipefd[0] >= 0)
-		close_fd(&cmd->pipefd[0]);
-	if (cmd->pipefd[1] >= 0)
-		close_fd(&cmd->pipefd[1]);
 }
 
 // decides cmd execution
