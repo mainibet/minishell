@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 16:22:18 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:39:36 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 		return (1);
 	// Remove quotes from command name for builtins and external commands
 	char *cmd_name_unquoted = strip_outer_quotes(node->u_data.cmd.argv[0]);
-	cmd_name = cmd_name_unquoted ? cmd_name_unquoted : node->u_data.cmd.argv[0];
+	cmd_name = cmd_name_unquoted ? cmd_name_unquoted : node->u_data.cmd.argv[0];//change ternary
 	if (is_pipe_child && node->u_data.cmd.redir == NULL)
 		cmd = &node->u_data.cmd;
 	if (is_operator_str(cmd_name))
@@ -127,13 +127,17 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 		if (is_builtin(cmd_name))
 		{
 			status = execute_builtin(program, node, true);
-			if (cmd_name_unquoted) free(cmd_name_unquoted);
-			exit (status);
+			if (cmd_name_unquoted)
+			{
+				free(cmd_name_unquoted);
+				exit (status);
+			}
 		}
 		else
 		{
 			// For external commands, update argv[0] to unquoted
-			if (cmd_name_unquoted) {
+			if (cmd_name_unquoted)
+			{
 				free(node->u_data.cmd.argv[0]);
 				node->u_data.cmd.argv[0] = cmd_name_unquoted;
 			}
@@ -154,14 +158,17 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 				cmd->fd_out = STDOUT_FILENO;
 			}
 			else
+			if (cmd->redir) 
 			{
-				// setup_redir(cmd);
-				// if (process_redir(cmd, program) == 0)
+				if (process_redir(cmd, program) == 0)
 					setup_redir(cmd);
 			}
+				// setup_redir(cmd);
 			status = execute_builtin(program, node, false);
-			if (cmd_name_unquoted) free(cmd_name_unquoted);
-			restore_std(program);
+			if (cmd_name_unquoted)
+				free(cmd_name_unquoted);
+			if (cmd->redir)
+				restore_std(program);
 			program->last_exit_status = status;
 			return (status);
 		}
@@ -177,6 +184,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 			return (exec_cmd_nopipe(program, node));
 		}
 	}
+	return (1);//added only to compile
 }
 
 int	execution(t_program *program, t_node *node, bool is_pipe_child)
