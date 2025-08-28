@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 16:39:36 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/28 17:43:20 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,11 @@ int	is_operator_str(const char *str)
 void	set_final_fds(t_cmd_data *cmd)
 {
     // stdin
-	if (cmd->fd_in <= 2 && cmd->pipefd[0] >= 0) // no hay redir_in
+	if (cmd->fd_in == STDIN_FILENO && cmd->pipefd[0] >= 0) // no hay redir_in
 		cmd->fd_in = cmd->pipefd[0];
 
     // stdout
-	if (cmd->fd_out <= 2 && cmd->pipefd[1] >= 0) // no hay redir_out
+	if (cmd->fd_out == STDOUT_FILENO && cmd->pipefd[1] >= 0) // no hay redir_out
 		cmd->fd_out = cmd->pipefd[1];
 
 	if (cmd->fd_in >= 0 && cmd->fd_in != STDIN_FILENO)
@@ -94,6 +94,10 @@ void	set_final_fds(t_cmd_data *cmd)
 		redir_out(cmd->fd_out);
 		close_fd(&cmd->fd_out);
 	}
+	if (cmd->pipefd[0] >= 0)
+		close_fd(&cmd->pipefd[0]);
+	if (cmd->pipefd[1] >= 0)
+		close_fd(&cmd->pipefd[1]);
 }
 
 // decides cmd execution
