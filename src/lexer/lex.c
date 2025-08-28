@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:57:29 by albetanc          #+#    #+#             */
-/*   Updated: 2025/07/21 12:05:40 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/28 15:50:13 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,8 +137,12 @@ static t_token *join_tokens(t_token *a, t_token *b)
 	size_t len_b = strlen(b->txt);
 
 	char *joined = malloc(len_a + len_b + 1);
-	if (!joined) return a; // leak risk if malloc fails
-
+	if (!joined) 
+	{
+		// malloc_error();//check
+		free_token(b);//NEW
+		return (a); // leak risk if malloc fails
+	}
 	strcpy(joined, a->txt);
 	strcat(joined, b->txt);
 
@@ -193,8 +197,11 @@ t_token *lex_quoted(char *s, char quote)
         else
             next = lex_unquoted(rest);
 
-        if (!next)
-            return NULL;
+		if (!next)
+		{
+			free_token(token);//new
+			return (NULL);
+		}
 
         token = join_tokens(token, next);
     }
@@ -237,8 +244,10 @@ t_token *lex_unquoted(char *s)
             next = lex_unquoted(rest);
 
         if (!next)
-            return NULL;
-
+		{
+			free_token(token);//new
+			return (NULL);
+		}
         token = join_tokens(token, next);
     }
     else
