@@ -44,13 +44,8 @@ int my_echo(t_program *program, t_node *node)
 		i++;
 	}
 
-	if (!node->u_data.cmd.argv[i]) // No args: read from STDIN
+	if (!node->u_data.cmd.argv[i]) // No args: just print newline (unless -n)
 	{
-		char buf[1024];
-		ssize_t n;
-		while ((n = read(STDIN_FILENO, buf, sizeof(buf))) > 0)
-			if (safe_write(node->u_data.cmd.fd_out, buf, n) == -1)
-				return 1;
 		if (new_line)
 			safe_write(node->u_data.cmd.fd_out, "\n", 1);
 		return 0;
