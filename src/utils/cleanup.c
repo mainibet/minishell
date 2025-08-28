@@ -180,9 +180,9 @@ void cleanup_program(t_program *program)
         free_array(program->envp_cpy);
         program->envp_cpy = NULL;
     }
-    if (program->fd_in_orig != -1)
+    if (program->fd_in_orig != -1)//new
         close_fd(&program->fd_in_orig);
-    if (program->fd_out_orig != -1)
+    if (program->fd_out_orig != -1)//new
         close_fd(&program->fd_out_orig);
 }
 
