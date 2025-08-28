@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 08:31:02 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/28 11:13:16 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,27 @@
 
 int	redir_in(int fd)
 {
-	if (dup2(fd, STDIN_FILENO) == -1)
-		perror("dup2 redir_in");
+	if (fd >= 0)
+	{
+		if (dup2(fd, STDIN_FILENO) == -1)
+		{
+			perror("dup2 redir_in");
+			return (1);
+		}
+	}
 	return (0);
 }
 
 int	redir_out(int fd)
 {
-	if (dup2(fd, STDOUT_FILENO) == -1)
-		perror("dup2 redir_out");
+	if (fd >= 0)
+	{
+		if (dup2(fd, STDOUT_FILENO) == -1)
+		{
+			perror("dup2 redir_out");
+			return (1);
+		}
+	}
 	return (0);
 }
 
