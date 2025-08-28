@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:20:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/20 15:50:53 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:10:14 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,27 +43,56 @@ void	free_token(t_token *token)
 // 	free(node);
 // }
 
-void free_node(t_node *node)
+void	free_redirs(t_redir *redir)//new
 {
-    if (!node)
-        return;
+	t_redir	*tmp;
 
-    if (node->type == OPERATOR)
-    {
-        free_node(node->u_data.op.left);
-        free_node(node->u_data.op.right);
-    }
-    else if (node->type == COMMAND)
-    {
-        if (node->u_data.cmd.argv)
-        {
-            for (int i = 0; node->u_data.cmd.argv[i]; i++)
-                free(node->u_data.cmd.argv[i]);
-            free(node->u_data.cmd.argv);
-            node->u_data.cmd.argv = NULL;
-        }
-    }
-    free(node);
+	while (redir)
+	{
+		tmp = redir->next;
+		free(redir->target); // strdup en el lexer
+		free(redir);
+		redir = tmp;
+	}
+}
+
+void	free_cmd_arg(t_node *node)//new
+{
+	int	i;
+
+	i = 0;
+	while (node->u_data.cmd.argv[i])
+	{
+		free(node->u_data.cmd.argv[i]);
+		i++;
+	}
+	free(node->u_data.cmd.argv);
+	node->u_data.cmd.argv = NULL;
+}
+
+void	free_node(t_node *node)
+{
+	int	i;
+
+	if (!node)
+		return ;
+	if (node->type == OPERATOR)
+	{
+		free_node(node->u_data.op.left);
+		free_node(node->u_data.op.right);
+	}
+	else if (node->type == COMMAND)
+	{
+		cleanup_cmd_node(node);//new
+		if (node->u_data.cmd.argv)
+			free_cmd_arg(node);
+		if (node->u_data.cmd.redir)//new
+		{
+			free_redirs(node->u_data.cmd.redir);//new
+			node->u_data.cmd.redir = NULL;//new
+		}
+	}
+	free (node);
 }
 
 int	cleanup_fd(t_node *node, t_nodetype type)
@@ -121,10 +150,10 @@ void	free_ast_tokens(t_program *program)
 		free_node(program->root);
 		program->root = NULL;
 	}
-	fprintf(stderr, BOLD MAGENTA "Command processed and cleaned up\n" RESET); //TEST
+	fprintf(stderr, BOLD MAGENTA "Co        mmand processed and cleaned up\n" RESET); //TEST
 }
 
-//To centralized cleanup at the end of the program
+//To centralized cleanup at the end of the program                                                                                          
 //to finish the program
 void cleanup_program(t_program *program)
 {
@@ -156,5 +185,9 @@ void cleanup_program(t_program *program)
         free_array(program->envp_cpy);
         program->envp_cpy = NULL;
     }
+	if (program->fd_in_orig != -1)//new
+		close_fd(&program->fd_in_orig);//new
+	if (program->fd_out_orig != -1)//new
+		close_fd(&program->fd_out_orig);//new
 }
 
