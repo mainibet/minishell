@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:20:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 13:08:45 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:10:14 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	free_token(t_token *token)
 // 	free(node);
 // }
 
-void	free_redirs(t_redir *redir)
+void	free_redirs(t_redir *redir)//new
 {
 	t_redir	*tmp;
 
@@ -56,38 +56,43 @@ void	free_redirs(t_redir *redir)
 	}
 }
 
-void free_node(t_node *node)
+void	free_cmd_arg(t_node *node)//new
 {
 	int	i;
 
-    if (!node)
-        return;
+	i = 0;
+	while (node->u_data.cmd.argv[i])
+	{
+		free(node->u_data.cmd.argv[i]);
+		i++;
+	}
+	free(node->u_data.cmd.argv);
+	node->u_data.cmd.argv = NULL;
+}
 
-    if (node->type == OPERATOR)
-    {
-        free_node(node->u_data.op.left);
-        free_node(node->u_data.op.right);
-    }
-    else if (node->type == COMMAND)
-    {
-        if (node->u_data.cmd.argv)
-        {
-            i = 0;
-            while (node->u_data.cmd.argv[i])
-            {
-                free(node->u_data.cmd.argv[i]);
-                i++;
-            }
-            free(node->u_data.cmd.argv);
-            node->u_data.cmd.argv = NULL;
-        }
-        if (node->u_data.cmd.redir)
-        {
-            free_redirs(node->u_data.cmd.redir);
-            node->u_data.cmd.redir = NULL;
-        }
-    }
-    free (node);
+void	free_node(t_node *node)
+{
+	int	i;
+
+	if (!node)
+		return ;
+	if (node->type == OPERATOR)
+	{
+		free_node(node->u_data.op.left);
+		free_node(node->u_data.op.right);
+	}
+	else if (node->type == COMMAND)
+	{
+		cleanup_cmd_node(node);//new
+		if (node->u_data.cmd.argv)
+			free_cmd_arg(node);
+		if (node->u_data.cmd.redir)//new
+		{
+			free_redirs(node->u_data.cmd.redir);//new
+			node->u_data.cmd.redir = NULL;//new
+		}
+	}
+	free (node);
 }
 
 int	cleanup_fd(t_node *node, t_nodetype type)
@@ -180,9 +185,9 @@ void cleanup_program(t_program *program)
         free_array(program->envp_cpy);
         program->envp_cpy = NULL;
     }
-    if (program->fd_in_orig != -1)
-        close_fd(&program->fd_in_orig);
-    if (program->fd_out_orig != -1)
-        close_fd(&program->fd_out_orig);
+	if (program->fd_in_orig != -1)//new
+		close_fd(&program->fd_in_orig);//new
+	if (program->fd_out_orig != -1)//new
+		close_fd(&program->fd_out_orig);//new
 }
 
