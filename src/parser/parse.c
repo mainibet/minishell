@@ -49,7 +49,7 @@ t_node	*parse_command(t_token *token)
 	if (process_cmd_tokens(token, &node->u_data.cmd) != 0)
 	{
 		// free_token(token);//check
-		free(node);//check
+		free_node(node);//changed from free to free_node
 		return (NULL);
 	}
 	return (node);
@@ -125,6 +125,12 @@ t_node *parse(t_token *token_list)
     t_node *left = parse(left_list);
     t_node *right = parse(right_list);
 
+    if (!left || !right) // NEW
+    {
+        free_node(left);
+        free_node(right);
+        return NULL;
+    }
     // 5. Create operator node
     return parse_operator(op_token, left, right);
 }
