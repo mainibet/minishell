@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:35:57 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 13:15:22 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/28 15:54:48 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_node	*parse_command(t_token *token)
 	init_cmd_node(NULL, node);
 	if (process_cmd_tokens(token, &node->u_data.cmd) != 0)
 	{
-		// free_token(token);//check
+		free_token(token);//new
 		free_node(node);//changed from free to free_node
 		return (NULL);
 	}
