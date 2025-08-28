@@ -43,8 +43,23 @@ void	free_token(t_token *token)
 // 	free(node);
 // }
 
+void	free_redirs(t_redir *redir)//new
+{
+	t_redir	*tmp;
+
+	while (redir)
+	{
+		tmp = redir->next;
+		free(redir->target); // strdup en el lexer
+		free(redir);
+		redir = tmp;
+	}
+}
+
 void free_node(t_node *node)
 {
+	int	i;
+
     if (!node)
         return;
 
@@ -57,11 +72,20 @@ void free_node(t_node *node)
     {
         if (node->u_data.cmd.argv)
         {
-            for (int i = 0; node->u_data.cmd.argv[i]; i++)
+            i = 0;
+			while (node->u_data.cmd.argv[i])
+            {
                 free(node->u_data.cmd.argv[i]);
+                i++;
+            }
             free(node->u_data.cmd.argv);
             node->u_data.cmd.argv = NULL;
         }
+	    if (node->u_data.cmd.redir)//new 
+    	{
+        	free_redirs(node->u_data.cmd.redir);//new
+        	node->u_data.cmd.redir = NULL;//new
+    	}
     }
     free(node);
 }
@@ -156,5 +180,9 @@ void cleanup_program(t_program *program)
         free_array(program->envp_cpy);
         program->envp_cpy = NULL;
     }
+    if (program->fd_in_orig != -1)
+        close_fd(&program->fd_in_orig);
+    if (program->fd_out_orig != -1)
+        close_fd(&program->fd_out_orig);
 }
 
