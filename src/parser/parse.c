@@ -44,7 +44,8 @@ t_node	*parse_command(t_token *token)
 	node = malloc(sizeof(t_node));
 	if (!node)
 		return (NULL);//check malloc error and free
-	init_cmd_node(NULL, node);
+	ft_memset(node, 0, sizeof(t_node));//new
+    init_cmd_node(NULL, node);
 	if (process_cmd_tokens(token, &node->u_data.cmd) != 0)
 	{
 		// free_token(token);//check
@@ -63,6 +64,7 @@ t_node *parse_operator(t_token *op, t_node *left, t_node *right)
         free_node(right);
         return NULL;
     }
+    ft_memset(node, 0, sizeof(t_node));//new
     node->type = OPERATOR;
     node->u_data.op.type = op->type; // directly use token type
     node->u_data.op.left = left;
