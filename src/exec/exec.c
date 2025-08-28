@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 15:06:53 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:22:18 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,9 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 
 	if (!node || !node->u_data.cmd.argv)
 		return (1);
-	cmd_name = node->u_data.cmd.argv[0];
+	// Remove quotes from command name for builtins and external commands
+	char *cmd_name_unquoted = strip_outer_quotes(node->u_data.cmd.argv[0]);
+	cmd_name = cmd_name_unquoted ? cmd_name_unquoted : node->u_data.cmd.argv[0];
 	if (is_pipe_child && node->u_data.cmd.redir == NULL)
 		cmd = &node->u_data.cmd;
 	if (is_operator_str(cmd_name))
@@ -125,10 +127,16 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 		if (is_builtin(cmd_name))
 		{
 			status = execute_builtin(program, node, true);
+			if (cmd_name_unquoted) free(cmd_name_unquoted);
 			exit (status);
 		}
 		else
 		{
+			// For external commands, update argv[0] to unquoted
+			if (cmd_name_unquoted) {
+				free(node->u_data.cmd.argv[0]);
+				node->u_data.cmd.argv[0] = cmd_name_unquoted;
+			}
 			exec_cmd_nopipe(program, node);
 			restore_std(program);//NEEDED
 			exit (1);
@@ -152,19 +160,20 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 					setup_redir(cmd);
 			}
 			status = execute_builtin(program, node, false);
-			if (cmd->redir)
-				restore_std(program);
+			if (cmd_name_unquoted) free(cmd_name_unquoted);
+			restore_std(program);
 			program->last_exit_status = status;
 			return (status);
 		}
 		else
 		{
-			if (node->u_data.cmd.redir)//new NEEDED
-			// For external commands, always process redir before execution
-			{
-				if (process_redir(&node->u_data.cmd, program) != 0)
-				return (1);
+			// For external commands, update argv[0] to unquoted
+			if (cmd_name_unquoted) {
+				free(node->u_data.cmd.argv[0]);
+				node->u_data.cmd.argv[0] = cmd_name_unquoted;
 			}
+			if (process_redir(&node->u_data.cmd, program) != 0)
+				return 1;
 			return (exec_cmd_nopipe(program, node));
 		}
 	}
