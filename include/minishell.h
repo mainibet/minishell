@@ -47,6 +47,7 @@
 # include "../libft/libft.h"
 # include "structs.h"
 # include "colors.h"
+# include "debug.h"
 # include "lexer.h"
 # include "parser.h"
 # include "prexec.h"
