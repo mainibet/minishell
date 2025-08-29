@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 08:41:11 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 09:10:37 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:23:57 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,8 @@ char	**token_to_argv(t_token *token)
 
 void	setup_cmd_arg(t_program *program, t_node *node)
 {
-	fprintf(stderr, CYAN "Setting up command arguments...\n" RESET);//debug
+	// fprintf(stderr, CYAN "Setting up command arguments...\n" RESET);//debug
+	DEBUG_PRINT(CYAN "Setting up command arguments...\n" RESET);//debug
 	node->u_data.cmd.argv = token_to_argv(node->u_data.cmd.tokens);
 	if (!node->u_data.cmd.argv)
 	{
@@ -143,7 +144,7 @@ void	setup_cmd_arg(t_program *program, t_node *node)
 		cleanup_program(program);
 		exit(EXIT_FAILURE);
 	}
-	fprintf(stderr, CYAN "Command arguments successfully created.\n" RESET);//debug
+	DEBUG_PRINT(GREEN "Command arguments successfully created.\n" RESET);//debug
 }
 
 
@@ -158,7 +159,8 @@ void	pre_execution(t_program *program, t_node *node)
 	}
 	else if (node->type == COMMAND)
 	{
-		fprintf(stderr, YELLOW BOLD "Pre-executing COMMAND node.\n" RESET); //debug
+		DEBUG_PRINT(stderr, YELLOW BOLD "Pre-executing COMMAND node.\n" RESET); //debug
+		// fprintf(stderr, YELLOW BOLD "Pre-executing COMMAND node.\n" RESET); //debug
 		setup_cmd_arg(program, node);
 		apply_redir(program, node);
 		node->u_data.cmd.env = program->envp;

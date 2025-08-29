@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 14:07:37 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:27:07 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ int	setup_redir(t_cmd_data *cmd)
 			return (1);
 		close_fd(&cmd->fd_out);
 	}
-	fprintf(stderr, GREEN "Redirections set up successfully.\n" RESET); //test
+	// fprintf(stderr, GREEN "Redirections set up successfully.\n" RESET); //test
+	DEBUG_PRINT(GREEN "Redirections set up successfully.\n" RESET); //test
 	return (0);
 }
 
