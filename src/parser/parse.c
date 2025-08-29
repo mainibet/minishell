@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:35:57 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 13:48:53 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 13:50:45 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ t_node *parse(t_token *token_list)
 {
     if (!token_list)
     {//debug
-        return NULL;
         DEBUG_PRINT("[DEBUG] parse: token_list is NULL\n");//debug
+        return NULL;
     }//debug
 
     // 1. Find operator of lowest precedence (leftmost for left-associativity)
