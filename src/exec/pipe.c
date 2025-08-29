@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 09:07:38 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 09:21:25 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,16 +117,16 @@ void	assign_pipefd(t_node *node, int pipefd[2])
 	if (!has_redir_out(node->u_data.op.left->u_data.cmd.redir))
 	{
 		node->u_data.op.left->u_data.cmd.pipefd[1] = pipefd[1];
-		node->u_data.op.left->u_data.cmd.fd_out = STDOUT_FILENO; // dejar que el child decida
+		node->u_data.op.left->u_data.cmd.fd_out = STDOUT_FILENO; //let the child decide
 	}
 	else
 		node->u_data.op.left->u_data.cmd.pipefd[1] = -1;
 
-	// Right command: si no tiene redir de entrada, usar pipe
+	// Right command: use pipe if there are not redir
 	if (!has_redir_in(node->u_data.op.right->u_data.cmd.redir))
 	{
 		node->u_data.op.right->u_data.cmd.pipefd[0] = pipefd[0];
-		node->u_data.op.right->u_data.cmd.fd_in = STDIN_FILENO; // dejar que el child decida
+		node->u_data.op.right->u_data.cmd.fd_in = STDIN_FILENO; // let the child decide
 	}
 	else
 		node->u_data.op.right->u_data.cmd.pipefd[0] = -1;
