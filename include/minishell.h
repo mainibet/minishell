@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/22 18:34:48 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 09:52:44 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@
 # include "../libft/libft.h"
 # include "structs.h"
 # include "colors.h"
+# include "debug.h"
 # include "lexer.h"
 # include "parser.h"
 # include "prexec.h"
