@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 14:29:17 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/01 08:21:42 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:30:48 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ int my_echo(t_program *program, t_node *node)
 	int new_line;
 
 	(void) program;
-	fprintf(stderr, MAGENTA BOLD "MY ECHO is about to be run\n" RESET);
+	// fprintf(stderr, MAGENTA BOLD "MY ECHO is about to be run\n" RESET);
+	DEBUG_PRINT(MAGENTA BOLD "MY ECHO is about to be run\n" RESET);//DEBUG
 
 	i = 1; // starts after command name
 	new_line = 1;

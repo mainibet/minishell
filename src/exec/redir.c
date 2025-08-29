@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 14:27:07 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:33:29 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,12 @@ int	process_redir(t_cmd_data *cmd, t_program *program)
         }
         else
         {
-            fprintf(stderr, BLUE "Attempting to open file: %s\n" RESET, r->target);//test
+            // fprintf(stderr, BLUE "Attempting to open file: %s\n" RESET, r->target);//test
+            DEBUG_PRINT(BLUE "Attempting to open file: %s\n" RESET, r->target);//test
             if (open_redir_filename(r) != 0)
                 return 1;
-            fprintf(stderr, GREEN "Successfully opened fd %d for %s\n" RESET, r->fd, r->target);//debug
+            // fprintf(stderr, GREEN "Successfully opened fd %d for %s\n" RESET, r->fd, r->target);//debug
+            DEBUG_PRINT(GREEN "Successfully opened fd %d for %s\n" RESET, r->fd, r->target);//debug
             if (r->type == RED_IN)
                 update_redir_fd(r->fd, &cmd->fd_in);
             else
