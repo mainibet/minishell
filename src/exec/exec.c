@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 08:33:36 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 09:03:02 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,11 +213,13 @@ int	execution(t_program *program, t_node *node, bool is_pipe_child)
 	}
 	if (node->type == COMMAND) 
 	{
+		fprintf(stderr, MAGENTA BOLD "Executing a COMMAND node...\n" RESET); //debug
 		status = handle_cmd_exec(program, node, is_pipe_child);
 		fprintf(stderr, MAGENTA BOLD "Will be a cmd\n" RESET);//test
 	}
 	else if (node->type == OPERATOR)
 	{
+		fprintf(stderr, MAGENTA BOLD "Executing an OPERATOR node...\n" RESET);//debug
 		status = handle_operator(program, node, is_pipe_child);
 		fprintf(stderr, MAGENTA BOLD "Will be a oprator\n" RESET);//test
 	}
@@ -227,6 +229,7 @@ int	execution(t_program *program, t_node *node, bool is_pipe_child)
 		status = 1;
 	}
 	program->last_exit_status = status;
+	fprintf(stderr, MAGENTA BOLD "Node execution finished with status: %d\n" RESET, status);//debug
 	return (status);
 }
 

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 11:54:32 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 09:13:25 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int	setup_redir(t_cmd_data *cmd)
 			return (1);
 		close_fd(&cmd->fd_out);
 	}
+	fprintf(stderr, GREEN "Redirections set up successfully.\n" RESET); //test
 	return (0);
 }
 
@@ -92,9 +93,10 @@ int	process_redir(t_cmd_data *cmd, t_program *program)
         }
         else
         {
+            fprintf(stderr, BLUE "Attempting to open file: %s\n" RESET, r->target);//test
             if (open_redir_filename(r) != 0)
                 return 1;
-
+            fprintf(stderr, GREEN "Successfully opened fd %d for %s\n" RESET, r->fd, r->target);//debug
             if (r->type == RED_IN)
                 update_redir_fd(r->fd, &cmd->fd_in);
             else

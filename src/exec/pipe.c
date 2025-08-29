@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 18:05:13 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 09:07:38 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 	left_node->u_data.cmd.pipefd[0] = pipefd[0];
 	left_node->u_data.cmd.pipefd[1] = pipefd[1];
 	pid = fork();
+	fprintf(stderr, CYAN "Forking for LEFT command: pid = %d\n" RESET, pid);
 	if (pid == -1)
 	{
 		perror("Error: Fork failed for left cmd");
@@ -29,18 +30,19 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 	}
 	else if (pid == 0)
 	{
-		// if (pipefd[1] >= 0)
-		if (left_node->u_data.cmd.fd_out == STDOUT_FILENO && pipefd[1] >= 0)
+	    // Only connect pipe if no output redirection
+		if (pipefd[1] >= 0 && left_node->u_data.cmd.fd_out == STDOUT_FILENO)
 		{
+			fprintf(stderr, CYAN "Child left: Duplicating pipe write to stdout\n" RESET);
 			if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 			{
 				perror("Error: dup2 failed for left cmd");
 				exit(1);
 			}
-			left_node->u_data.cmd.fd_out = STDOUT_FILENO;
+		left_node->u_data.cmd.fd_out = STDOUT_FILENO;//included again
 		}
-		// close_fd(&pipefd[0]);//needed
-		// close_fd(&pipefd[1]);//needed
+	    //    close_fd(&pipefd[0]);//commented out
+	    //    close_fd(&pipefd[1]);//commented out
 		execution(program, left_node, true);
 		exit(EXIT_FAILURE);
 	}
@@ -55,6 +57,7 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 	right_node->u_data.cmd.pipefd[0] = pipefd[0];
 	right_node->u_data.cmd.pipefd[1] = pipefd[1];
 	pid = fork();
+	fprintf(stderr, CYAN "Forking for RIGHT command: pid = %d\n" RESET, pid);
 	if (pid == -1)
 	{
 		perror("Error: Fork failed for right cmd");
@@ -72,8 +75,8 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 			}
 			right_node->u_data.cmd.fd_in = STDIN_FILENO;
 		}
-		// close_fd(&pipefd[0]);
-		// close_fd(&pipefd[1]);
+		// close_fd(&pipefd[0]);//commented out again
+		// close_fd(&pipefd[1]);//commented out again
 		execution(program, right_node, true);
 		exit(EXIT_FAILURE);
 	}
