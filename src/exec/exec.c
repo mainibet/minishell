@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 13:35:56 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:27:33 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ void	set_final_fds(t_cmd_data *cmd)
 			if (redir_in(cmd->fd_in) == 0)
 				close_fd(&cmd->fd_in);
 		} else {
-			fprintf(stderr, "[ERROR] set_final_fds: fd_in %d is invalid\n", cmd->fd_in);
+			// fprintf(stderr, "[ERROR] set_final_fds: fd_in %d is invalid\n", cmd->fd_in);
+			DEBUG_ERROR("[ERROR] set_final_fds: fd_in %d is invalid\n", cmd->fd_in);//DEBUG
 		}
 	}
 	if (cmd->fd_out >= 0 && cmd->fd_out != STDOUT_FILENO)
@@ -99,7 +100,8 @@ void	set_final_fds(t_cmd_data *cmd)
 			if (redir_out(cmd->fd_out) == 0)
 				close_fd(&cmd->fd_out);
 		} else {
-			fprintf(stderr, "[ERROR] set_final_fds: fd_out %d is invalid\n", cmd->fd_out);
+			// fprintf(stderr, "[ERROR] set_final_fds: fd_out %d is invalid\n", cmd->fd_out);
+			DEBUG_ERROR("[ERROR] set_final_fds: fd_out %d is invalid\n", cmd->fd_out);//debug
 		}
 	}
 }
@@ -195,24 +197,30 @@ int	execution(t_program *program, t_node *node, bool is_pipe_child)
 {
 	int	status;
 
-	fprintf(stderr, MAGENTA BOLD "About to dispatch a node execution\n" RESET);//test
+	// fprintf(stderr, MAGENTA BOLD "About to dispatch a node execution\n" RESET);//test
+	DEBUG_PRINT(MAGENTA BOLD "About to dispatch a node execution\n" RESET);//debug
 	if (!node)
 	{
 		program->last_exit_status = 0;
-		fprintf(stderr, MAGENTA BOLD "Last cmd updated: %d\n" RESET, program->last_exit_status);//test
+		// fprintf(stderr, MAGENTA BOLD "Last cmd updated: %d\n" RESET, program->last_exit_status);//test
+		DEBUG_PRINT(MAGENTA BOLD "Last cmd updated: %d\n" RESET, program->last_exit_status);//test
 		return (0);
 	}
 	if (node->type == COMMAND) 
 	{
-		fprintf(stderr, MAGENTA BOLD "Executing a COMMAND node...\n" RESET); //debug
+		// fprintf(stderr, MAGENTA BOLD "Executing a COMMAND node...\n" RESET); //debug
+		DEBUG_PRINT(MAGENTA BOLD "Executing a COMMAND node...\n" RESET); //debug
 		status = handle_cmd_exec(program, node, is_pipe_child);
-		fprintf(stderr, MAGENTA BOLD "Will be a cmd\n" RESET);//test
+		// fprintf(stderr, MAGENTA BOLD "Will be a cmd\n" RESET);//test
+		DEBUG_PRINT(MAGENTA BOLD "Will be a cmd\n" RESET);//test
 	}
 	else if (node->type == OPERATOR)
 	{
-		fprintf(stderr, MAGENTA BOLD "Executing an OPERATOR node...\n" RESET);//debug
+		// fprintf(stderr, MAGENTA BOLD "Executing an OPERATOR node...\n" RESET);//debug
+		DEBUG_PRINT(MAGENTA BOLD "Executing an OPERATOR node...\n" RESET);//debug
 		status = handle_operator(program, node, is_pipe_child);
-		fprintf(stderr, MAGENTA BOLD "Will be a oprator\n" RESET);//test
+		// fprintf(stderr, MAGENTA BOLD "Will be a oprator\n" RESET);//test
+		DEBUG_PRINT(MAGENTA BOLD "Will be a oprator\n" RESET);//test
 	}
 	else
 	{
@@ -220,7 +228,8 @@ int	execution(t_program *program, t_node *node, bool is_pipe_child)
 		status = 1;
 	}
 	program->last_exit_status = status;
-	fprintf(stderr, MAGENTA BOLD "Node execution finished with status: %d\n" RESET, status);//debug
+	// fprintf(stderr, MAGENTA BOLD "Node execution finished with status: %d\n" RESET, status);//debug
+	DEBUG_PRINT(MAGENTA BOLD "Node execution finished with status: %d\n" RESET, status);//debug
 	return (status);
 }
 

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:55:37 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/11 13:59:45 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:31:03 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ int	my_env(t_program *program, t_node *node)
 	int	i;
 
 	(void)node;
-	fprintf(stderr, MAGENTA BOLD "MY ENV is about to be run\n" RESET);
+	// fprintf(stderr, MAGENTA BOLD "MY ENV is about to be run\n" RESET);
+	DEBUG_PRINT(MAGENTA BOLD "MY ENV is about to be run\n" RESET);//DEBUG
 	if (!program->envp_cpy)
 	{
 		fprintf(stderr, BLUE "env: no environment variables found\n");

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 13:35:46 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:29:47 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 	left_node->u_data.cmd.pipefd[0] = pipefd[0];
 	left_node->u_data.cmd.pipefd[1] = pipefd[1];
 	pid = fork();
-	fprintf(stderr, CYAN "Forking for LEFT command: pid = %d\n" RESET, pid);
+	// fprintf(stderr, CYAN "Forking for LEFT command: pid = %d\n" RESET, pid);
+	DEBUG_PRINT(CYAN "Forking for LEFT command: pid = %d\n" RESET, pid);
 	if (pid == -1)
 	{
 		perror("Error: Fork failed for left cmd");
@@ -66,7 +67,8 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 	right_node->u_data.cmd.pipefd[0] = pipefd[0];
 	right_node->u_data.cmd.pipefd[1] = pipefd[1];
 	pid = fork();
-	fprintf(stderr, CYAN "Forking for RIGHT command: pid = %d\n" RESET, pid);
+	// fprintf(stderr, CYAN "Forking for RIGHT command: pid = %d\n" RESET, pid);
+	DEBUG_PRINT(CYAN "Forking for RIGHT command: pid = %d\n" RESET, pid);//DEBUG
 	if (pid == -1)
 	{
 		perror("Error: Fork failed for right cmd");

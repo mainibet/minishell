@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 08:22:30 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 14:12:39 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:21:15 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,8 @@ int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
     DEBUG_PRINT("\033[1;36m[DEBUG] process_cmd_tokens: tokens received:\033[0m\n");//debug
     current = token;
     while (current) {
-        fprintf(stderr, "\033[1;36m  token: '%s' type: %d\033[0m\n", current->txt, current->type);
+        // fprintf(stderr, "\033[1;36m  token: '%s' type: %d\033[0m\n", current->txt, current->type);
+        DEBUG_PRINT("\033[1;36m  token: '%s' type: %d\033[0m\n", current->txt, current->type);//DEBUG
         current = current->next;
     }
     // Reset current for actual processing
@@ -177,7 +178,8 @@ int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
         if (current->type == REDIR_IN || current->type == REDIR_OUT ||
             current->type == APPEND || current->type == HEREDOC)
         {
-            fprintf(stderr, YELLOW "Found redirection token: '%s'. Splitting...\n" RESET, current->txt);//debug
+            // fprintf(stderr, YELLOW "Found redirection token: '%s'. Splitting...\n" RESET, current->txt);//debug
+            DEBUG_PRINT(YELLOW "Found redirection token: '%s'. Splitting...\n" RESET, current->txt);//debug
             if (split_cmd_arg(&current, cmd_data) != 0)
             {
                 free_token(cmd_tokens);
@@ -186,7 +188,8 @@ int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
             // split_cmd_arg already advances current
             continue;
         }
-        fprintf(stderr, GREEN "Adding command token: '%s'\n" RESET, current->txt);//debug
+        // fprintf(stderr, GREEN "Adding command token: '%s'\n" RESET, current->txt);//debug
+        DEBUG_PRINT(stderr, GREEN "Adding command token: '%s'\n" RESET, current->txt);//debug
         add_token(&cmd_tokens, token_cpy(current));
         current = current->next;
     }
