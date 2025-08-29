@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 09:13:25 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:07:37 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,22 +40,20 @@ int	redir_out(int fd)
 
 int	setup_redir(t_cmd_data *cmd)
 {
-	// if (cmd->fd_in != STDIN_FILENO)
-	// if (cmd->fd_in != STDIN_FILENO && cmd->fd_in >= 0)
 	if (cmd->fd_in != STDIN_FILENO && cmd->fd_in >= 0
 		&& cmd->fd_in != cmd->pipefd[0])
 	{
-		fprintf(stderr, "[DEBUG] setup_redir: dup2(%d -> STDIN_FILENO)\n", cmd->fd_in);//test
+		// fprintf(stderr, "[DEBUG] setup_redir: dup2(%d -> STDIN_FILENO)\n", cmd->fd_in);//test
+		DEBUG_PRINT("[DEBUG] setup_redir: dup2(%d -> STDIN_FILENO)\n", cmd->fd_in);//debug
 		if (redir_in(cmd->fd_in) != 0)
 			return (1);
 		close_fd(&cmd->fd_in);
 	}
-	// if (cmd->fd_out != STDOUT_FILENO)
-	// if (cmd->fd_out != STDOUT_FILENO && cmd->fd_out >= 0)//new
 	if (cmd->fd_out != STDOUT_FILENO && cmd->fd_out >= 0
 		&& cmd->fd_out != cmd->pipefd[1])
 	{
-		fprintf(stderr, "[DEBUG] setup_redir: dup2(%d -> STDOUT_FILENO)\n", cmd->fd_out);//test
+		// fprintf(stderr, "[DEBUG] setup_redir: dup2(%d -> STDOUT_FILENO)\n", cmd->fd_out);//test
+		DEBUG_PRINT("[DEBUG] setup_redir: dup2(%d -> STDOUT_FILENO)\n", cmd->fd_out);//test
 		if (redir_out(cmd->fd_out) != 0)
 			return (1);
 		close_fd(&cmd->fd_out);

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 08:22:30 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 09:17:38 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:12:39 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ void	error_split_arg(t_token *current)
 
 int	split_cmd_arg(t_token **current, t_cmd_data *cmd_data)
 {
-	fprintf(stderr, "\033[1;36m[DEBUG] split_cmd_arg: called on token '%s' type %d\033[0m\n", (*current)->txt, (*current)->type);
+	// fprintf(stderr, "\033[1;36m[DEBUG] split_cmd_arg: called on token '%s' type %d\033[0m\n", (*current)->txt, (*current)->type);
+	DEBUG_PRINT("\033[1;36m[DEBUG] split_cmd_arg: called on token '%s' type %d\033[0m\n", (*current)->txt, (*current)->type);//debug
 	if (!(*current)->next ||
 		((*current)->next->type != WORD &&
 		 (*current)->next->type != SINGLE_Q &&
@@ -91,7 +92,8 @@ int	split_cmd_arg(t_token **current, t_cmd_data *cmd_data)
 	int redir_count = 0;
 	t_redir *tmp_redir = cmd_data->redir;//make happy norm
 	while (tmp_redir) { redir_count++; tmp_redir = tmp_redir->next; }
-	fprintf(stderr, "\033[1;36m[DEBUG] split_cmd_arg: cmd_data->redir now has %d redirs\033[0m\n", redir_count);
+	// fprintf(stderr, "\033[1;36m[DEBUG] split_cmd_arg: cmd_data->redir now has %d redirs\033[0m\n", redir_count);//DEBUG
+	DEBUG_PRINT("\033[1;36m[DEBUG] split_cmd_arg: cmd_data->redir now has %d redirs\033[0m\n", redir_count);//DEBUG
 	*current = (*current)->next->next;
 	return (0);
 }
@@ -157,9 +159,11 @@ int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
     t_token *current;
     t_token *cmd_tokens;
     // Print enum values for debugging
-    fprintf(stderr, "\033[1;36m[DEBUG] REDIR_IN=%d REDIR_OUT=%d APPEND=%d HEREDOC=%d\033[0m\n", REDIR_IN, REDIR_OUT, APPEND, HEREDOC);
+    // fprintf(stderr, "\033[1;36m[DEBUG] REDIR_IN=%d REDIR_OUT=%d APPEND=%d HEREDOC=%d\033[0m\n", REDIR_IN, REDIR_OUT, APPEND, HEREDOC);
+    DEBUG_PRINT("\033[1;36m[DEBUG] REDIR_IN=%d REDIR_OUT=%d APPEND=%d HEREDOC=%d\033[0m\n", REDIR_IN, REDIR_OUT, APPEND, HEREDOC);//debug
     // Debug print: list all tokens and their types
-    fprintf(stderr, "\033[1;36m[DEBUG] process_cmd_tokens: tokens received:\033[0m\n");
+    // fprintf(stderr, "\033[1;36m[DEBUG] process_cmd_tokens: tokens received:\033[0m\n");
+    DEBUG_PRINT("\033[1;36m[DEBUG] process_cmd_tokens: tokens received:\033[0m\n");//debug
     current = token;
     while (current) {
         fprintf(stderr, "\033[1;36m  token: '%s' type: %d\033[0m\n", current->txt, current->type);
