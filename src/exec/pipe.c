@@ -32,11 +32,20 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 		// Setup redirections for left side before pipe
 	       process_redir(&left_node->u_data.cmd, program);
 	       // Only connect pipe if no output redirection
+	       // If fd_out is still STDOUT_FILENO, use pipe, else use redirected file
 	       if (pipefd[1] >= 0 && left_node->u_data.cmd.fd_out == STDOUT_FILENO)
 	       {
 		       if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 		       {
 			       perror("Error: dup2 failed for left cmd");
+			       exit(1);
+		       }
+	       }
+	       else if (left_node->u_data.cmd.fd_out != STDOUT_FILENO)
+	       {
+		       if (dup2(left_node->u_data.cmd.fd_out, STDOUT_FILENO) == -1)
+		       {
+			       perror("Error: dup2 failed for left redir");
 			       exit(1);
 		       }
 	       }
@@ -64,15 +73,24 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 	else if (pid == 0)
 	{
 		// if (pipefd[0] >= 0)
-		if (right_node->u_data.cmd.fd_in == STDIN_FILENO && pipefd[0] >= 0)
-		{
-			if (dup2(pipefd[0], STDIN_FILENO) == -1)
-			{
-				perror("Error: dup2 failed for right cmd");
-				exit(1);
-			}
-			right_node->u_data.cmd.fd_in = STDIN_FILENO;
-		}
+	       // If fd_in is still STDIN_FILENO, use pipe, else use redirected file
+	       if (right_node->u_data.cmd.fd_in == STDIN_FILENO && pipefd[0] >= 0)
+	       {
+		       if (dup2(pipefd[0], STDIN_FILENO) == -1)
+		       {
+			       perror("Error: dup2 failed for right cmd");
+			       exit(1);
+		       }
+		       right_node->u_data.cmd.fd_in = STDIN_FILENO;
+	       }
+	       else if (right_node->u_data.cmd.fd_in != STDIN_FILENO)
+	       {
+		       if (dup2(right_node->u_data.cmd.fd_in, STDIN_FILENO) == -1)
+		       {
+			       perror("Error: dup2 failed for right redir");
+			       exit(1);
+		       }
+	       }
 		// close_fd(&pipefd[0]);
 		// close_fd(&pipefd[1]);
 		execution(program, right_node, true);

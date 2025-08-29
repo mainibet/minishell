@@ -25,11 +25,12 @@ int	my_env(t_program *program, t_node *node)
 		fprintf(stderr, BLUE "env: no environment variables found\n");
 		return (1);
 	}
-	i = 0;
-	while (program->envp_cpy[i])
-	{
-		printf("%s\n", program->envp_cpy[i]);
-		i++;
-	}
+	   i = 0;
+	   while (program->envp_cpy[i])
+	   {
+		   safe_write(node->u_data.cmd.fd_out, program->envp_cpy[i], ft_strlen(program->envp_cpy[i]));
+		   safe_write(node->u_data.cmd.fd_out, "\n", 1);
+		   i++;
+	   }
 	return (0);
 }
