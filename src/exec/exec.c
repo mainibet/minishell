@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 17:56:06 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 08:33:36 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,16 +83,29 @@ void	set_final_fds(t_cmd_data *cmd)
     // stdout
 	if (cmd->fd_out == STDOUT_FILENO && cmd->pipefd[1] >= 0) // no hay redir_out
 		cmd->fd_out = cmd->pipefd[1];
-
+    //redir_in
 	if (cmd->fd_in >= 0 && cmd->fd_in != STDIN_FILENO)
 	{
 		redir_in(cmd->fd_in);
 		close_fd(&cmd->fd_in);
 	}
+	if (cmd->pipefd[1] >= 0)//close write pipefd
+		close_fd(&cmd->pipefd[1]);
+	else if (cmd->fd_in < 0)//debug
+	{
+		fprintf(stderr, "[ERROR] set_final_fds: fd_in %d is invalid\n", cmd->fd_in);//test
+	}
+    //rdir_out
 	if (cmd->fd_out >= 0 && cmd->fd_out != STDOUT_FILENO)
 	{
 		redir_out(cmd->fd_out);
 		close_fd(&cmd->fd_out);
+		if (cmd->pipefd[0] >= 0)//close read pipefd
+			close_fd(&cmd->pipefd[0]);
+	}
+	else if (cmd->fd_out < 0)//debug
+	{
+		fprintf(stderr, "[ERROR] set_final_fds: fd_out %d is invalid\n", cmd->fd_out);
 	}
 }
 
