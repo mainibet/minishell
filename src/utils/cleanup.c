@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:20:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 16:10:14 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 13:26:52 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,25 +25,7 @@ void	free_token(t_token *token)
 	free(token);
 }
 
-// void	free_node(t_node *node)
-// {
-// 	if (!node)
-// 		return ;
-// 	if (node->type == OPERATOR)
-// 	{
-// 		free_node(node->u_data.op.left);
-// 		free_node(node->u_data.op.right);
-// 	}
-// 	else if (node->type == COMMAND)
-// 	{
-// 		 if (node->u_data.cmd.argv)
-// 		 	free_array(node->u_data.cmd.argv);
-// 		node->u_data.cmd.argv = NULL;
-// 	}
-// 	free(node);
-// }
-
-void	free_redirs(t_redir *redir)//new
+void	free_redirs(t_redir *redir)
 {
 	t_redir	*tmp;
 
@@ -56,7 +38,7 @@ void	free_redirs(t_redir *redir)//new
 	}
 }
 
-void	free_cmd_arg(t_node *node)//new
+void	free_cmd_arg(t_node *node)
 {
 	int	i;
 
@@ -83,13 +65,13 @@ void	free_node(t_node *node)
 	}
 	else if (node->type == COMMAND)
 	{
-		cleanup_cmd_node(node);//new
+		cleanup_cmd_node(node);
 		if (node->u_data.cmd.argv)
 			free_cmd_arg(node);
-		if (node->u_data.cmd.redir)//new
+		if (node->u_data.cmd.redir)
 		{
-			free_redirs(node->u_data.cmd.redir);//new
-			node->u_data.cmd.redir = NULL;//new
+			free_redirs(node->u_data.cmd.redir);
+			node->u_data.cmd.redir = NULL;
 		}
 	}
 	free (node);
@@ -109,14 +91,24 @@ int	cleanup_fd(t_node *node, t_nodetype type)
 int	cleanup_cmd_node(t_node *node)
 {
 	t_cmd_data	*cmd;
+	int	tmp_fd_in;//only for debug
+	int	tmp_fd_out;//only for debug
 
+	tmp_fd_in = node->u_data.cmd.fd_in;//ONLY FOR DEBUG
+	tmp_fd_out = node->u_data.cmd.fd_out;//ONLY FOR DEBUG
 	if (!node || node->type != COMMAND)
 		return (-1);
 	cmd = &node->u_data.cmd;
 	if (cmd->fd_in != STDIN_FILENO)
+	{//debug
 		close_fd(&node->u_data.cmd.fd_in);
+		DEBUG_PRINT(CYAN "[DEBUG_FD] cleanup node- Closed cmd.fd_in -> %d\n", tmp_fd_in);//debug
+	}//debug
 	if (cmd->fd_out != STDOUT_FILENO)
+	{//debug
 		close_fd(&node->u_data.cmd.fd_out);
+		DEBUG_PRINT(CYAN "[DEBUG_FD] cleaup node - Closed cmd.fd_out -> %d\n", tmp_fd_out);//debug
+	}//debug
 	return (0);
 }
 
@@ -150,10 +142,11 @@ void	free_ast_tokens(t_program *program)
 		free_node(program->root);
 		program->root = NULL;
 	}
-	fprintf(stderr, BOLD MAGENTA "Co        mmand processed and cleaned up\n" RESET); //TEST
+	// fprintf(stderr, BOLD MAGENTA "Command processed and cleaned up\n" RESET); //TEST
+	DEBUG_PRINT(BOLD MAGENTA "Command processed and cleaned up\n" RESET); //TEST
 }
 
-//To centralized cleanup at the end of the program                                                                                          
+//To centralized cleanup at the end of the program
 //to finish the program
 void cleanup_program(t_program *program)
 {
@@ -185,9 +178,15 @@ void cleanup_program(t_program *program)
         free_array(program->envp_cpy);
         program->envp_cpy = NULL;
     }
-	if (program->fd_in_orig != -1)//new
-		close_fd(&program->fd_in_orig);//new
+	if (program->fd_in_orig != -1)
+	{//DEBUG
+		close_fd(&program->fd_in_orig);
+		DEBUG_PRINT(CYAN "[DEBUG_FD] Closed fd_in_orig in program-> %d\n" RESET, program->fd_in_orig);//DEBUG
+	}//DEBUG
 	if (program->fd_out_orig != -1)//new
+	{//DEBUG
 		close_fd(&program->fd_out_orig);//new
+		DEBUG_PRINT(CYAN "[DEBUG_FD] Closed fd_out_orig in program-> %d\n" RESET, program->fd_out_orig);//DEBUG
+	}//DEBUG
 }
 

@@ -19,7 +19,7 @@ void print_ast(t_node *node, int level)
         return;
 
     // Indentation
-    for (int i = 0; i < level; i++)
+    for (int i = 0; i < level; i++)//make norm happy
         fprintf(stderr,"  ");
 
     if (node->type == COMMAND)
@@ -31,7 +31,7 @@ void print_ast(t_node *node, int level)
     }
     else if (node->type == OPERATOR)
     {
-        fprintf(stderr, "OPERATOR: ");
+        fprintf(stderr, "[DEBUG] OPERATOR: ");
         switch (node->u_data.op.type)
         {
             case PIPE: fprintf(stderr, "|"); break;
