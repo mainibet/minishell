@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:35:57 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 13:50:45 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 13:57:05 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_node	*parse_command(t_token *token)
 
 	node = malloc(sizeof(t_node));
 	if (!node)
-		return (NULL);//check malloc error and free
+		return (NULL);//check malloc error and free, set message
 	ft_memset(node, 0, sizeof(t_node));//new
 	init_cmd_node(NULL, node);
 	if (process_cmd_tokens(token, &node->u_data.cmd) != 0)
@@ -59,11 +59,10 @@ t_node	*parse_command(t_token *token)
 t_node *parse_operator(t_token *op, t_node *left, t_node *right)
 {
     t_node *node = malloc(sizeof(t_node));
-    if (!node)
+    if (!node)//check malloc error and free, set message
     {
         free_node(left);
         free_node(right);
-        DEBUG_ERROR("[ERROR] parse_operator: malloc failed\n");//DEBUG
         return NULL;
     }
 	ft_memset(node, 0, sizeof(t_node));//new
