@@ -23,7 +23,7 @@ $(NAME): $(OBJ) $(LIBFT_LIB)
 
 # debug rule
 debug: CFLAGS += -DDEBUG
-debug : re
+debug : $(NAME)
 
 # Rule to build libft if it doesn't exist
 $(LIBFT_LIB): $(LIBFT_DIR)/Makefile
