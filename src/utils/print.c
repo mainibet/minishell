@@ -1,14 +1,15 @@
 #include "minishell.h"
 
-
+//TO DEBUG
 // Helper: print token list
 static void print_tokens_debug(t_token *token)
 {
     while (token)
     {
-        printf("%s ", token->txt);
+        fprintf(stderr, "%s ", token->txt);
         token = token->next;
     }
+    fflush(stderr);
 }
 
 // Recursive AST printer
@@ -19,30 +20,31 @@ void print_ast(t_node *node, int level)
 
     // Indentation
     for (int i = 0; i < level; i++)
-        printf("  ");
+        fprintf(stderr,"  ");
 
     if (node->type == COMMAND)
     {
-        printf("COMMAND: ");
+        fprintf(stderr, "[DEBUG] COMMAND: ");
         if (node->u_data.cmd.tokens)
             print_tokens_debug(node->u_data.cmd.tokens);
-        printf("\n");
+        fprintf(stderr, "\n");
     }
     else if (node->type == OPERATOR)
     {
-        printf("OPERATOR: ");
+        fprintf(stderr, "OPERATOR: ");
         switch (node->u_data.op.type)
         {
-            case PIPE: printf("|"); break;
-            case AND: printf("&&"); break;
-            case OR: printf("||"); break;
-            case SEMICOLON: printf(";"); break;
-            default: printf("UNKNOWN"); break;
+            case PIPE: fprintf(stderr, "|"); break;
+            case AND: fprintf(stderr, "&&"); break;
+            case OR: fprintf(stderr, "||"); break;
+            case SEMICOLON: fprintf(stderr, ";"); break;
+            default: fprintf(stderr, "UNKNOWN"); break;
         }
-        printf("\n");
+        fprintf(stderr, "\n");
 
         // Recurse into children
         print_ast(node->u_data.op.left, level + 1);
         print_ast(node->u_data.op.right, level + 1);
     }
+    fflush(stderr);
 }

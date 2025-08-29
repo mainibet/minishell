@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 09:25:34 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 09:48:48 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 11:01:06 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 #define DEBUG_H
 
 #ifdef DEBUG
-# define DEBUG_PRINT(format, ...) fprintf(stderr, format, ##__VA_ARGS__)
+# define DEBUG_PRINT(format, ...) do { fflush(stdout); fprintf(stderr, format, ##__VA_ARGS__); } while (0)
+# define DEBUG_PRINT_AST(ast) do { fflush(stdout); print_ast(ast, 0); } while (0)
 #else
 # define DEBUG_PRINT(format, ...) do {} while (0)
+# define DEBUG_PRINT_AST(ast) do {} while (0)
 #endif
 
 #define DEBUG_ERROR(format, ...) fprintf(stderr, format, ##__VA_ARGS__)
