@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 09:27:29 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/19 16:44:44 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 09:01:07 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	my_pwd(t_program *program, t_node *node)
 	char	*cwd_path;
 
 	(void) node;
+	fprintf(stderr, MAGENTA BOLD "Executing 'pwd'\n" RESET);//new debug
 	cwd_path = getcwd(NULL, 0);
        if (cwd_path)
        {

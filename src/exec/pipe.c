@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 18:05:13 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 13:35:46 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 	left_node->u_data.cmd.pipefd[0] = pipefd[0];
 	left_node->u_data.cmd.pipefd[1] = pipefd[1];
 	pid = fork();
+	fprintf(stderr, CYAN "Forking for LEFT command: pid = %d\n" RESET, pid);
 	if (pid == -1)
 	{
 		perror("Error: Fork failed for left cmd");
@@ -65,6 +66,7 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 	right_node->u_data.cmd.pipefd[0] = pipefd[0];
 	right_node->u_data.cmd.pipefd[1] = pipefd[1];
 	pid = fork();
+	fprintf(stderr, CYAN "Forking for RIGHT command: pid = %d\n" RESET, pid);
 	if (pid == -1)
 	{
 		perror("Error: Fork failed for right cmd");
@@ -133,16 +135,16 @@ void	assign_pipefd(t_node *node, int pipefd[2])
 	if (!has_redir_out(node->u_data.op.left->u_data.cmd.redir))
 	{
 		node->u_data.op.left->u_data.cmd.pipefd[1] = pipefd[1];
-		node->u_data.op.left->u_data.cmd.fd_out = STDOUT_FILENO; // dejar que el child decida
+		node->u_data.op.left->u_data.cmd.fd_out = STDOUT_FILENO; //let the child decide
 	}
 	else
 		node->u_data.op.left->u_data.cmd.pipefd[1] = -1;
 
-	// Right command: si no tiene redir de entrada, usar pipe
+	// Right command: use pipe if there are not redir
 	if (!has_redir_in(node->u_data.op.right->u_data.cmd.redir))
 	{
 		node->u_data.op.right->u_data.cmd.pipefd[0] = pipefd[0];
-		node->u_data.op.right->u_data.cmd.fd_in = STDIN_FILENO; // dejar que el child decida
+		node->u_data.op.right->u_data.cmd.fd_in = STDIN_FILENO; // let the child decide
 	}
 	else
 		node->u_data.op.right->u_data.cmd.pipefd[0] = -1;

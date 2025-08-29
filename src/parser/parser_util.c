@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 08:22:30 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 11:10:58 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 09:17:38 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ int	split_cmd_arg(t_token **current, t_cmd_data *cmd_data)
 		 (*current)->next->type != DOUBLE_Q))
 	{
 		error_split_arg(*current);
+		fprintf(stderr, BOLD RED "Error: Redirection target missing or invalid.\n" RESET);//debug
 		return (1);
 	}
 	bool quoted = ((*current)->next->type == SINGLE_Q || (*current)->next->type == DOUBLE_Q);
@@ -88,7 +89,7 @@ int	split_cmd_arg(t_token **current, t_cmd_data *cmd_data)
 		create_redir_node((*current)->next->txt, map_type((*current)->type), quoted));
 	// Count redirs after adding
 	int redir_count = 0;
-	t_redir *tmp_redir = cmd_data->redir;
+	t_redir *tmp_redir = cmd_data->redir;//make happy norm
 	while (tmp_redir) { redir_count++; tmp_redir = tmp_redir->next; }
 	fprintf(stderr, "\033[1;36m[DEBUG] split_cmd_arg: cmd_data->redir now has %d redirs\033[0m\n", redir_count);
 	*current = (*current)->next->next;
@@ -172,6 +173,7 @@ int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
         if (current->type == REDIR_IN || current->type == REDIR_OUT ||
             current->type == APPEND || current->type == HEREDOC)
         {
+            fprintf(stderr, YELLOW "Found redirection token: '%s'. Splitting...\n" RESET, current->txt);//debug
             if (split_cmd_arg(&current, cmd_data) != 0)
             {
                 free_token(cmd_tokens);
@@ -180,6 +182,7 @@ int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
             // split_cmd_arg already advances current
             continue;
         }
+        fprintf(stderr, GREEN "Adding command token: '%s'\n" RESET, current->txt);//debug
         add_token(&cmd_tokens, token_cpy(current));
         current = current->next;
     }

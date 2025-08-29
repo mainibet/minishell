@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 17:56:06 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 13:35:56 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	set_final_fds(t_cmd_data *cmd)
     // stdout
 	if (cmd->fd_out == STDOUT_FILENO && cmd->pipefd[1] >= 0) // no hay redir_out
 		cmd->fd_out = cmd->pipefd[1];
-
+    //redir_in
 	if (cmd->fd_in >= 0 && cmd->fd_in != STDIN_FILENO)
 	{
 		if (fcntl(cmd->fd_in, F_GETFD) != -1) {
@@ -204,11 +204,13 @@ int	execution(t_program *program, t_node *node, bool is_pipe_child)
 	}
 	if (node->type == COMMAND) 
 	{
+		fprintf(stderr, MAGENTA BOLD "Executing a COMMAND node...\n" RESET); //debug
 		status = handle_cmd_exec(program, node, is_pipe_child);
 		fprintf(stderr, MAGENTA BOLD "Will be a cmd\n" RESET);//test
 	}
 	else if (node->type == OPERATOR)
 	{
+		fprintf(stderr, MAGENTA BOLD "Executing an OPERATOR node...\n" RESET);//debug
 		status = handle_operator(program, node, is_pipe_child);
 		fprintf(stderr, MAGENTA BOLD "Will be a oprator\n" RESET);//test
 	}
@@ -218,6 +220,7 @@ int	execution(t_program *program, t_node *node, bool is_pipe_child)
 		status = 1;
 	}
 	program->last_exit_status = status;
+	fprintf(stderr, MAGENTA BOLD "Node execution finished with status: %d\n" RESET, status);//debug
 	return (status);
 }
 
