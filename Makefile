@@ -4,6 +4,8 @@ CC = cc
 # -Iinclude to include the header files in the include directory
 CFLAGS = -Wall -Wextra -g -Iinclude #-fsanitize=address -fno-omit-frame-pointer 
 
+DEBUG_FLAGS = -DDEBUG
+
 LIBFT_DIR = ./libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
 SRC_DIR = src # NEW
@@ -23,6 +25,10 @@ all: $(NAME)
 $(NAME): $(OBJ) $(LIBFT_LIB)
 	$(CC) $(CFLAGS) $(OBJ) -o $@ -L$(LIBFT_DIR) -lft -lreadline
 
+debug: CFLAGS += -DDEBUG
+debug : re
+	#@echo "Running $(NAME) under valgrind..."
+	#valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes ./$(NAME)
 # Rule to build libft if it doesn't exist
 $(LIBFT_LIB): $(LIBFT_DIR)/Makefile
 	$(MAKE) -C $(LIBFT_DIR)
@@ -45,21 +51,5 @@ fclean: clean
 
 re: fclean all
 
-# debug rule
-# will create all the stdout and stderr in a tmp file at the end it will print wahtever is needed
-# at the end it will delete the tmp file
-debug: $(NAME)
-	@echo "Running $(NAME) under valgrind..."
-	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes ./$(NAME)
-	@echo "Running automated tests..."
-	@tmpfile=$$(mktemp); \
-	if bash test/run_all.sh > $$tmpfile 2>&1; then \
-		echo -e "\033[0;32m🎉 All tests passed! 🎉\033[0m"; \
-	else \
-		echo -e "\033[0;31m❌ Some tests failed! ❌\033[0m"; \
-		echo "Errors summary:"; \
-		cat $$tmpfile; \
-	fi; \
-	rm -f $$tmpfile
 .PHONY: all clean fclean re debug
 
