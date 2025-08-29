@@ -37,6 +37,7 @@ static int	init_fd_origin(const char *err_msg, int orig_fd)
 	new_fd = dup(orig_fd);
 	if (new_fd == -1)
 		perror(err_msg);
+	DEBUG_PRINT(CYAN "[DEBUG] init_fd_origin dup(%d) -> %d\n" RESET, orig_fd, new_fd);//new
 	return (new_fd);
 }
 

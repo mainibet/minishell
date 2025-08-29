@@ -4,8 +4,6 @@ CC = cc
 # -Iinclude to include the header files in the include directory
 CFLAGS = -Wall -Wextra -g -Iinclude #-fsanitize=address -fno-omit-frame-pointer 
 
-DEBUG_FLAGS = -DDEBUG
-
 LIBFT_DIR = ./libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
 SRC_DIR = src # NEW
@@ -26,9 +24,12 @@ $(NAME): $(OBJ) $(LIBFT_LIB)
 	$(CC) $(CFLAGS) $(OBJ) -o $@ -L$(LIBFT_DIR) -lft -lreadline
 
 debug: CFLAGS += -DDEBUG
-debug : re
+debug : $(NAME)
 	#@echo "Running $(NAME) under valgrind..."
 	#valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes ./$(NAME)
+debug_fd: CFLAGS += -DDEBUG -DFD_DEBUG
+debug_fd: $(NAME)
+
 # Rule to build libft if it doesn't exist
 $(LIBFT_LIB): $(LIBFT_DIR)/Makefile
 	$(MAKE) -C $(LIBFT_DIR)
@@ -51,5 +52,5 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re debug
+.PHONY: all clean fclean re debug debug_fd
 

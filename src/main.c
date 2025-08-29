@@ -3,32 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rococo <rococo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/15 11:48:41 by rococo           ###   ########.fr       */
+/*   Updated: 2025/08/29 11:02:27 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-//-------------------------------//
-//          V0: main             //
-//                               //
-// set-ups the shell's core      //
-// interactive loop: while(1)    //
-// display prompt and readline   //
-// command lines with readline   //
-// until the user exits          //
-// includes add_history          //
-//-------------------------------//
-
-//-------------------------------//
-//         V1: CURRENT           //
-//                               //
-// Calls lexer, parser, prexec   //
-// and execution, static prompt. //
-//-------------------------------//
 
 t_node	*token_parser_input(char *line, t_token **token_out, t_program *program)
 {
@@ -39,7 +21,7 @@ t_node	*token_parser_input(char *line, t_token **token_out, t_program *program)
 	token_list = lex(line, ' ');
 	if (!token_list)
 	{
-		fprintf(stderr, BOLD RED "Lexing failed or empty imput\n" RESET);//test
+		fprintf(stderr, BOLD RED "Lexing failed or empty imput\n" RESET);
 		*token_out = NULL;
 		return (NULL);
 	}
@@ -78,8 +60,10 @@ static void	process_cmdline(t_program *program, char *line)
 		fprintf(stderr, RED "Parsing failed\n" RESET);
 		return ;
 	}
-	print_ast(root, 0); // might be useful for debugging
-	fprintf(stderr, BOLD MAGENTA "AST built. stating pre-execution \n" RESET);//TEST
+	DEBUG_PRINT(stderr, BOLD MAGENTA "AST built. stating pre-execution \n" RESET);//TEST
+	// print_ast(root, 0); // might be useful for debugging
+	DEBUG_PRINT_AST(root);
+	// fprintf(stderr, BOLD MAGENTA "AST built. stating pre-execution \n" RESET);//TEST
 	pre_execution(program, root);
 	program->last_exit_status = execution(program, root, false);
 	free_ast_tokens(program);
@@ -107,6 +91,7 @@ int	main(int argc, char **argv, char **envp)
 		process_cmdline(&program, program.line);
 	}
 	cleanup_program(&program);
-	fprintf(stderr, MAGENTA BOLD "last program status: %d\n" RESET, program.last_exit_status);//new TEST
+	// fprintf(stderr, MAGENTA BOLD "last program status: %d\n" RESET, program.last_exit_status);//new TEST
+	DEBUG_PRINT(MAGENTA BOLD "last program status: %d\n" RESET, program.last_exit_status);//TEST
 	return (program.last_exit_status);
 }
