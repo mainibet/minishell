@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 09:03:02 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/08/29 13:35:56 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,26 +86,21 @@ void	set_final_fds(t_cmd_data *cmd)
     //redir_in
 	if (cmd->fd_in >= 0 && cmd->fd_in != STDIN_FILENO)
 	{
-		redir_in(cmd->fd_in);
-		close_fd(&cmd->fd_in);
+		if (fcntl(cmd->fd_in, F_GETFD) != -1) {
+			if (redir_in(cmd->fd_in) == 0)
+				close_fd(&cmd->fd_in);
+		} else {
+			fprintf(stderr, "[ERROR] set_final_fds: fd_in %d is invalid\n", cmd->fd_in);
+		}
 	}
-	if (cmd->pipefd[1] >= 0)//close write pipefd
-		close_fd(&cmd->pipefd[1]);
-	else if (cmd->fd_in < 0)//debug
-	{
-		fprintf(stderr, "[ERROR] set_final_fds: fd_in %d is invalid\n", cmd->fd_in);//test
-	}
-    //rdir_out
 	if (cmd->fd_out >= 0 && cmd->fd_out != STDOUT_FILENO)
 	{
-		redir_out(cmd->fd_out);
-		close_fd(&cmd->fd_out);
-		if (cmd->pipefd[0] >= 0)//close read pipefd
-			close_fd(&cmd->pipefd[0]);
-	}
-	else if (cmd->fd_out < 0)//debug
-	{
-		fprintf(stderr, "[ERROR] set_final_fds: fd_out %d is invalid\n", cmd->fd_out);
+		if (fcntl(cmd->fd_out, F_GETFD) != -1) {
+			if (redir_out(cmd->fd_out) == 0)
+				close_fd(&cmd->fd_out);
+		} else {
+			fprintf(stderr, "[ERROR] set_final_fds: fd_out %d is invalid\n", cmd->fd_out);
+		}
 	}
 }
 
@@ -164,19 +159,15 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 		if (is_builtin(cmd_name))
 		{
 			cmd = &node->u_data.cmd;
-			if (cmd->redir) 
-			{
-				if (process_redir(cmd, program) == 0)
-					setup_redir(cmd);
-				cmd->fd_out = STDOUT_FILENO;
-			}
-			else
-			if (cmd->redir) 
-			{
-				if (process_redir(cmd, program) == 0)
-					setup_redir(cmd);
-			}
-				// setup_redir(cmd);
+			   if (cmd->redir) 
+			   {
+				   if (process_redir(cmd, program) == 0)
+					   setup_redir(cmd);
+			   }
+			   else
+			   {
+				   setup_redir(cmd);
+			   }
 			status = execute_builtin(program, node, false);
 			if (cmd_name_unquoted)
 				free(cmd_name_unquoted);
