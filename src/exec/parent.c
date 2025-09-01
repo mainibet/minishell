@@ -48,7 +48,7 @@ int	exec_cmd_nopipe(t_program *program, t_node *node)
 	else
 	{
 		waitpid(pid, &child_status, 0);
-		restore_std(program); 
+		// restore_std has been moved to handle_cmd_exec
 		if (WIFEXITED(child_status))
 			return (WEXITSTATUS(child_status));
 		return (1); // Default error if not exited normally check if is handle later

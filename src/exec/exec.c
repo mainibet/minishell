@@ -76,34 +76,62 @@ int	is_operator_str(const char *str)
 // connect pipes if there is no redir
 void	set_final_fds(t_cmd_data *cmd)
 {
-    // stdin
-	if (cmd->fd_in == STDIN_FILENO && cmd->pipefd[0] >= 0) // no hay redir_in
-		cmd->fd_in = cmd->pipefd[0];
+	fprintf(stderr, "DEBUG: set_final_fds - fd_in=%d, fd_out=%d, pipefd[0]=%d, pipefd[1]=%d\n", 
+		cmd->fd_in, cmd->fd_out, cmd->pipefd[0], cmd->pipefd[1]);
 
-    // stdout
-	if (cmd->fd_out == STDOUT_FILENO && cmd->pipefd[1] >= 0) // no hay redir_out
-		cmd->fd_out = cmd->pipefd[1];
-    //redir_in
-	if (cmd->fd_in >= 0 && cmd->fd_in != STDIN_FILENO)
+	// Set up stdin from pipe if appropriate
+	if (cmd->fd_in == STDIN_FILENO && cmd->pipefd[0] >= 0)
 	{
-		if (fcntl(cmd->fd_in, F_GETFD) != -1) {
-			if (redir_in(cmd->fd_in) == 0)
-				close_fd(&cmd->fd_in);
-		} else {
-			// fprintf(stderr, "[ERROR] set_final_fds: fd_in %d is invalid\n", cmd->fd_in);
-			DEBUG_ERROR("[ERROR] set_final_fds: fd_in %d is invalid\n", cmd->fd_in);//DEBUG
+		fprintf(stderr, "DEBUG: Redirecting stdin from pipe fd=%d\n", cmd->pipefd[0]);
+		if (dup2(cmd->pipefd[0], STDIN_FILENO) == -1)
+		{
+			perror("Error: dup2 failed for pipe input");
+			exit(1);
 		}
+		close_fd(&cmd->pipefd[0]);
 	}
-	if (cmd->fd_out >= 0 && cmd->fd_out != STDOUT_FILENO)
+	else if (cmd->fd_in >= 0 && cmd->fd_in != STDIN_FILENO)
 	{
-		if (fcntl(cmd->fd_out, F_GETFD) != -1) {
-			if (redir_out(cmd->fd_out) == 0)
-				close_fd(&cmd->fd_out);
-		} else {
-			// fprintf(stderr, "[ERROR] set_final_fds: fd_out %d is invalid\n", cmd->fd_out);
-			DEBUG_ERROR("[ERROR] set_final_fds: fd_out %d is invalid\n", cmd->fd_out);//debug
+		// Handle explicit input redirection
+		fprintf(stderr, "DEBUG: Redirecting stdin from redirection fd=%d\n", cmd->fd_in);
+		if (dup2(cmd->fd_in, STDIN_FILENO) == -1)
+		{
+			perror("Error: dup2 failed for input redirection");
+			exit(1);
 		}
+		close_fd(&cmd->fd_in);
 	}
+
+	// Set up stdout to pipe if appropriate
+	if (cmd->fd_out == STDOUT_FILENO && cmd->pipefd[1] >= 0)
+	{
+		fprintf(stderr, "DEBUG: Redirecting stdout to pipe fd=%d\n", cmd->pipefd[1]);
+		if (dup2(cmd->pipefd[1], STDOUT_FILENO) == -1)
+		{
+			perror("Error: dup2 failed for pipe output");
+			exit(1);
+		}
+		close_fd(&cmd->pipefd[1]);
+	}
+	else if (cmd->fd_out >= 0 && cmd->fd_out != STDOUT_FILENO)
+	{
+		// Handle explicit output redirection
+		fprintf(stderr, "DEBUG: Redirecting stdout to redirection fd=%d\n", cmd->fd_out);
+		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
+		{
+			perror("Error: dup2 failed for output redirection");
+			exit(1);
+		}
+		close_fd(&cmd->fd_out);
+	}
+
+	// Close any remaining pipe fds
+	if (cmd->pipefd[0] >= 0)
+		close_fd(&cmd->pipefd[0]);
+	if (cmd->pipefd[1] >= 0)
+		close_fd(&cmd->pipefd[1]);
+
+	fprintf(stderr, "DEBUG: File descriptors set up successfully\n");
 }
 
 // decides cmd execution
@@ -128,32 +156,42 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 	}
 	if (is_pipe_child)
 	{
-		if (cmd->redir)
+		fprintf(stderr, "DEBUG: Executing pipe child command: %s\n", cmd_name);
+		
+		// Process redirections if there are any
+		if (node->u_data.cmd.redir)
 		{
-			if (process_redir(&node->u_data.cmd, program) != 0)//NEEDED
-				exit(EXIT_FAILURE);//NEEDED check if return (1) instead
+			fprintf(stderr, "DEBUG: Pipe child has redirections\n");
+			if (process_redir(&node->u_data.cmd, program) != 0)
+				exit(EXIT_FAILURE);
 		}
-		set_final_fds(cmd);
+		
+		// Always set up final file descriptors for pipes
+		set_final_fds(&node->u_data.cmd);
+		
 		if (is_builtin(cmd_name))
 		{
+			fprintf(stderr, "DEBUG: Pipe child executing builtin: %s\n", cmd_name);
 			status = execute_builtin(program, node, true);
 			if (cmd_name_unquoted)
 			{
 				free(cmd_name_unquoted);
-				exit (status);
 			}
+			exit(status);
 		}
 		else
 		{
+			fprintf(stderr, "DEBUG: Pipe child executing external command: %s\n", cmd_name);
 			// For external commands, update argv[0] to unquoted
 			if (cmd_name_unquoted)
 			{
 				free(node->u_data.cmd.argv[0]);
 				node->u_data.cmd.argv[0] = cmd_name_unquoted;
 			}
-			exec_cmd_nopipe(program, node);
-			restore_std(program);//NEEDED
-			exit (1);
+			exec_cmd_inchild(node);  // Direct execution without fork
+			// Should not reach here - exec_cmd_inchild should not return
+			perror("Error executing command in pipe");
+			exit(EXIT_FAILURE);
 		}
 	}
 	else
@@ -161,20 +199,27 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 		if (is_builtin(cmd_name))
 		{
 			cmd = &node->u_data.cmd;
-			   if (cmd->redir) 
-			   {
-				   if (process_redir(cmd, program) == 0)
-					   setup_redir(cmd);
-			   }
-			   else
-			   {
-				   setup_redir(cmd);
-			   }
+			if (cmd->redir) 
+			{
+				fprintf(stderr, "DEBUG: Builtin with redirections\n");
+				if (process_redir(cmd, program) == 0) {
+					fprintf(stderr, "DEBUG: Redirection processed, setting up fd_in=%d, fd_out=%d\n", 
+						cmd->fd_in, cmd->fd_out);
+					setup_redir(cmd);
+				}
+			}
+			else
+			{
+				setup_redir(cmd);
+			}
 			status = execute_builtin(program, node, false);
 			if (cmd_name_unquoted)
 				free(cmd_name_unquoted);
-			if (cmd->redir)
+			if (cmd->redir) {
+				// Clean up file descriptors before restoring standard input/output
+				cleanup_fds(cmd);
 				restore_std(program);
+			}
 			program->last_exit_status = status;
 			return (status);
 		}
@@ -187,7 +232,13 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 			}
 			if (process_redir(&node->u_data.cmd, program) != 0)
 				return 1;
-			return (exec_cmd_nopipe(program, node));
+			// Setup redirections before executing the command
+			setup_redir(&node->u_data.cmd);
+			int status = exec_cmd_nopipe(program, node);
+			// Clean up file descriptors before restoring standard input/output
+			cleanup_fds(&node->u_data.cmd);
+			restore_std(program);
+			return status;
 		}
 	}
 	return (1);//added only to compile

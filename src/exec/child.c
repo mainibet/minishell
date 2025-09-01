@@ -25,27 +25,25 @@
 *
 *   @note v0: execute single external cmd: no pipes no builtins
 */
-// void	child_process(t_node *node)
 void	child_process(t_program *program, t_node *node)
 {
 	t_cmd_data		*cmd;
-	// t_builtin_type	builtin_id;
 	int				status;
 
 	cmd = &node->u_data.cmd;
-	// int redir_count = 0;
-	// t_redir *tmp_redir = cmd->redir;
-	// while (tmp_redir) { redir_count++; tmp_redir = tmp_redir->next; }
-	// fprintf(stderr, "\033[1;36m[DEBUG] child_process: cmd->redir is %s (%d redirs)\033[0m\n", cmd->redir ? "NOT NULL" : "NULL", redir_count);
-	if (cmd->redir)
-	{
-		if (setup_redir(cmd) != 0)//new handling error
-			exit(EXIT_FAILURE);
-	}
-	if (is_builtin(cmd->argv[0]))//might change if declared $ARG in cmd line
+	
+	// Debug output to track redirections
+	DEBUG_PRINT("\033[1;36m[DEBUG] child_process: fd_in=%d, fd_out=%d\033[0m\n", 
+		cmd->fd_in, cmd->fd_out);
+	
+	// Setup redirections here (already processed in handle_cmd_exec)
+	if (setup_redir(cmd) != 0)
+		exit(EXIT_FAILURE);
+	
+	if (is_builtin(cmd->argv[0]))
 	{
 		status = execute_builtin(program, node, true);
-		exit(status);//some exit status
+		exit(status);
 	}
 	else
 	{

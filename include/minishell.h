@@ -48,6 +48,7 @@
 # include "structs.h"
 # include "colors.h"
 # include "debug.h"
+# include "cleanup_fd.h"
 # include "lexer.h"
 # include "parser.h"
 # include "prexec.h"

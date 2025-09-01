@@ -19,11 +19,9 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 {
 	pid_t	pid;
 
-	left_node->u_data.cmd.pipefd[0] = pipefd[0];
-	left_node->u_data.cmd.pipefd[1] = pipefd[1];
 	pid = fork();
-	// fprintf(stderr, CYAN "Forking for LEFT command: pid = %d\n" RESET, pid);
-	DEBUG_PRINT(CYAN "Forking for LEFT command: pid = %d\n" RESET, pid);
+	fprintf(stderr, "DEBUG: LEFT command fork pid=%d\n", pid);
+	
 	if (pid == -1)
 	{
 		perror("Error: Fork failed for left cmd");
@@ -31,31 +29,40 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 	}
 	else if (pid == 0)
 	{
-		// Setup redirections for left side before pipe
-	       process_redir(&left_node->u_data.cmd, program);
-	       // Only connect pipe if no output redirection
-	       // If fd_out is still STDOUT_FILENO, use pipe, else use redirected file
-	       if (pipefd[1] >= 0 && left_node->u_data.cmd.fd_out == STDOUT_FILENO)
-	       {
-		       if (dup2(pipefd[1], STDOUT_FILENO) == -1)
-		       {
-			       perror("Error: dup2 failed for left cmd");
-			       exit(1);
-		       }
-	       }
-	       else if (left_node->u_data.cmd.fd_out != STDOUT_FILENO)
-	       {
-		       if (dup2(left_node->u_data.cmd.fd_out, STDOUT_FILENO) == -1)
-		       {
-			       perror("Error: dup2 failed for left redir");
-			       exit(1);
-		       }
-	       }
-	       close_fd(&pipefd[0]);
-	       close_fd(&pipefd[1]);
-	       execution(program, left_node, true);
-	       exit(EXIT_FAILURE);
+		// Child process for left command
+		
+		// Close read end of pipe since we're only writing
+		close(pipefd[0]);
+		
+		// Process redirections first if there are any
+		if (left_node->u_data.cmd.redir)
+			process_redir(&left_node->u_data.cmd, program);
+		
+		// Connect stdout to write end of pipe
+		fprintf(stderr, "DEBUG: Left command redirecting stdout to pipe fd=%d\n", pipefd[1]);
+		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+		{
+			perror("Error: dup2 failed for left cmd");
+			exit(1);
+		}
+		
+		// Close pipe fd after dup2
+		close(pipefd[1]);
+		
+		// Execute the command
+		if (is_builtin(left_node->u_data.cmd.argv[0]))
+		{
+			int status = execute_builtin(program, left_node, true);
+			exit(status);
+		}
+		else
+		{
+			exec_cmd_inchild(left_node);
+			// Should not reach here
+			exit(EXIT_FAILURE);
+		}
 	}
+	
 	return (pid);
 }
 
@@ -63,12 +70,9 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 {
 	pid_t	pid;
 
-
-	right_node->u_data.cmd.pipefd[0] = pipefd[0];
-	right_node->u_data.cmd.pipefd[1] = pipefd[1];
 	pid = fork();
-	// fprintf(stderr, CYAN "Forking for RIGHT command: pid = %d\n" RESET, pid);
-	DEBUG_PRINT(CYAN "Forking for RIGHT command: pid = %d\n" RESET, pid);//DEBUG
+	fprintf(stderr, "DEBUG: RIGHT command fork pid=%d\n", pid);
+	
 	if (pid == -1)
 	{
 		perror("Error: Fork failed for right cmd");
@@ -76,30 +80,40 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 	}
 	else if (pid == 0)
 	{
-		// if (pipefd[0] >= 0)
-	       // If fd_in is still STDIN_FILENO, use pipe, else use redirected file
-	       if (right_node->u_data.cmd.fd_in == STDIN_FILENO && pipefd[0] >= 0)
-	       {
-		       if (dup2(pipefd[0], STDIN_FILENO) == -1)
-		       {
-			       perror("Error: dup2 failed for right cmd");
-			       exit(1);
-		       }
-		       right_node->u_data.cmd.fd_in = STDIN_FILENO;
-	       }
-	       else if (right_node->u_data.cmd.fd_in != STDIN_FILENO)
-	       {
-		       if (dup2(right_node->u_data.cmd.fd_in, STDIN_FILENO) == -1)
-		       {
-			       perror("Error: dup2 failed for right redir");
-			       exit(1);
-		       }
-	       }
-		// close_fd(&pipefd[0]);
-		// close_fd(&pipefd[1]);
-		execution(program, right_node, true);
-		exit(EXIT_FAILURE);
+		// Child process for right command
+		
+		// Close write end of pipe since we're only reading
+		close(pipefd[1]);
+		
+		// Process redirections first if there are any
+		if (right_node->u_data.cmd.redir)
+			process_redir(&right_node->u_data.cmd, program);
+		
+		// Connect stdin to read end of pipe
+		fprintf(stderr, "DEBUG: Right command redirecting stdin from pipe fd=%d\n", pipefd[0]);
+		if (dup2(pipefd[0], STDIN_FILENO) == -1)
+		{
+			perror("Error: dup2 failed for right cmd");
+			exit(1);
+		}
+		
+		// Close pipe fd after dup2
+		close(pipefd[0]);
+		
+		// Execute the command
+		if (is_builtin(right_node->u_data.cmd.argv[0]))
+		{
+			int status = execute_builtin(program, right_node, true);
+			exit(status);
+		}
+		else
+		{
+			exec_cmd_inchild(right_node);
+			// Should not reach here
+			exit(EXIT_FAILURE);
+		}
 	}
+	
 	return (pid);
 }
 
@@ -161,32 +175,48 @@ int	execute_pipeline(t_program *program, t_node *node)
 	int		pipefd[2];
 	int		status;
 
+	// Create the pipe
 	if (pipe(pipefd) == -1)
 	{
 		perror("Error: Pipe failed");
 		return (1);
 	}
-	// node->u_data.op.left->u_data.cmd.pipefd[0] = -1;//new
-	// node->u_data.op.left->u_data.cmd.pipefd[1] = pipefd[1];//new
-	// node->u_data.op.right->u_data.cmd.pipefd[0] = pipefd[0];//new
-	// node->u_data.op.right->u_data.cmd.pipefd[1] = -1;//new
-	assign_pipefd(node, pipefd);
+	
+	fprintf(stderr, "DEBUG: Created pipe: read_fd=%d, write_fd=%d\n", pipefd[0], pipefd[1]);
+	
+	// Execute left command (writes to pipe)
 	pids[0] = execute_left(program, node->u_data.op.left, pipefd);
-	if (pids[0] == -1)//check
+	if (pids[0] == -1)
 	{
-		close_all_pipefd(&pipefd[0], &pipefd[1]);
+		close(pipefd[0]);
+		close(pipefd[1]);
 		return (1);
 	}
-	close_fd(&pipefd[1]);
+	
+	// Execute right command (reads from pipe)
 	pids[1] = execute_right(program, node->u_data.op.right, pipefd);
 	if (pids[1] == -1)
 	{
-		close_fd(&pipefd[0]);
+		close(pipefd[0]);
+		close(pipefd[1]);
 		waitpid(pids[0], NULL, 0);
 		return (1);
 	}
-	close_fd(&pipefd[0]);
-	status = wait_children(pids[0], pids[1], &status);
-	restore_std(program);
+	
+	// Parent closes both ends of the pipe
+	close(pipefd[0]);
+	close(pipefd[1]);
+	
+	// Wait for both processes to complete
+	waitpid(pids[0], NULL, 0);
+	waitpid(pids[1], &status, 0);
+	
+	if (WIFEXITED(status))
+		status = WEXITSTATUS(status);
+	else
+		status = 1;
+		
+	fprintf(stderr, "DEBUG: Both pipe processes completed with status %d\n", status);
+	
 	return (status);
 }

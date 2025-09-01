@@ -164,8 +164,8 @@ void	pre_execution(t_program *program, t_node *node)
 		setup_cmd_arg(program, node);
 		apply_redir(program, node);
 		node->u_data.cmd.env = program->envp;
-		node->u_data.cmd.fd_in = STDIN_FILENO;
-		node->u_data.cmd.fd_out = STDOUT_FILENO;
+		// Removed duplicate initialization of fd_in and fd_out as they're already
+		// initialized in init_cmd_node
 		if (node->u_data.cmd.argv[0] && is_builtin(node->u_data.cmd.argv[0]))
 			node->u_data.cmd.cmd_type = BUILTIN;
 		else

@@ -29,6 +29,8 @@ int	redir_out(int fd)
 {
 	if (fd >= 0)
 	{
+		// Flush stdout before redirecting
+		fflush(stdout);
 		if (dup2(fd, STDOUT_FILENO) == -1)
 		{
 			perror("dup2 redir_out");
@@ -45,18 +47,22 @@ int	setup_redir(t_cmd_data *cmd)
 	{
 		// fprintf(stderr, "[DEBUG] setup_redir: dup2(%d -> STDIN_FILENO)\n", cmd->fd_in);//test
 		DEBUG_PRINT("[DEBUG] setup_redir: dup2(%d -> STDIN_FILENO)\n", cmd->fd_in);//debug
+		fprintf(stderr, "DEBUG: Redirecting stdin from fd=%d\n", cmd->fd_in);
 		if (redir_in(cmd->fd_in) != 0)
 			return (1);
-		close_fd(&cmd->fd_in);
+		// Don't close the input fd yet - keep it for the command to use
+		// close_fd(&cmd->fd_in);
 	}
 	if (cmd->fd_out != STDOUT_FILENO && cmd->fd_out >= 0
 		&& cmd->fd_out != cmd->pipefd[1])
 	{
 		// fprintf(stderr, "[DEBUG] setup_redir: dup2(%d -> STDOUT_FILENO)\n", cmd->fd_out);//test
 		DEBUG_PRINT("[DEBUG] setup_redir: dup2(%d -> STDOUT_FILENO)\n", cmd->fd_out);//test
+		fprintf(stderr, "DEBUG: Redirecting stdout to fd=%d\n", cmd->fd_out);
 		if (redir_out(cmd->fd_out) != 0)
 			return (1);
-		close_fd(&cmd->fd_out);
+		// Don't close the output fd yet - keep it for the command to use
+		// close_fd(&cmd->fd_out);
 	}
 	// fprintf(stderr, GREEN "Redirections set up successfully.\n" RESET); //test
 	DEBUG_PRINT(GREEN "Redirections set up successfully.\n" RESET); //test
