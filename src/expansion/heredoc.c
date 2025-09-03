@@ -59,30 +59,26 @@ int heredoc_prepare(t_redir *redir, char **envp, int last_exit)
         perror("heredoc: pipe failed");
         return 1;
     }
-
-    // Always normalize delimiter before heredoc input
-    heredoc_normalize_delimiter(redir);
-    DEBUG_PRINT("[DEBUG] heredoc_prepare: delimiter='%s', hd_expand=%d\n", redir->target, redir->hd_expand);
-    
     // Fork a child process for the heredoc
     pid = fork();
     if (pid < 0)
     {
         perror("heredoc: fork failed");
-        close(pipefd[0]);
-        close(pipefd[1]);
+        close_fd(&pipefd[0]);
+        close_fd(&pipefd[1]);
         return 1;
     }
     
     if (pid == 0)
     {
         // Child process
-        close(pipefd[0]);  // Close read end in child
+        close_fd(&pipefd[0]);  // Close read end in child
         
         // Set signal handlers for heredoc
         set_signal_heredoc();
         g_signal_value = 0;  // Reset signal value
         
+        heredoc_normalize_delimiter(redir);//new position
         // Read lines until delimiter or signal
         while (1)
         {
