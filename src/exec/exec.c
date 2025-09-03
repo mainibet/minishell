@@ -135,6 +135,7 @@ void	set_final_fds(t_cmd_data *cmd)
 }
 
 // decides cmd execution
+
 int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 {
 	int			status;
@@ -143,111 +144,89 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 
 	if (!node || !node->u_data.cmd.argv)
 		return (1);
-	// Remove quotes from command name for builtins and external commands
 
+	// --- Unquote command name and replace argv[0] directly ---
 	char *cmd_name_unquoted = strip_outer_quotes(node->u_data.cmd.argv[0]);
-	if (cmd_name_unquoted != NULL)
-		cmd_name = cmd_name_unquoted;   // must free later
-	else
-		cmd_name = node->u_data.cmd.argv[0];
-	
+	if (cmd_name_unquoted) {
+		free(node->u_data.cmd.argv[0]);
+		node->u_data.cmd.argv[0] = cmd_name_unquoted;
+	}
+	cmd_name = node->u_data.cmd.argv[0]; // safe pointer to use everywhere
+
 	if (is_pipe_child && node->u_data.cmd.redir == NULL)
 		cmd = &node->u_data.cmd;
+
 	if (is_operator_str(cmd_name))
 	{
 		fprintf(stderr, RED BOLD
 			"Syntax error near unexpected token `%s`\n" RESET, cmd_name);
-		return (1);//syntax error can be 2?
+		return (2); // syntax error usually returns 2 in bash
 	}
+
 	if (is_pipe_child)
 	{
-		// DEBUG removed
-		
-		// Process redirections if there are any
-		if (node->u_data.cmd.redir)
-		{
-			// DEBUG removed
-			if (process_redir(&node->u_data.cmd, program) != 0)
-				exit(EXIT_FAILURE);
-		}
-		
-		// Always set up final file descriptors for pipes
-		set_final_fds(&node->u_data.cmd);
-		
+		cmd = &node->u_data.cmd;
+
+		// Process redirections if any
+		if (cmd->redir && process_redir(cmd, program) != 0)
+			exit(EXIT_FAILURE);
+
+		// Set final file descriptors for pipes
+		set_final_fds(cmd);
+
 		if (is_builtin(cmd_name))
-		{
-			// DEBUG removed
-			status = execute_builtin(program, node, true);
-			if (cmd_name_unquoted)
-			{
-				free(cmd_name_unquoted);
-			}
-			exit(status);
-		}
+			exit(execute_builtin(program, node, true));
 		else
 		{
-			// DEBUG removed
-			// For external commands, update argv[0] to unquoted
-			if (cmd_name_unquoted)
-			{
-				free(node->u_data.cmd.argv[0]);
-				node->u_data.cmd.argv[0] = cmd_name_unquoted;
-			}
-			exec_cmd_inchild(node);  // Direct execution without fork
-			// Should not reach here - exec_cmd_inchild should not return
+			exec_cmd_inchild(node); // should not return
 			perror("Error executing command in pipe");
 			exit(EXIT_FAILURE);
 		}
 	}
 	else
 	{
+		cmd = &node->u_data.cmd;
+
 		if (is_builtin(cmd_name))
 		{
-			cmd = &node->u_data.cmd;
-			if (cmd->redir) 
+			if (cmd->redir)
 			{
-				// DEBUG removed
-				if (process_redir(cmd, program) == 0) {
-					// DEBUG removed
+				if (process_redir(cmd, program) == 0)
 					setup_redir(cmd);
-				}
 			}
 			else
-			{
 				setup_redir(cmd);
-			}
+
 			status = execute_builtin(program, node, false);
-			if (cmd_name_unquoted)
-				free(cmd_name_unquoted);
-			if (cmd->redir) {
-				// Clean up file descriptors before restoring standard input/output
+
+			if (cmd->redir)
+			{
 				cleanup_fds(cmd);
 				restore_std(program);
 			}
 			program->last_exit_status = status;
-			return (status);
+			return status;
 		}
 		else
 		{
-			// For external commands, update argv[0] to unquoted
-			if (cmd_name_unquoted) {
-				free(node->u_data.cmd.argv[0]);
-				node->u_data.cmd.argv[0] = cmd_name_unquoted;
-			}
-			if (process_redir(&node->u_data.cmd, program) != 0)
+			// External command
+			if (process_redir(cmd, program) != 0)
 				return 1;
-			// Setup redirections before executing the command
-			setup_redir(&node->u_data.cmd);
-			int status = exec_cmd_nopipe(program, node);
-			// Clean up file descriptors before restoring standard input/output
-			cleanup_fds(&node->u_data.cmd);
+
+			setup_redir(cmd);
+			status = exec_cmd_nopipe(program, node);
+
+			// Clean up redirections
+			cleanup_fds(cmd);
 			restore_std(program);
 			return status;
 		}
 	}
-	free(cmd_name_unquoted); // freeing 
-	return (1);//added only to compile
+
+	// unreachable, added only to satisfy compiler
+	return 1;
 }
+
 
 int	execution(t_program *program, t_node *node, bool is_pipe_child)
 {
