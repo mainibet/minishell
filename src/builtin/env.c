@@ -20,7 +20,7 @@ int	my_env(t_program *program, t_node *node)
 
 	(void)node;
 	// fprintf(stderr, MAGENTA BOLD "MY ENV is about to be run\n" RESET);
-	DEBUG_PRINT(MAGENTA BOLD "MY ENV is about to be run\n" RESET);//DEBUG
+	// DEBUG removed//DEBUG
 	if (!program->envp_cpy)
 	{
 		fprintf(stderr, BLUE "env: no environment variables found\n");

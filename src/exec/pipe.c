@@ -23,7 +23,7 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 	pid_t	pid;
 
 	pid = fork();
-	fprintf(stderr, "DEBUG: LEFT command fork pid=%d\n", pid);
+	// DEBUG removed
 	
 	if (pid == -1)
 	{
@@ -46,7 +46,7 @@ pid_t	execute_left(t_program *program, t_node *left_node, int *pipefd)
 		// Process redirections first
 		if (left_node->u_data.cmd.redir)
 		{
-			fprintf(stderr, "DEBUG: Processing redirections for left command\n");
+			// DEBUG removed
 			if (process_redir(&left_node->u_data.cmd, program) != 0)
 				exit(1);
 		}
@@ -76,7 +76,7 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 	pid_t	pid;
 
 	pid = fork();
-	fprintf(stderr, "DEBUG: RIGHT command fork pid=%d\n", pid);
+	// DEBUG removed
 	
 	if (pid == -1)
 	{
@@ -99,7 +99,7 @@ pid_t	execute_right(t_program *program, t_node *right_node, int *pipefd)
 		// Process redirections first
 		if (right_node->u_data.cmd.redir)
 		{
-			fprintf(stderr, "DEBUG: Processing redirections for right command\n");
+			// DEBUG removed
 			if (process_redir(&right_node->u_data.cmd, program) != 0)
 				exit(1);
 		}
@@ -189,12 +189,12 @@ int	execute_pipeline(t_program *program, t_node *node)
 		return (1);
 	}
 	
-	fprintf(stderr, "DEBUG: Created pipe: read_fd=%d, write_fd=%d\n", pipefd[0], pipefd[1]);
+	// DEBUG removed
 	
 	// Check if left side is another pipe
 	if (node->u_data.op.left->type == OPERATOR && node->u_data.op.left->u_data.op.type == PIPE)
 	{
-		fprintf(stderr, "DEBUG: Left side is another pipe, recursively executing\n");
+		// DEBUG removed
 		// Recursively handle left pipeline
 		status = execute_pipeline(program, node->u_data.op.left);
 		if (status != 0)
@@ -220,7 +220,7 @@ int	execute_pipeline(t_program *program, t_node *node)
 	// Check if right side is another pipe
 	if (node->u_data.op.right->type == OPERATOR && node->u_data.op.right->u_data.op.type == PIPE)
 	{
-		fprintf(stderr, "DEBUG: Right side is another pipe, recursively executing\n");
+		// DEBUG removed
 		// For the right side pipe, we pass the read end of our pipe as stdin
 		// and let it create its own output pipe
 		
@@ -265,13 +265,13 @@ int	execute_pipeline(t_program *program, t_node *node)
 	// Wait for processes to complete
 	if (pids[0] > 0)
 	{
-		fprintf(stderr, "DEBUG: Waiting for left command pid=%d\n", pids[0]);
+		// DEBUG removed
 		waitpid(pids[0], NULL, 0);
 	}
 	
 	if (pids[1] > 0)
 	{
-		fprintf(stderr, "DEBUG: Waiting for right command pid=%d\n", pids[1]);
+		// DEBUG removed
 		waitpid(pids[1], &status, 0);
 		
 		if (WIFEXITED(status))
@@ -288,7 +288,7 @@ int	execute_pipeline(t_program *program, t_node *node)
 			status = 1;  // Default error code
 		}
 			
-		fprintf(stderr, "DEBUG: Right process completed with status %d\n", status);
+		// DEBUG removed
 	}
 	
 	return (status);

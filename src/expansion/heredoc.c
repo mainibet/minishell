@@ -62,7 +62,7 @@ int heredoc_prepare(t_redir *redir, char **envp, int last_exit)
 
     // Always normalize delimiter before heredoc input
     heredoc_normalize_delimiter(redir);
-    DEBUG_PRINT("[DEBUG] heredoc_prepare: delimiter='%s', hd_expand=%d\n", redir->target, redir->hd_expand);
+    // DEBUG removed
     
     // Fork a child process for the heredoc
     pid = fork();
@@ -110,12 +110,12 @@ int heredoc_prepare(t_redir *redir, char **envp, int last_exit)
             char *to_write;
             if (redir->hd_expand)
             {
-                DEBUG_PRINT("[DEBUG] heredoc_prepare: expanding line '%s'\n", line);
+                // DEBUG removed
                 to_write = expand_token_text(line, envp, last_exit);
             }
             else
             {
-                DEBUG_PRINT("[DEBUG] heredoc_prepare: no expansion for line '%s'\n", line);
+                // DEBUG removed
                 to_write = ft_strdup(line);
             }
             
