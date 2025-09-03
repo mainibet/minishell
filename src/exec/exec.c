@@ -76,8 +76,7 @@ int	is_operator_str(const char *str)
 // connect pipes if there is no redir
 void	set_final_fds(t_cmd_data *cmd)
 {
-	fprintf(stderr, "DEBUG: set_final_fds - fd_in=%d, fd_out=%d, pipefd[0]=%d, pipefd[1]=%d\n", 
-		cmd->fd_in, cmd->fd_out, cmd->pipefd[0], cmd->pipefd[1]);
+	// Debug logs removed
 
 	// Set up stdin from pipe if appropriate
 	if (cmd->fd_in == STDIN_FILENO && cmd->pipefd[0] >= 0)

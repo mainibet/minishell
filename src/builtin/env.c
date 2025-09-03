@@ -23,14 +23,14 @@ int	my_env(t_program *program, t_node *node)
 	// DEBUG removed//DEBUG
 	if (!program->envp_cpy)
 	{
-		fprintf(stderr, BLUE "env: no environment variables found\n");
+		//fprintf(stderr, BLUE "env: no environment variables found\n");
 		return (1);
 	}
 	   i = 0;
 	   while (program->envp_cpy[i])
 	   {
-		   safe_write(node->u_data.cmd.fd_out, program->envp_cpy[i], ft_strlen(program->envp_cpy[i]));
-		   safe_write(node->u_data.cmd.fd_out, "\n", 1);
+		   safe_write(STDOUT_FILENO, program->envp_cpy[i], ft_strlen(program->envp_cpy[i]));
+		   safe_write(STDOUT_FILENO, "\n", 1);
 		   i++;
 	   }
 	return (0);
