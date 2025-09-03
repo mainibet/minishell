@@ -105,7 +105,12 @@ int	process_redir(t_cmd_data *cmd, t_program *program)
 		if (r->type == RED_HERE_DOC)
 		{
 			if (heredoc_prepare(r, program->envp_cpy, program->last_exit_status) != 0)
+			{
+				// If heredoc was interrupted by Ctrl+C, set exit status to 130
+				if (g_signal_value == SIGINT)
+					program->last_exit_status = 130;
 				return (1);
+			}
             // only dup later in child
             update_redir_fd(r->fd, &cmd->fd_in);
         }

@@ -275,9 +275,18 @@ int	execute_pipeline(t_program *program, t_node *node)
 		waitpid(pids[1], &status, 0);
 		
 		if (WIFEXITED(status))
+		{
 			status = WEXITSTATUS(status);
+		}
+		else if (WIFSIGNALED(status))
+		{
+			// For signals like Ctrl+C (SIGINT)
+			status = 128 + WTERMSIG(status);
+		}
 		else
-			status = 1;
+		{
+			status = 1;  // Default error code
+		}
 			
 		fprintf(stderr, "DEBUG: Right process completed with status %d\n", status);
 	}
