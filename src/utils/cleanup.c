@@ -169,7 +169,7 @@ void cleanup_program(t_program *program)
 
     if (program->line)
     {
-        free(program->line);
+       // free(program->line); --- for double free coming from readline
         program->line = NULL;
     }
 

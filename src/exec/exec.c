@@ -144,8 +144,13 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 	if (!node || !node->u_data.cmd.argv)
 		return (1);
 	// Remove quotes from command name for builtins and external commands
+
 	char *cmd_name_unquoted = strip_outer_quotes(node->u_data.cmd.argv[0]);
-	cmd_name = cmd_name_unquoted ? cmd_name_unquoted : node->u_data.cmd.argv[0];//change ternary
+	if (cmd_name_unquoted != NULL)
+		cmd_name = cmd_name_unquoted;   // must free later
+	else
+		cmd_name = node->u_data.cmd.argv[0];
+	
 	if (is_pipe_child && node->u_data.cmd.redir == NULL)
 		cmd = &node->u_data.cmd;
 	if (is_operator_str(cmd_name))
@@ -240,6 +245,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 			return status;
 		}
 	}
+	free(cmd_name_unquoted); // freeing 
 	return (1);//added only to compile
 }
 
