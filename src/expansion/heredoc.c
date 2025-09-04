@@ -168,4 +168,3 @@ int heredoc_prepare(t_redir *redir, char **envp, int last_exit)
     set_signal_prompt();
     return 0;
 }
-
