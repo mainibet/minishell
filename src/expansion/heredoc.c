@@ -53,7 +53,9 @@ int heredoc_prepare(t_redir *redir, char **envp, int last_exit)
     char *line;
     pid_t pid;
     int status;
+    int current_line;//new for warning message
 
+    current_line = 1;//new to count lines in here doc for warning message
     if (!redir || pipe(pipefd) == -1)
     {
         perror("heredoc: pipe failed");
@@ -72,27 +74,28 @@ int heredoc_prepare(t_redir *redir, char **envp, int last_exit)
     if (pid == 0)
     {
         // Child process
-        close_fd(&pipefd[0]);  // Close read end in child
-        
-        // Set signal handlers for heredoc
-        set_signal_heredoc();
-        g_signal_value = 0;  // Reset signal value
-        
+        close_fd(&pipefd[0]);   // Close read end in child
+        set_signal_heredoc();   // Set signal handlers for heredoc
+        g_signal_value = 0;     // Reset signal value
         heredoc_normalize_delimiter(redir);//new position
-        // Read lines until delimiter or signal
-        while (1)
+        while (1)               // Read lines until delimiter or signal
         {
             line = readline("> ");
             
             // Check for EOF or signal
-            if (!line || g_signal_value == SIGINT)
+            // if (!line || g_signal_value == SIGINT)
+            if (!line)//changed
             {
-                if (line)
-                    free(line);
-                close(pipefd[1]);
+                fprintf(stderr, "warning: here-document at line %d delimited by end-of-file (wanted `%s')\n",
+                        current_line,
+                        redir->target);  
+                break;//new
+                // if (line)
+                    // free(line);
+                // close(pipefd[1]);
                 
                 // Exit with 130 if interrupted by Ctrl+C, or 0 for EOF
-                exit(g_signal_value == SIGINT ? 130 : 0);
+                // exit(g_signal_value == SIGINT ? 130 : 0);//ternary not allowed
             }
             
             // Check for delimiter
@@ -119,7 +122,7 @@ int heredoc_prepare(t_redir *redir, char **envp, int last_exit)
             
             if (!to_write)
             {
-                close(pipefd[1]);
+                close_fd(&pipefd[1]);
                 exit(1);
             }
             
@@ -127,15 +130,16 @@ int heredoc_prepare(t_redir *redir, char **envp, int last_exit)
             write(pipefd[1], to_write, ft_strlen(to_write));
             write(pipefd[1], "\n", 1);  // Preserve newline
             free(to_write);
+            current_line++;//new for warning message
         }
         
         // Clean up and exit
-        close(pipefd[1]);
+        close_fd(&pipefd[1]);
         exit(0);
     }
     
     // Parent process
-    close(pipefd[1]);  // Close write end in parent
+    close_fd(&pipefd[1]);  // Close write end in parent
     
     // Store read end for command
     redir->fd = pipefd[0];
@@ -144,10 +148,10 @@ int heredoc_prepare(t_redir *redir, char **envp, int last_exit)
     waitpid(pid, &status, 0);
     
     // If child was interrupted by Ctrl+C (status 130)
-    if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+    if (WIFEXITED(status) && WEXITSTATUS(status) == 130)//check if better == SIGINT instead of 130
     {
         g_signal_value = SIGINT;
-        close(pipefd[0]);
+        close_fd(&pipefd[0]);
         set_signal_prompt();
         return 1;
     }
@@ -155,7 +159,7 @@ int heredoc_prepare(t_redir *redir, char **envp, int last_exit)
     // Handle other errors
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
     {
-        close(pipefd[0]);
+        close_fd(&pipefd[0]);
         set_signal_prompt();
         return 1;
     }
