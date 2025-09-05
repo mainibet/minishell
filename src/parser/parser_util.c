@@ -252,12 +252,10 @@ int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
         return (1);
     }
     
-    cmd_data->tokens = cmd_tokens;
-    cmd_data->argv = build_argv_from_tokens(cmd_tokens);
-    if (!cmd_data->argv)
-    {
-        perror("Failed to allocate argv");
-        return (1);
-    }
+	 cmd_data->tokens = cmd_tokens;
+	 /* argv will be built later in pre_execution (setup_cmd_arg) to avoid
+		 duplicating allocations here and leaking the parser-time argv when
+		 it's later rebuilt. */
+	 cmd_data->argv = NULL;
     return (0);
 }

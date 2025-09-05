@@ -66,6 +66,12 @@ void	free_node(t_node *node)
 	else if (node->type == COMMAND)
 	{
 		cleanup_cmd_node(node);
+		// Free any copied tokens created during process_cmd_tokens
+		if (node->u_data.cmd.tokens)
+		{
+			free_token(node->u_data.cmd.tokens);
+			node->u_data.cmd.tokens = NULL;
+		}
 		if (node->u_data.cmd.argv)
 			free_cmd_arg(node);
 		if (node->u_data.cmd.redir)
