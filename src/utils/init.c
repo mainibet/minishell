@@ -66,4 +66,6 @@ void	init_program(t_program *program, char **envp)
 	if (!program->envp_cpy || program->fd_in_orig == -1 
 		|| program->fd_out_orig == -1)
 		handle_init_error(program);
+	if (tcgetattr(STDIN_FILENO, &program->orig_termios) == -1)//this saves the original terminal config
+		perror("tcgetattr");//new heredoc signals
 }
