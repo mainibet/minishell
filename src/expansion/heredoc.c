@@ -48,134 +48,131 @@ void heredoc_normalize_delimiter(t_redir *redir)
 
 /* prepare heredoc: create a pipe, read user input until delimiter */
 // int heredoc_prepare(t_redir *redir, char **envp, int last_exit)
-int heredoc_prepare(t_redir *redir, t_program *program)
+int	heredoc_prepare(t_redir *redir, t_program *program)
 {
-    int pipefd[2];
-    char *line;
-    pid_t pid;
-    int status;
-    int current_line;//new for warning message
+	int		pipefd[2];
+	char	*line;
+	pid_t	pid;
+	int		status;
+	int		current_line;
 
-    current_line = 1;//new to count lines in here doc for warning message
-    if (!redir || pipe(pipefd) == -1)
+	current_line = 1;
+	if (!redir || pipe(pipefd) == -1)
+	{
+		perror("heredoc: pipe failed");
+		return (1);
+	}
+	// Fork a child process for the heredoc
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("heredoc: fork failed");
+		close_fd(&pipefd[0]);
+		close_fd(&pipefd[1]);
+		return (1);
+	}
+	if (pid == 0)
+	{
+	// Child process
+		close_fd(&pipefd[0]); // Close read end in child
+		set_signal_heredoc(); // Set signal handlers for heredoc
+		g_signal_value = 0; // Reset signal value
+		heredoc_normalize_delimiter(redir);//new position
+		while (1) // Read lines until delimiter or signal
+		{
+			line = readline("> ");
+			if (!line)//needed EOF detected
+			{
+				if (g_signal_value == SIGINT)//needed
+				{
+					close_fd(&pipefd[1]);
+					exit(130);//ctr+c
+				}
+				fprintf(stderr, "warning: here-document at line %d delimited by end-of-file (wanted `%s')\n",
+						current_line,
+						redir->target); //warning in ctr+D
+				break;
+			}
+			if (is_delim_line(line, redir->target))	// Check for delimiter
+			{
+				free(line);
+				break ;
+			}
+			// Process the line
+			char *to_write;
+			if (redir->hd_expand)
+			{
+			// DEBUG removed
+				to_write = expand_token_text(line, &program->envp_cpy, program->last_exit_status);
+			}
+			else
+			{
+				// DEBUG removed
+				to_write = ft_strdup(line);
+			}
+			free(line);
+			if (!to_write)
+			{
+				close_fd(&pipefd[1]);
+				exit(1);
+			}
+			// Write to pipe
+			write(pipefd[1], to_write, ft_strlen(to_write));
+			write(pipefd[1], "\n", 1);  // Preserve newline
+			free(to_write);
+			current_line++;//new for warning message
+		}
+		// Clean up and exit
+		close_fd(&pipefd[1]);
+		exit(0);
+	}
+	// Parent process
+	close_fd(&pipefd[1]);  // Close write end in parent
+	redir->fd = pipefd[0];  // Store read end for command
+	waitpid(pid, &status, 0);// Wait for child to finish
+	// If child was interrupted by Ctrl+C (status 130)
+	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+	{
+		ft_printf(stderr, "inside the loop ctr c\n");//TEST
+		g_signal_value = SIGINT;
+		close_fd(&pipefd[0]);
+		set_signal_prompt();
+		if (program->line)//new
+		{
+			free(program->line);//new
+			program->line = NULL;//new
+		}
+		rl_replace_line("", 0); // borra la línea actual en readline
+		rl_on_new_line(); // mueve readline a una nueva línea
+		rl_redisplay(); 
+		return (1);
+	}
+    if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)//NEW
     {
-        perror("heredoc: pipe failed");
-        return 1;
-    }
-    // Fork a child process for the heredoc
-    pid = fork();
-    if (pid < 0)
-    {
-        perror("heredoc: fork failed");
-        close_fd(&pipefd[0]);
-        close_fd(&pipefd[1]);
-        return 1;
-    }
-    
-    if (pid == 0)
-    {
-        // Child process
-        close_fd(&pipefd[0]);   // Close read end in child
-        set_signal_heredoc();   // Set signal handlers for heredoc
-        g_signal_value = 0;     // Reset signal value
-        heredoc_normalize_delimiter(redir);//new position
-        while (1)               // Read lines until delimiter or signal
-        {
-            line = readline("> ");
-            ft_printf(stderr, "[HEREDOC CHILD] After readline, line = %p, g_signal_value = %d\n", line, g_signal_value);
-            // if (g_signal_value == SIGINT) // interrupción con Ctrl-C
-            // {
-            //     free(line);//new
-            //     close_fd(&pipefd[1]);//new
-            //     exit(130);//for ctrl c
-            // }
-            // Check for EOF or signal
-            // if (!line || g_signal_value == SIGINT)
-            if (!line)//changed
-            {
-                if (g_signal_value == SIGINT)
-                {
-                    close_fd(&pipefd[1]);
-                    tcsetattr(STDIN_FILENO, TCSANOW, &program->orig_termios);//new restore terminal before exit
-                    exit(130);
-                }
-                fprintf(stderr, "warning: here-document at line %d delimited by end-of-file (wanted `%s')\n",
-                        current_line,
-                        redir->target);  
-                break;//new
-                // if (line)
-                    // free(line);
-                // close(pipefd[1]);
-                
-                // Exit with 130 if interrupted by Ctrl+C, or 0 for EOF
-                // exit(g_signal_value == SIGINT ? 130 : 0);//ternary not allowed
-            }
-            
-            // Check for delimiter
-            if (is_delim_line(line, redir->target))
-            {
-                free(line);
-                break;
-            }
-            
-            // Process the line
-            char *to_write;
-            if (redir->hd_expand)
-            {
-                // DEBUG removed
-                to_write = expand_token_text(line, &program->envp_cpy, program->last_exit_status);
-            }
-            else
-            {
-                // DEBUG removed
-                to_write = ft_strdup(line);
-            }
-            
-            free(line);
-            
-            if (!to_write)
-            {
-                close_fd(&pipefd[1]);
-                exit(1);
-            }
-            
-            // Write to pipe
-            write(pipefd[1], to_write, ft_strlen(to_write));
-            write(pipefd[1], "\n", 1);  // Preserve newline
-            free(to_write);
-            current_line++;//new for warning message
-        }
-        
-        // Clean up and exit
-        close_fd(&pipefd[1]);
-        exit(0);
-    }
-    
-    // Parent process
-    close_fd(&pipefd[1]);  // Close write end in parent
-    redir->fd = pipefd[0];  // Store read end for command
-    waitpid(pid, &status, 0);// Wait for child to finish
-    // If child was interrupted by Ctrl+C (status 130)
-    if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
-    {
-        ft_printf(stderr, "inside the loop ctr c\n");//TEST
+        // El hijo terminó por SIGINT (ej: Ctrl+C en heredoc)
         g_signal_value = SIGINT;
-        close_fd(&pipefd[0]);
-        // set_signal_prompt();
+        close_fd(&pipefd);
+        if (program->line)
+        {
+            free(program->line);
+            program->line = NULL;
+        }
+        rl_replace_line("", 0);
+        rl_on_new_line();
+        rl_redisplay();
+        set_signal_prompt(); // Nuevo: restaurar handler del prompt
         return 1;
     }
-    
-    // Handle other errors
-    if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-    {
-        fprintf(stderr, "inside the other errors if\n");
-        close_fd(&pipefd[0]);
-        // set_signal_prompt();
-        return 1;
-    }
-    
-    // Success
-    tcsetattr(STDIN_FILENO, TCSANOW, &program->orig_termios);//new -restore terminal signals
-    set_signal_prompt();
-    return 0;
+	// Handle other errors
+	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+	{
+		fprintf(stderr, "inside the other errors if\n");//test
+		close_fd(&pipefd[0]);
+		set_signal_prompt();//restore handler
+		return 1;
+	}
+	// Success
+	tcsetattr(STDIN_FILENO, TCSANOW, &program->orig_termios);//new -restore terminal signals ONLY IN PARENT
+	set_signal_prompt();
+	return (0);
 }
