@@ -129,14 +129,16 @@ int	heredoc_prepare(t_redir *redir, t_program *program)
 	// Parent process
 	close_fd(&pipefd[1]);  // Close write end in parent
 	redir->fd = pipefd[0];  // Store read end for command
+	set_signal_prompt(1);//new
 	waitpid(pid, &status, 0);// Wait for child to finish
+	set_signal_prompt(0);//new
 	// If child was interrupted by Ctrl+C (status 130)
-	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+	if ((WIFEXITED(status) && WEXITSTATUS(status) == 130)
+		|| (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT))
 	{
 		ft_printf(stderr, "inside the loop ctr c\n");//TEST
 		g_signal_value = SIGINT;
 		close_fd(&pipefd[0]);
-		set_signal_prompt();
 		if (program->line)//new
 		{
 			free(program->line);//new
@@ -145,34 +147,19 @@ int	heredoc_prepare(t_redir *redir, t_program *program)
 		rl_replace_line("", 0); // borra la línea actual en readline
 		rl_on_new_line(); // mueve readline a una nueva línea
 		rl_redisplay(); 
+		// set_signal_prompt(0);
 		return (1);
 	}
-    if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)//NEW
-    {
-        // El hijo terminó por SIGINT (ej: Ctrl+C en heredoc)
-        g_signal_value = SIGINT;
-        close_fd(&pipefd);
-        if (program->line)
-        {
-            free(program->line);
-            program->line = NULL;
-        }
-        rl_replace_line("", 0);
-        rl_on_new_line();
-        rl_redisplay();
-        set_signal_prompt(); // Nuevo: restaurar handler del prompt
-        return 1;
-    }
 	// Handle other errors
 	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
 	{
 		fprintf(stderr, "inside the other errors if\n");//test
 		close_fd(&pipefd[0]);
-		set_signal_prompt();//restore handler
-		return 1;
+		// set_signal_prompt(0);//restore handler
+		return (1);
 	}
 	// Success
 	tcsetattr(STDIN_FILENO, TCSANOW, &program->orig_termios);//new -restore terminal signals ONLY IN PARENT
-	set_signal_prompt();
+	set_signal_prompt(0);
 	return (0);
 }
