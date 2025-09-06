@@ -34,9 +34,8 @@ void sigint_heredoc(int signum)
 	(void)signum;
 	// g_signal_value = SIGINT;//was a try not original line
 	write(STDOUT_FILENO, "\n", 1);  // Write a newline for visual feedback NEEDED
+	rl_done = 1;//new
 	exit(130);//new needed to kill child ok
-	// Force readline to return immediately
-	rl_done = 1;
 }
 
 void set_signal_handler(int signum, void(*handler)(int))
