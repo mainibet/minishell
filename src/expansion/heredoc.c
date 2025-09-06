@@ -92,6 +92,19 @@ int	heredoc_prepare(t_redir *redir, t_program *program)
 					close_fd(&pipefd[1]);
 					exit(130);//ctr+c
 				}
+			    if (buf) // si ya escribimos algo en buf, mandarlo al pipe
+	   			 {
+			        char *to_write = buf;
+    			    if (redir->hd_expand) // expandir si corresponde
+        			{
+            			to_write = expand_token_text(buf, program->envp_cpy, program->last_exit_status);
+            			free(buf);
+        			}
+    			    write(pipefd[1], to_write, ft_strlen(to_write));
+       			 	// free(buf);
+					free(to_write);
+        			buf = NULL;
+    			}
 				fprintf(stderr, "warning: here-document at line %d delimited by end-of-file (wanted `%s')\n",
 						current_line,
 						redir->target); //warning in ctr+D
@@ -103,26 +116,16 @@ int	heredoc_prepare(t_redir *redir, t_program *program)
 				free(line);
 				break ;
 			}
-			// Process the line
-			char *to_write;
-			if (redir->hd_expand)
-				to_write = expand_token_text(line, &program->envp_cpy, program->last_exit_status);
-			else
-				to_write = ft_strdup(line);
-			free(line);
-			if (!to_write)
-			{
-				close_fd(&pipefd[1]);
-				exit(1);
-			}
+			//append line
 			char *tmp = buf;//concatenate buf
-			buf = buf ? ft_strjoin(buf, to_write) : ft_strdup(to_write);//check handle malloc and free
+			buf = buf ? ft_strjoin(buf, line) : ft_strdup(line);//check handle malloc and free
 			free(tmp);
-			free(to_write);
+			// free(to_write);
 			//add new line
 			tmp = buf;
 			buf = ft_strjoin(buf, "\n");
 			free (tmp);
+			free (line);
 			current_line++;//new for warning message
 			// Write to pipe
 			// write(pipefd[1], to_write, ft_strlen(to_write));
@@ -130,7 +133,13 @@ int	heredoc_prepare(t_redir *redir, t_program *program)
 			// free(to_write);
 			// current_line++;//new for warning message
 		}
-		// Clean up and exit
+		// Process the line and expand if needed
+		if (redir->hd_expand && buf)
+		{
+    		char *expanded = expand_token_text(buf, program->envp_cpy, program->last_exit_status);
+    		free(buf);
+    	buf = expanded;
+		}		// Write in pipe, clean up and exit
 		if (buf)
 		{
 			write(pipefd[1], buf, ft_strlen(buf));
@@ -149,7 +158,6 @@ int	heredoc_prepare(t_redir *redir, t_program *program)
 	if ((WIFEXITED(status) && WEXITSTATUS(status) == 130)
 		|| (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT))
 	{
-		ft_printf(stderr, "inside the loop ctr c\n");//TEST
 		g_signal_value = SIGINT;
 		close_fd(&pipefd[0]);
 		if (program->line)//new
