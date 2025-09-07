@@ -43,6 +43,17 @@ int		execute_pipeline(t_program *program, t_node *node);
 int		wait_children(pid_t left_pid, pid_t right_pid, int *right_status);
 void	set_final_fds(t_cmd_data *cmd);
 
+// Helper functions
+
+int	handle_operator(t_program *program, t_node *node, bool is_pipe_child);
+void	set_pipe_input(t_cmd_data *cmd);
+void	set_input_redir(t_cmd_data *cmd);
+void	set_pipe_output(t_cmd_data *cmd);
+void	set_output_redir(t_cmd_data *cmd);
+int	handle_builtin_no_pipe(t_program *program, t_node *node, t_cmd_data *cmd);
+void	child_exec_flow(t_program *program, t_node *node, t_cmd_data *cmd);
+int	external_no_pipe(t_program *program, t_node *node, t_cmd_data *cmd);
+
 /**
 Left-associative
 EXAMPLE: cat file.txt | grep "foo" | sort >> sorted.txt
