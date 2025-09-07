@@ -23,7 +23,12 @@
 // int		process_node(t_program *program);
 
 // --- ABSOLUTE PATH --- //
-
+char	**get_path(void);
+char	*create_path(char *dir, char *argv);
+char	*check_path(char **dir, char *file_path, int i);
+char 	*free_prev_dir(char **dir, int i);
+int	is_executable(char *path);
+char	*find_in_path_dirs(char **dir, char *argv);
 char	*find_path(char *argv);
 
 // --- EXECUTION --- //

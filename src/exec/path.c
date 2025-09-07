@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static char	**get_path(void)
+char	**get_path(void)
 {
 	char	*path;
 	char	**dir;
@@ -27,7 +27,7 @@ static char	**get_path(void)
 	return (dir);
 }
 
-static char	*create_path(char *dir, char *argv)
+char	*create_path(char *dir, char *argv)
 {
 	char	*each_path;
 	char	*file_path;
@@ -35,11 +35,11 @@ static char	*create_path(char *dir, char *argv)
 	each_path = ft_strjoin(dir, "/");
 	if (!each_path)
 	{
-		free (dir);
+		free(dir);
 		return (NULL);
 	}
 	file_path = ft_strjoin(each_path, argv);
-	free (each_path);
+	free(each_path);
 	if (!file_path)
 	{
 		free(dir);
@@ -48,21 +48,22 @@ static char	*create_path(char *dir, char *argv)
 	return (file_path);
 }
 
-static char	*check_path(char **dir, char *file_path, int i)
+char	*check_path(char **dir, char *file_path, int i)
 {
-	if (access (file_path, F_OK) == 0)
+	if (access(file_path, F_OK) == 0)
 	{
 		while (dir[i])
 		{
 			free(dir[i]);
 			i++;
 		}
-		free (dir);
+		free(dir);
 		return (file_path);
-	}	return (NULL);
+	}
+	return (NULL);
 }
 
-static char	*free_prev_dir(char **dir, int i)
+char	*free_prev_dir(char **dir, int i)
 {
 	while (dir[i])
 	{
@@ -73,36 +74,18 @@ static char	*free_prev_dir(char **dir, int i)
 	return (NULL);
 }
 
-char    *find_path(char *argv)
+char	*find_path(char *argv)
 {
-	char    *file_path;
-	char    **dir;
-	char    *final_path;
-	int     i;
+	char	**dir;
 
-	if (argv && ft_strchr(argv, '/')) {
-		if (access(argv, X_OK) == 0)
-			return ft_strdup(argv);
-		else
-			return NULL;
+	if (argv && ft_strchr(argv, '/'))
+	{
+		if (is_executable(argv))
+			return (ft_strdup(argv));
+		return (NULL);
 	}
-
 	dir = get_path();
 	if (!dir)
 		return (NULL);
-	i = 0;
-	while (dir[i])
-	{
-		file_path = create_path(dir[i], argv);
-		if (!file_path)
-			free_prev_dir(dir, i);
-		final_path = check_path(dir, file_path, i);
-		if (final_path)
-			return (final_path);
-		free(file_path);
-		free (dir[i]);
-		i++;
-	}
-	free(dir);
-	return (NULL);
+	return (find_in_path_dirs(dir, argv));
 }
