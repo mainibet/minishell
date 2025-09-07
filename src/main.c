@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 13:00:25 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/06 11:41:08 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ int	main(int argc, char **argv, char **envp)
 
 	init_program(&program, envp);
 	prompt = BOLD GREEN "🐶🥕 Milanshell >" RESET;
-	set_signal_prompt();
+	// set_signal_prompt();
+	set_signal_prompt(0);
 	while (1)
 	{
 		program.line = readline(prompt);

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 12:59:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 14:33:29 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/05 08:36:43 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,8 @@ int	process_redir(t_cmd_data *cmd, t_program *program)
 	{
 		if (r->type == RED_HERE_DOC)
 		{
-			if (heredoc_prepare(r, program->envp_cpy, program->last_exit_status) != 0)
+			// if (heredoc_prepare(r, program->envp_cpy, program->last_exit_status) != 0)
+			if (heredoc_prepare(r, program) != 0)//changed for heredoc signals
 			{
 				// If heredoc was interrupted by Ctrl+C, set exit status to 130
 				if (g_signal_value == SIGINT)
