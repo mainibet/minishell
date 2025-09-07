@@ -110,7 +110,7 @@ minishell/
 │   └── utils/               # Helper functions
 │       └── cleanup.c
 │
-└── tests/                   # Optional: Shell test scripts or CI/CD when push
+└── tests/                   # Optional: Shell test scripts or CI/CD when push.
     ├── run_all_test.sh      #executes all listed scripts when 'make debug'
     ├── test_redirects.sh (example)
     └── test_builtins.sh (example)
