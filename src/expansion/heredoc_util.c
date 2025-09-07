@@ -6,12 +6,11 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:30:08 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/07 18:26:36 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/07 18:41:25 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 char	*strip_outer_quotes(const char *s)
 {

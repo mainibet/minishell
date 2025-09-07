@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:29:30 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/07 18:28:37 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/07 18:41:13 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ static void	write_tmp_heredoc(t_heredoc *hd, char **line)
 	*line = NULL;
 	hd->buf = NULL;
 }
-
 
 //concatenate buf in tmp later maybe in fd
 static void	process_line_heredoc(t_heredoc *hd, char *line)
