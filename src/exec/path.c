@@ -12,12 +12,6 @@
 
 #include "minishell.h"
 
-/*
-   To find the full path of a command.
-   Retrieves the PATH environment variable, splits it into directories,
-   and checks each directory for the command file.
-   Returns the full path; if not NULL.
-*/
 static char	**get_path(void)
 {
 	char	*path;
@@ -33,7 +27,6 @@ static char	**get_path(void)
 	return (dir);
 }
 
-// Joins a directory and a filename to create a full file path.
 static char	*create_path(char *dir, char *argv)
 {
 	char	*each_path;
@@ -55,8 +48,6 @@ static char	*create_path(char *dir, char *argv)
 	return (file_path);
 }
 
-// Checks if the file at file_path exists; frees memory 
-//and returns the path if found.
 static char	*check_path(char **dir, char *file_path, int i)
 {
 	if (access (file_path, F_OK) == 0)
@@ -68,12 +59,9 @@ static char	*check_path(char **dir, char *file_path, int i)
 		}
 		free (dir);
 		return (file_path);
-	}//check if here need to free_file_path before NULL
-	return (NULL);
+	}	return (NULL);
 }
 
-// Frees all directory strings from index i onwards and 
-//returns NULL.
 static char	*free_prev_dir(char **dir, int i)
 {
 	while (dir[i])
@@ -85,8 +73,6 @@ static char	*free_prev_dir(char **dir, int i)
 	return (NULL);
 }
 
-// Finds the full path of a command by searching directories
-//in PATH.
 char    *find_path(char *argv)
 {
 	char    *file_path;
@@ -94,7 +80,6 @@ char    *find_path(char *argv)
 	char    *final_path;
 	int     i;
 
-	// If argv contains a '/', treat as direct/relative path
 	if (argv && ft_strchr(argv, '/')) {
 		if (access(argv, X_OK) == 0)
 			return ft_strdup(argv);

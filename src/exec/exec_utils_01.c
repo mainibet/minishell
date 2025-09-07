@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils_01.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tpandya <tpandya@student.42berlin.de>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/07 22:58:27 by tpandya           #+#    #+#             */
+/*   Updated: 2025/09/07 22:58:31 by tpandya          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	handle_builtin_no_pipe(t_program *program, t_node *node, t_cmd_data *cmd)
@@ -44,4 +56,3 @@ int	external_no_pipe(t_program *program, t_node *node, t_cmd_data *cmd)
 	restore_std(program);
 	return (status);
 }
-

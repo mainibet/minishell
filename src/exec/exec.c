@@ -53,14 +53,14 @@ void	set_final_fds(t_cmd_data *cmd)
 int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 {
 	t_cmd_data	*cmd;
-	char		*unq;
 	char		*name;
+	char		*unq;
 
 	if (!node || !node->u_data.cmd.argv)
 		return (1);
 	cmd = &node->u_data.cmd;
 	unq = strip_outer_quotes(cmd->argv[0]);
-	if (unq)
+	if (unq != NULL)
 	{
 		free(cmd->argv[0]);
 		cmd->argv[0] = unq;
@@ -68,17 +68,15 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 	name = cmd->argv[0];
 	if (is_operator_str(name))
 	{
-		fprintf(stderr,
-			RED BOLD "Syntax error near unexpected token `%s`\n" RESET, name);
+		fprintf(stderr, RED BOLD "Syntax error near unexpected token ");
+		fprintf(stderr, "`%s'\n" RESET, name);
 		return (2);
 	}
 	if (is_pipe_child)
 		child_exec_flow(program, node, cmd);
 	else if (is_builtin(name))
 		return (handle_builtin_no_pipe(program, node, cmd));
-	else
-		return (external_no_pipe(program, node, cmd));
-	return (1);
+	return (external_no_pipe(program, node, cmd));
 }
 
 int	execution(t_program *program, t_node *node, bool is_pipe_child)

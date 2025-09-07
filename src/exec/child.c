@@ -10,19 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
 
 void	child_process(t_program *program, t_node *node)
 {
-	t_cmd_data		*cmd;
-	int				status;
+	t_cmd_data	*cmd;
+	int			status;
 
 	cmd = &node->u_data.cmd;
-	
 	if (setup_redir(cmd) != 0)
 		exit(EXIT_FAILURE);
-	
 	if (is_builtin(cmd->argv[0]))
 	{
 		status = execute_builtin(program, node, true);
@@ -31,7 +28,7 @@ void	child_process(t_program *program, t_node *node)
 	else
 	{
 		exec_cmd_inchild(node);
-		perror (BOLD RED "Exec/Builtin failed" RESET);
+		perror(BOLD RED "Exec/Builtin failed" RESET);
 		exit(EXIT_FAILURE);
 	}
 }

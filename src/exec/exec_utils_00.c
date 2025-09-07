@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils_00.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tpandya <tpandya@student.42berlin.de>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/07 22:57:51 by tpandya           #+#    #+#             */
+/*   Updated: 2025/09/07 22:58:07 by tpandya          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	handle_operator(t_program *program, t_node *node, bool is_pipe_child)
@@ -14,7 +26,6 @@ int	handle_operator(t_program *program, t_node *node, bool is_pipe_child)
 			return (execution(program, node->u_data.op.right, true));
 		return (left_status);
 	}
-
 	fprintf(stderr, BOLD RED "Error: unknow type operand for execution\n" RESET);
 	return (1);
 }
