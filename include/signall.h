@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 11:39:00 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 08:39:00 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 08:42:28 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define SIGNALL_H
 
 # include "minishell.h"
-// #include <readline/readline.h>//already in minishell.h
 
 extern	sig_atomic_t g_signal_value;
 
