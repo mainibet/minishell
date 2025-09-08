@@ -6,14 +6,12 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:29:30 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/07 18:41:13 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 08:27:58 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void	write_tmp_heredoc(t_redir *redir, t_program *program,
-// 	char **buf, char **line, int *pipefd)//fix param #
 static void	write_tmp_heredoc(t_heredoc *hd, char **line)
 {
 	char	*to_write;
@@ -23,6 +21,8 @@ static void	write_tmp_heredoc(t_heredoc *hd, char **line)
 	{
 		to_write = expand_token_text(hd->buf, hd->program->envp_cpy,
 				hd->program->last_exit_status);
+		free(hd->buf);
+		hd->buf = NULL;
 		if (line)
 		{
 			free (*line);
@@ -32,11 +32,6 @@ static void	write_tmp_heredoc(t_heredoc *hd, char **line)
 	write(hd->pipefd[1], to_write, ft_strlen(to_write));
 	if (hd->redir->hd_expand)
 		free(to_write);
-	else
-	{
-		free(hd->buf);
-		hd->buf = NULL;
-	}
 	*line = NULL;
 	hd->buf = NULL;
 }
@@ -44,19 +39,22 @@ static void	write_tmp_heredoc(t_heredoc *hd, char **line)
 //concatenate buf in tmp later maybe in fd
 static void	process_line_heredoc(t_heredoc *hd, char *line)
 {
-	char	*tmp;
+	char	*old;
+	char	*new;
 
-	tmp = hd->buf;
 	if (hd->buf)
 	{
-		tmp = hd->buf;
-		hd->buf = ft_strjoin(hd->buf, line);
+		old = hd->buf;
+		new = ft_strjoin(hd->buf, line);
+		free (old);
+		hd->buf = new;
 	}
 	else
 		hd->buf = ft_strdup(line);
-	tmp = hd->buf;
-	hd->buf = ft_strjoin(hd->buf, "\n");
-	free (tmp);
+	old = hd->buf;
+	new = ft_strjoin(hd->buf, "\n");
+	free (old);
+	hd->buf = new;
 	free (line);
 }
 
@@ -71,19 +69,22 @@ void	expand_heredoc(t_program *program, char **buf)
 	*buf = expanded;
 }
 
-// void	exit_ctrlc_heredoc(int *pipefd, char **line, char **buf)
 static void	exit_ctrlc_heredoc(t_heredoc *hd, char **line)
 {
-	if (line)
-		free (line);
+	if (line && *line)
+	{
+		free (*line);
+		*line = NULL;
+	}
 	if (hd->buf && hd->buf)
+	{
 		free (hd->buf);
+		hd->buf = NULL;
+	}
 	close_fd(&hd->pipefd[1]);
 	exit(130);
 }
 
-// int	read_heredoc(t_program *program, t_redir *redir,
-// 		char **buf, int *pipefd, int current_line)//fix # param
 int	read_heredoc(t_heredoc *hd)
 {
 	char	*line;
@@ -97,6 +98,7 @@ int	read_heredoc(t_heredoc *hd)
 				exit_ctrlc_heredoc(hd, &line);
 			if (hd->buf)
 				write_tmp_heredoc(hd, &line);
+			free_hd(hd);
 			fprintf(stderr, set_warn_ctrl_d(), hd->current_line, hd->delimiter);
 			break ;
 		}
