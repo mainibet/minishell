@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/06 11:41:08 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 17:50:04 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_node	*token_parser_input(char *line, t_token **token_out, t_program *program)
 	root = parse(parser_tokens);
 	if (!root)
 	{
-		fprintf(stderr, RED BOLD "Parsing failed\n" RESET);
+		DEBUG_ERROR("[ERROR] Parsing failed\n");
 		free_token(token_list);
 		*token_out = NULL;
 		return (NULL);
@@ -56,10 +56,7 @@ static void	process_cmdline(t_program *program, char *line)
 	program->root = root;
 	free(line);
 	if (!program->root)
-	{
-		fprintf(stderr, RED "Parsing failed\n" RESET);
 		return ;
-	}
 	pre_execution(program, root);
 	program->last_exit_status = execution(program, root, false);
 	free_ast_tokens(program);
