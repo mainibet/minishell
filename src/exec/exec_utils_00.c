@@ -18,7 +18,7 @@ int	handle_operator(t_program *program, t_node *node, bool is_pipe_child)
 	int	right_status;
 
 	if (node->u_data.op.type == PIPE)
-		return (execute_pipeline(program, node));
+		return (execute_pipefile(program, node));
 	else if (node->u_data.op.type == AND)
 	{
 		left_status = execution(program, node->u_data.op.left, true);

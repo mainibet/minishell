@@ -29,7 +29,6 @@ int	redir_out(int fd)
 {
 	if (fd >= 0)
 	{
-		// Flush stdout before redirecting
 		fflush(stdout);
 		if (dup2(fd, STDOUT_FILENO) == -1)
 		{
@@ -42,46 +41,26 @@ int	redir_out(int fd)
 
 int	setup_redir(t_cmd_data *cmd)
 {
-	// Input redirection: file/heredoc takes precedence over pipe
 	if (cmd->fd_in != STDIN_FILENO && cmd->fd_in >= 0)
-	{
-		// DEBUG removed
-		// DEBUG removed
 		if (redir_in(cmd->fd_in) != 0)
 			return (1);
-	}
-	// If we have a pipe input and no file redirection
 	else if (cmd->pipefd[0] >= 0)
 	{
-		// DEBUG removed
-		// DEBUG removed
 		if (redir_in(cmd->pipefd[0]) != 0)
 			return (1);
-		close_fd(&cmd->pipefd[0]); // Close after duplication
+		close_fd(&cmd->pipefd[0]);
 	}
-
-	// Output redirection: file takes precedence over pipe
 	if (cmd->fd_out != STDOUT_FILENO && cmd->fd_out >= 0)
-	{
-		// DEBUG removed
-		// DEBUG removed
 		if (redir_out(cmd->fd_out) != 0)
 			return (1);
-	}
-	// If we have a pipe output and no file redirection
 	else if (cmd->pipefd[1] >= 0)
 	{
-		// DEBUG removed
-		// DEBUG removed
 		if (redir_out(cmd->pipefd[1]) != 0)
 			return (1);
-		close_fd(&cmd->pipefd[1]); // Close after duplication
+		close_fd(&cmd->pipefd[1]);
 	}
-
-	// DEBUG removed
 	return (0);
 }
-
 
 static void	update_redir_fd(int new_fd, int *cmd_fd)
 {
@@ -91,7 +70,6 @@ static void	update_redir_fd(int new_fd, int *cmd_fd)
 		close_fd(cmd_fd);
 	*cmd_fd = new_fd;
 }
-
 
 int	process_redir(t_cmd_data *cmd, t_program *program)
 {
@@ -104,32 +82,24 @@ int	process_redir(t_cmd_data *cmd, t_program *program)
 	{
 		if (r->type == RED_HERE_DOC)
 		{
-			// if (heredoc_prepare(r, program->envp_cpy, program->last_exit_status) != 0)
-			if (heredoc_prepare(r, program) != 0)//changed for heredoc signals
+			if (heredoc_prepare(r, program) != 0)
 			{
-				// If heredoc was interrupted by Ctrl+C, set exit status to 130
 				if (g_signal_value == SIGINT)
 					program->last_exit_status = 130;
 				return (1);
 			}
-            // only dup later in child
-            update_redir_fd(r->fd, &cmd->fd_in);
-        }
-        else
-        {
-            // fprintf(stderr, BLUE "Attempting to open file: %s\n" RESET, r->target);//test
-            // DEBUG removed//test
-            if (open_redir_filename(r) != 0)
-                return 1;
-            // fprintf(stderr, GREEN "Successfully opened fd %d for %s\n" RESET, r->fd, r->target);//debug
-            // DEBUG removed//debug
-            if (r->type == RED_IN)
-                update_redir_fd(r->fd, &cmd->fd_in);
-            else
-                update_redir_fd(r->fd, &cmd->fd_out);
-        }
-        r = r->next;
-    }
-    return 0;
+			update_redir_fd(r->fd, &cmd->fd_in);
+		}
+		else
+		{
+			if (open_redir_filename(r) != 0)
+				return (1);
+			if (r->type == RED_IN)
+				update_redir_fd(r->fd, &cmd->fd_in);
+			else
+				update_redir_fd(r->fd, &cmd->fd_out);
+		}
+		r = r->next;
+	}
+	return (0);
 }
-
