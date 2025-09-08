@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:29:30 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 08:27:58 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 15:34:07 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,8 @@ int	read_heredoc(t_heredoc *hd)
 				exit_ctrlc_heredoc(hd, &line);
 			if (hd->buf)
 				write_tmp_heredoc(hd, &line);
-			free_hd(hd);
 			fprintf(stderr, set_warn_ctrl_d(), hd->current_line, hd->delimiter);
+			free_hd(hd);
 			break ;
 		}
 		if (is_delim_line(line, hd->redir->target))
