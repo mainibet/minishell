@@ -35,7 +35,12 @@ static int	get_old_pwd(char **old_pwd, char *dest_path)
 {
 	*old_pwd = getcwd(NULL, 0);
 	if (!*old_pwd)
-		return (handle_cwd_error(dest_path));
+	{
+		/* getcwd failed (for example, current dir removed). Print a warning
+		 * but do not abort: we still attempt to chdir to the destination. */
+		fprintf(stderr, RED BOLD "cd: getcwd error to get path\n" RESET);
+		*old_pwd = NULL;
+	}
 	return (0);
 }
 

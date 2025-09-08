@@ -36,7 +36,6 @@ static void	write_tmp_heredoc(t_heredoc *hd, char **line)
 	hd->buf = NULL;
 }
 
-
 //concatenate buf in tmp later maybe in fd
 static void	process_line_heredoc(t_heredoc *hd, char *line)
 {
