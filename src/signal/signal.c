@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 07:25:18 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 08:04:35 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 08:35:49 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,3 @@ void	set_signal_heredoc(void)
 	sa.sa_flags = 0;
 	sigaction(SIGINT, &sa, NULL);
 }
-
-// void	set_signal_main_process(void)
-// {
-// 	set_signal_handler(SIGINT, SIG_IGN);
-// 	set_signal_handler(SIGQUIT, SIG_IGN);
-// }
-
