@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:31:48 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 18:12:15 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:31:22 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,23 +35,8 @@ static int	validate_redirections(t_token *token)
 		if (current->type == REDIR_IN || current->type == REDIR_OUT
 			|| current->type == APPEND || current->type == HEREDOC)
 		{
-			if (!current->next)
-			{
-				fprintf(stderr, BOLD RED
-					"Syntax error: Missing redirection target after '%s'\n"
-					RESET, current->txt);
+			if (validate_redir_target(current))
 				return (1);
-			}
-			if (current->next->type == REDIR_IN
-				|| current->next->type == REDIR_OUT
-				|| current->next->type == APPEND
-				|| current->next->type == HEREDOC)
-			{
-				fprintf(stderr, BOLD RED
-					"Syntax error: Unexpected redirection operator '%s'"
-					" after '%s'\n" RESET, current->next->txt, current->txt);
-				return (1);
-			}
 		}
 		current = current->next;
 	}
