@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:31:48 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 15:17:30 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 17:50:59 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,43 +25,42 @@ void	init_cmd_node(t_token *token, t_node *node)
 	node->u_data.cmd.pipefd[1] = -1;
 }
 
-static t_token	*validate_redirections(t_token *token)
+static int	validate_redirections(t_token *token)
 {
-	t_token	*validate;
+	t_token	*current;
 
-	validate = token;
-	while (validate)
+	current = token;
+	while (current)
 	{
-		if (validate->type == REDIR_IN || validate->type == REDIR_OUT
-			|| validate->type == APPEND || validate->type == HEREDOC)
+		if (current->type == REDIR_IN || current->type == REDIR_OUT
+			|| current->type == APPEND || current->type == HEREDOC)
 		{
-			if (!validate->next)
+			if (!current->next)
 			{
 				fprintf(stderr, BOLD RED
 					"Syntax error: Missing redirection target after '%s'\n"
-					RESET, validate->txt);
-				return (validate);
+					RESET, current->txt);
+				return (1);
 			}
-			if (validate->next->type == REDIR_IN
-				|| validate->next->type == REDIR_OUT
-				|| validate->next->type == APPEND
-				|| validate->next->type == HEREDOC)
+			if (current->next->type == REDIR_IN
+				|| current->next->type == REDIR_OUT
+				|| current->next->type == APPEND
+				|| current->next->type == HEREDOC)
 			{
 				fprintf(stderr, BOLD RED
 					"Syntax error: Unexpected redirection operator '%s'"
-					" after '%s'\n" RESET, validate->next->txt, validate->txt);
-				return (validate);
+					" after '%s'\n" RESET, current->next->txt, current->txt);
+				return (1);
 			}
 		}
-		validate = validate->next;
+		current = current->next;
 	}
-	return (NULL);
+	return (0);
 }
 
 static int	validate_token_syntax(t_token *token, bool *has_command)
 {
 	t_token	*current;
-	t_token	*validate;
 
 	current = token;
 	*has_command = false;
@@ -85,8 +84,7 @@ static int	validate_token_syntax(t_token *token, bool *has_command)
 		}
 		current = current->next;
 	}
-	validate = validate_redirections(token);
-	if (validate)
+	if (validate_redirections(token))
 		return (1);
 	return (0);
 }
@@ -97,14 +95,25 @@ int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
 	bool	has_command;
 
 	if (validate_token_syntax(token, &has_command) != 0)
+	{
+		cmd_data->tokens = NULL;
+		cmd_data->argv = NULL;
 		return (1);
+	}
 	if (process_tokens_loop(token, cmd_data, &cmd_tokens) != 0)
+	{
+		free_token(cmd_tokens);
+		cmd_data->tokens = NULL;
+		cmd_data->argv = NULL;
 		return (1);
+	}
 	if (!cmd_tokens && !has_command)
 	{
 		fprintf(stderr, BOLD RED
 			"Syntax error: Command expected but only redirections found\n"
 			RESET);
+		cmd_data->tokens = NULL;
+		cmd_data->argv = NULL;
 		return (1);
 	}
 	cmd_data->tokens = cmd_tokens;

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:35:57 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 15:30:43 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 17:51:46 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,44 +23,6 @@ static int	precedence(t_token *token)
 	if (token->type == PIPE)
 		return (3);
 	return (0);
-}
-
-static t_node	*parse_command(t_token *token)
-{
-	t_node	*node;
-
-	node = malloc(sizeof(t_node));
-	if (!node)
-		return (NULL);
-	ft_memset(node, 0, sizeof(t_node));
-	init_cmd_node(NULL, node);
-	if (process_cmd_tokens(token, &node->u_data.cmd) != 0)
-	{
-		free_token(token);
-		free_node(node);
-		DEBUG_ERROR("[ERROR] parse_command: failed to process tokens\n");//DEBUG
-		return (NULL);
-	}
-	return (node);
-}
-
-static t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
-{
-	t_node	*node;
-
-	node = malloc(sizeof(t_node));
-	if (!node)
-	{
-		free_node(left);
-		free_node(right);
-		return (NULL);
-	}
-	ft_memset(node, 0, sizeof(t_node));
-	node->type = OPERATOR;
-	node->u_data.op.type = op->type;
-	node->u_data.op.left = left;
-	node->u_data.op.right = right;
-	return (node);
 }
 
 //precedence
@@ -85,45 +47,56 @@ static t_token	*find_lowest_operator(t_token *token)
 	return (lowest_op);
 }
 
-
-t_node	*parse(t_token *token_list)
+// Cut the left list at op_token
+//oken lit always begn in left
+static t_token	*cut_left_list(t_token *token_list, t_token *op_token)
 {
-	if (!token_list)
-		return (NULL);
-	// 1. Find operator of lowest precedence (leftmost for left-associativity)
-	t_token *op_token = find_lowest_operator(token_list);
+	t_token	*current;
 
-	// 2. No operator -> just a command node
-	if (!op_token)
-		return (parse_command(token_list));
-
-	// 3. Split tokens into left and right lists
-	t_token *left_list = token_list;
-	t_token *right_list = op_token->next;
-	t_token *current = left_list;
-
-	// Cut the left list at op_token
+	current = token_list;
 	if (current == op_token)
-		left_list = NULL;
-	else
-	{
-		while (current && current->next != op_token)
-			current = current->next;
-		if (current)
-			current->next = NULL;
-	}
+		return (NULL);
+	while (current && current->next != op_token)
+		current = current->next;
+	if (current)
+		current->next = NULL;
+	return (token_list);
+}
 
-	// 4. Recursively parse left and right
-	t_node *left = parse(left_list);
-	t_node *right = parse(right_list);
+// Recursively parse left and right
+//creae operator node
+static t_node	*parse_sides(t_token *op_token,
+	t_token *left_list, t_token *right_list)
+{
+	t_node	*left;
+	t_node	*right;
 
-	if (!left || !right) // NEW
+	left = parse(left_list);
+	right = parse(right_list);
+	if (!left || !right)
 	{
 		free_node(left);
 		free_node(right);
-		DEBUG_ERROR("[ERROR] parse: failed to parse left or right sub-tree\n");//debug
 		return (NULL);
 	}
-	// 5. Create operator node
 	return (parse_operator(op_token, left, right));
+}
+
+// Find operator of lowest precedence (leftmost for left-associativity)
+// No operator -> just a command node
+// Split tokens into left and right lists
+t_node	*parse(t_token *token_list)
+{
+	t_token	*op_token;
+	t_token	*left_list;
+	t_token	*right_list;
+
+	if (!token_list)
+		return (NULL);
+	op_token = find_lowest_operator(token_list);
+	if (!op_token)
+		return (parse_command(token_list));
+	left_list = cut_left_list(token_list, op_token);
+	right_list = op_token->next;
+	return (parse_sides(op_token, left_list, right_list));
 }

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:32:01 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 15:30:46 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 17:51:26 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,7 @@ int	process_tokens_loop(t_token *token, t_cmd_data *cmd_data,
 			|| current->type == APPEND || current->type == HEREDOC)
 		{
 			if (split_cmd_arg(&current, cmd_data) != 0)
-			{
-				free_token(*cmd_tokens);
 				return (1);
-			}
 			continue ;
 		}
 		add_token(cmd_tokens, token_cpy(current));
@@ -78,5 +75,3 @@ int	process_tokens_loop(t_token *token, t_cmd_data *cmd_data,
 	}
 	return (0);
 }
-
-
