@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:29:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/07 18:33:40 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 08:28:28 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ static int	parent_heredoc(t_redir *redir,
 {
 	int	status;
 
+	status = 0;
 	close_fd(&pipefd[1]);
 	redir->fd = pipefd[0];
 	set_signal_prompt(1);
