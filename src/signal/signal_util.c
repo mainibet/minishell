@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 07:26:19 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 08:01:05 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 08:38:44 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	sigint_prompt(int signum)
 void	sigint_prompt_heredoc(int signum)
 {
 	(void)signum;
-
 	g_signal_value = SIGINT;
 }
 
@@ -36,12 +35,11 @@ void	sigint_prompt_heredoc(int signum)
 void	sigint_heredoc(int signum)
 {
 	(void)signum;
-
 	write(STDOUT_FILENO, "\n", 1);
 	exit(130);
 }
 
-void	set_signal_handler(int signum, void(*handler)(int))
+void	set_signal_handler(int signum, void (*handler)(int))
 {
 	struct sigaction	sa;
 
@@ -52,4 +50,3 @@ void	set_signal_handler(int signum, void(*handler)(int))
 	if (sigaction(signum, &sa, NULL) == -1)
 		perror("sigaction");
 }
-
