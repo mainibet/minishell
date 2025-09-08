@@ -60,8 +60,6 @@ static void	process_cmdline(t_program *program, char *line)
 		fprintf(stderr, RED "Parsing failed\n" RESET);
 		return ;
 	}
-	// DEBUG removed//TEST
-	// DEBUG removed//test
 	pre_execution(program, root);
 	program->last_exit_status = execution(program, root, false);
 	free_ast_tokens(program);
@@ -72,17 +70,15 @@ int	main(int argc, char **argv, char **envp)
 	char		*prompt;
 	t_program	program;
 
-	(void) argc;//check if needed
-	(void) argv;//check if needed
-
+	(void)argc;
+	(void)argv;
 	init_program(&program, envp);
 	prompt = BOLD GREEN "🐶🥕 Milanshell >" RESET;
-	// set_signal_prompt();
 	set_signal_prompt(0);
 	while (1)
 	{
 		program.line = readline(prompt);
-		if (!program.line && isatty(STDIN_FILENO)) //if issaty returns 0 is in an fd
+		if (!program.line && isatty(STDIN_FILENO))
 		{
 			printf(BLUE "exit\n" RESET);
 			break ;
@@ -90,7 +86,5 @@ int	main(int argc, char **argv, char **envp)
 		process_cmdline(&program, program.line);
 	}
 	cleanup_program(&program);
-	// fprintf(stderr, MAGENTA BOLD "last program status: %d\n" RESET, program.last_exit_status);//new TEST
-	// DEBUG removed//TEST
 	return (program.last_exit_status);
 }
