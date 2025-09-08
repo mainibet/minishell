@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:11:26 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 18:32:37 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:47:42 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,20 @@ int	validate_redir_target(t_token *current)
 		fprintf(stderr, BOLD RED
 			"Syntax error: Unexpected redirection operator '%s'"
 			" after '%s'\n" RESET, current->next->txt, current->txt);
+		return (1);
+	}
+	return (0);
+}
+
+int	handle_miss_cmd(t_cmd_data *cmd_data, t_token *cmd_tokens, bool has_cmd)
+{
+	if (!cmd_tokens && !has_cmd)
+	{
+		fprintf(stderr, BOLD RED
+			"Syntax error: Command expected but only redirections found\n"
+			RESET);
+		cmd_data->tokens = NULL;
+		cmd_data->argv = NULL;
 		return (1);
 	}
 	return (0);

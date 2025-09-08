@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:31:48 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 18:31:22 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:47:30 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ static int	validate_token_syntax(t_token *token, bool *has_command)
 int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
 {
 	t_token	*cmd_tokens;
-	bool	has_command;
+	bool	has_cmd;
 
-	if (validate_token_syntax(token, &has_command) != 0)
+	if (validate_token_syntax(token, &has_cmd) != 0)
 	{
 		cmd_data->tokens = NULL;
 		cmd_data->argv = NULL;
@@ -83,17 +83,9 @@ int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
 		cmd_data->argv = NULL;
 		return (1);
 	}
-	if (!cmd_tokens && !has_command)
-	{
-		fprintf(stderr, BOLD RED
-			"Syntax error: Command expected but only redirections found\n"
-			RESET);
-		cmd_data->tokens = NULL;
-		cmd_data->argv = NULL;
+	if (handle_miss_cmd(cmd_data, cmd_tokens, has_cmd))
 		return (1);
-	}
 	cmd_data->tokens = cmd_tokens;
 	cmd_data->argv = NULL;
 	return (0);
 }
-
