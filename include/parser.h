@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:34:47 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 16:48:38 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:11:14 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 t_node	*parse(t_token *token_list);
 void	init_cmd_node(t_token *token, t_node *node);
 int		process_cmd_tokens(t_token *token, t_cmd_data *cmd_data);
+
+// --- Parse cmd helpers ---//
+int		validate_word_token(t_token *token);
 
 // --- Node creation --- //
 t_node	*parse_command(t_token *token);

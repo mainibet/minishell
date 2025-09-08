@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:31:48 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 17:50:59 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:12:15 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,17 +69,8 @@ static int	validate_token_syntax(t_token *token, bool *has_command)
 		if (current->type == WORD || current->type == SINGLE_Q
 			|| current->type == DOUBLE_Q)
 		{
-			if (ft_strchr(current->txt, '>') != NULL
-				|| ft_strchr(current->txt, '<') != NULL)
-			{
-				if (current->type == WORD)
-				{
-					fprintf(stderr, BOLD RED
-						"Syntax error: Invalid token '%s' contains "
-						"redirection characters\n" RESET, current->txt);
-					return (1);
-				}
-			}
+			if (validate_word_token(current))
+				return (1);
 			*has_command = true;
 		}
 		current = current->next;
