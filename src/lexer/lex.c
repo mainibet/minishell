@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:57:29 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/09 15:32:18 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:28:13 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,9 @@ static t_token	*lex_operator(char *s)
 }
 
 // Check Quoted string
-t_token	*lex(char *s, char delim)
+t_token	*lex(char *s, int delim)
 {
-	size_t	op_len;
-
+	(void) delim;
 	if (!s || !*s)
 		return (NULL);
 	s = consume_whitespace(s);
