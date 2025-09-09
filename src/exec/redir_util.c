@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <errno.h> // Include errno.h for strerror
-#include <libgen.h> // Include libgen.h for dirname
+#include <errno.h>
+#include <libgen.h>
 
 void	restore_std(t_program *program)
 {
@@ -33,7 +33,6 @@ t_redir_type	map_type(t_toktype token_type)
 	return (RED_UNKNOW);
 }
 
-// Add quoted argument
 t_redir	*create_redir_node(char *target, enum e_redir_type type, bool quoted)
 {
 	t_redir	*new_redir;
@@ -41,10 +40,10 @@ t_redir	*create_redir_node(char *target, enum e_redir_type type, bool quoted)
 	new_redir = malloc(sizeof(t_redir));
 	if (!new_redir)
 	{
-		malloc_error();//check
+		malloc_error();
 		return (NULL);
 	}
-	new_redir->target = ft_strdup(target);//check where to free
+	new_redir->target = ft_strdup(target);
 	if (!new_redir->target)
 	{
 		free(new_redir);
@@ -52,13 +51,12 @@ t_redir	*create_redir_node(char *target, enum e_redir_type type, bool quoted)
 		return (NULL);
 	}
 	new_redir->type = type;
-	new_redir->fd = -1;//init with a non valid fd
+	new_redir->fd = -1;
 	new_redir->next = NULL;
 	new_redir->quoted = quoted;
 	return (new_redir);
 }
 
-// No change needed here, just ensure all create_redir_node calls use quoted argument
 void	add_redir(t_redir **list, t_redir *new_redir)
 {
 	t_redir	*tmp;
@@ -76,14 +74,10 @@ void	add_redir(t_redir **list, t_redir *new_redir)
 	tmp->next = new_redir;
 }
 
-//when target is file name
-//only for < > >>
-//to set the flags when open redir type
-//permissions 0644 due to flag O_CREAT
 int	open_redir_filename(t_redir *redir)
 {
-	int	open_flags;
-	char *dir_path;
+	int		open_flags;
+	char	*dir_path;
 
 	if (redir->type == RED_IN)
 		open_flags = O_RDONLY;
@@ -92,21 +86,19 @@ int	open_redir_filename(t_redir *redir)
 	else if (redir->type == RED_APPEND)
 		open_flags = O_WRONLY | O_CREAT | O_APPEND;
 	else
-		return (1); // Invalid redirection type
-	
-	// Check if the file exists for input redirection
-	if (redir->type == RED_IN && access(redir->target, F_OK) != 0) {
-		fprintf(stderr, "Error: No such file or directory: %s\n", redir->target);
+		return (1);
+	if (redir->type == RED_IN && access(redir->target, F_OK) != 0)
+	{
+		fprintf(stderr, "Error: No such file or directory: %s\n",
+			redir->target);
 		return (1);
 	}
-	
 	redir->fd = open(redir->target, open_flags, 0644);
 	if (redir->fd < 0)
 	{
-		fprintf(stderr, "Error opening file '%s': %s\n", redir->target, strerror(errno));
+		fprintf(stderr, "Error opening file '%s': %s\n", redir->target,
+			strerror(errno));
 		return (1);
 	}
-	
 	return (0);
 }
-

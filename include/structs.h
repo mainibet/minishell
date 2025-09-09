@@ -83,6 +83,17 @@ typedef enum e_redir_type
 //                AST STRUCTS               //
 // -----------------------------------------//
 
+
+
+typedef struct s_pipe_ctx
+{
+	int		idx;
+	int		n_cmds;
+	int		(*pipes)[2];
+}	t_pipe_ctx;
+
+
+
 // --- TOKEN STRUCT --- //
 
 typedef struct s_token
@@ -144,6 +155,15 @@ typedef struct s_program
 	int		last_exit_status;
 	struct	termios orig_termios; //new for heredoc signlas
 }t_program;
+
+typedef struct s_spawn_ctx
+{
+	t_node		**cmds;
+	int			n_cmds;
+	int			(*pipes)[2];
+	pid_t		*pids;
+	t_program	*prog;
+}	t_spawn_ctx;
 
 // --- STRUCT FOR REDIR --- //
 
