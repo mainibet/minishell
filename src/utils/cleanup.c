@@ -195,4 +195,3 @@ void cleanup_program(t_program *program)
 		// DEBUG removed//DEBUG
 	}//DEBUG
 }
-

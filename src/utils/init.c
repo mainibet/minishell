@@ -1,12 +1,21 @@
-
-//PENDING 42 HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tpandya <tpandya@student.42berlin.de>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/09 22:44:22 by tpandya           #+#    #+#             */
+/*   Updated: 2025/09/09 22:44:25 by tpandya          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
 static char	**ft_dup_env(char **envp)
 {
-	int i;
-	char **envp_cpy;
+	int		i;
+	char	**envp_cpy;
 
 	i = 0;
 	while (envp[i])
@@ -17,7 +26,7 @@ static char	**ft_dup_env(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		envp_cpy[i] = ft_strdup(envp[i]);//check were to free
+		envp_cpy[i] = ft_strdup(envp[i]);
 		if (!envp_cpy[i])
 		{
 			envp_cpy[i] = NULL;
@@ -37,8 +46,6 @@ static int	init_fd_origin(const char *err_msg, int orig_fd)
 	new_fd = dup(orig_fd);
 	if (new_fd == -1)
 		perror(err_msg);
-	else//DEBUG
-		// DEBUG removed//new DEBUG
 	return (new_fd);
 }
 
@@ -56,16 +63,16 @@ void	init_program(t_program *program, char **envp)
 	program->envp_cpy = ft_dup_env(envp);
 	program->root = NULL;
 	program->token_list = NULL;
-	program->fd_in_orig = init_fd_origin
-		("dup failes for STDIN init", STDIN_FILENO);//fix pipes
-	program->fd_out_orig = init_fd_origin
-		("dup failes for STDOUT init", STDOUT_FILENO);//fix pipes
+	program->fd_in_orig = init_fd_origin("dup failes for STDIN init",
+			STDIN_FILENO);
+	program->fd_out_orig = init_fd_origin("dup failes for STDOUT init",
+			STDOUT_FILENO);
 	program->last_exit_status = 0;
 	if (!program->envp_cpy)
 		malloc_error();
-	if (!program->envp_cpy || program->fd_in_orig == -1 
+	if (!program->envp_cpy || program->fd_in_orig == -1
 		|| program->fd_out_orig == -1)
 		handle_init_error(program);
-	if (tcgetattr(STDIN_FILENO, &program->orig_termios) == -1)//this saves the original terminal config
-		perror("tcgetattr");//new heredoc signals
+	if (tcgetattr(STDIN_FILENO, &program->orig_termios) == -1)
+		perror("tcgetattr");
 }

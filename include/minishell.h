@@ -71,9 +71,12 @@ void	init_program(t_program *program, char **envp);
 // --- ERRORS_CLEAN-UP --- //
 int		cleanup_fd(t_node *node, t_nodetype type);
 int		cleanup_cmd_node(t_node *node);
+int		cleanup_operator_fd(t_node *node);
 void	cleanup_program(t_program *program);
 void	free_node(t_node *node);
 void	free_token(t_token *token);
+void	free_redirs(t_redir *redir);
+void	free_cmd_arg(t_node *node);
 void	free_ast_tokens(t_program *program);
 
 // ---PRINT AST TREE --- //
