@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:36:45 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/09 16:29:58 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/09 07:41:09 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 //                PROTOTYPES                //
 // -----------------------------------------//
 
-t_token			*lex(char *s);
+t_token			*lex(char *s, char delim);
 enum e_toktype	token_type(char *s);
 t_token			*join_tokens(t_token *a, t_token *b);
 
