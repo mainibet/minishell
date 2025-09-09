@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/09 16:31:07 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:13:30 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_node	*token_parser_input(char *line, t_token **token_out, t_program *program)
 	t_token	*parser_tokens;
 	t_node	*root;
 
-	token_list = lex(line);
+	token_list = lex(line, ' ');
 	if (!token_list)
 	{
 		fprintf(stderr, BOLD RED "Lexing failed or empty imput\n" RESET);
