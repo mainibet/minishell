@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 07:28:27 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/09 07:47:07 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/09 08:17:45 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,17 @@
 
 t_token	*join_tokens(t_token *a, t_token *b)
 {
-	if (!a) return b;
-	if (!b) return a;
+	size_t	len_a;
+	size_t	len_b;
+	char	*joined;
 
-	size_t	len_a = strlen(a->txt);
-	size_t	len_b = strlen(b->txt);
-
-	char	*joined = malloc(len_a + len_b + 1);
+	if (!a)
+		return (b);
+	if (!b)
+		return (a);
+	len_a = strlen(a->txt);
+	len_b = strlen(b->txt);
+	joined = malloc(len_a + len_b + 1);
 	if (!joined) 
 	{
 		free_token(b);
@@ -28,45 +32,37 @@ t_token	*join_tokens(t_token *a, t_token *b)
 	}
 	strcpy(joined, a->txt);
 	strcat(joined, b->txt);
-
 	free(a->txt);
 	a->txt = joined;
-
-	// preserve the rest of b's chain
-	t_token *b_next = b->next;
+	a->next = b->next;
 	free(b->txt);
 	free(b);
-	a->next = b_next;
-	return a;
+	return (a);
 }
 
-
-t_token	*lex_quoted(char *s, char quote)
+//find the end of the quoted str
+// skip escape in double quotes
+static char	*find_quote_end(char *start, char quote)
 {
-	t_token	*token;
-	t_token	*next;
-	char	*start = s;
-	char	*end = s;
-	char	*rest;
+	char	*end;
 
+	end = start;
 	while (*end && *end != quote)
 	{
-		if (quote == '"' && *end == '\\' && (*(end + 1) == '"' || *(end + 1) == '$' || *(end + 1) == '\\'))
-			end += 2; // skip escape in double quotes
+		if (quote == '"' && *end == '\\' && (*(end + 1) == '"'
+				|| *(end + 1) == '$' || *(end + 1) == '\\'))
+			end += 2;
 		else
 			end++;
 	}
-	if (!*end)
-	{
-		perror("Unclosed quote");
-		return (NULL);
-	}
-	token = extract_token(start, end - start);
-	if (!token)
-		return (NULL);
-	token->type = (quote == '\'') ? SINGLE_Q : DOUBLE_Q;
-	rest = end + 1;
-	// Check for adjacent token without whitespace
+	return (end);
+}
+
+//processes adjacent token without spaces and joins it to the current token
+static t_token	*handle_adj_token(t_token *token, char *rest)
+{
+	t_token	*next;
+
 	if (*rest && !ft_isspace(*rest) && !is_operator_char(*rest))
 	{
 		if (*rest == '\'' || *rest == '"')
@@ -76,7 +72,7 @@ t_token	*lex_quoted(char *s, char quote)
 
 		if (!next)
 		{
-			free_token(token);//new
+			free_token(token);
 			return (NULL);
 		}
 
@@ -85,5 +81,28 @@ t_token	*lex_quoted(char *s, char quote)
 	else
 		token->next = lex(consume_whitespace(rest), ' ');
 	return (token);
+}
+
+t_token	*lex_quoted(char *s, char quote)
+{
+	t_token	*token;
+	char	*end;
+	char	*rest;
+
+	end = find_quote_end(s, quote);
+	if (!*end)
+	{
+		perror("Unclosed quote");
+		return (NULL);
+	}
+	token = extract_token(s, end - s);
+	if (!token)
+		return (NULL);
+	if (quote == '\'')
+		token->type = SINGLE_Q;
+	else
+		token->type = DOUBLE_Q;
+	rest = end + 1;
+	return (handle_adj_token(token, rest));
 }
 
