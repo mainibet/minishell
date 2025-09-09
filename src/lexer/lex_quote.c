@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 07:28:27 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/09 08:17:45 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:27:33 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,11 @@ static t_token	*handle_adj_token(t_token *token, char *rest)
 			next = lex_quoted(rest + 1, *rest);
 		else
 			next = lex_unquoted(rest);
-
 		if (!next)
 		{
 			free_token(token);
 			return (NULL);
 		}
-
 		token = join_tokens(token, next);
 	}
 	else
@@ -105,4 +103,3 @@ t_token	*lex_quoted(char *s, char quote)
 	rest = end + 1;
 	return (handle_adj_token(token, rest));
 }
-

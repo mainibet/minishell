@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:57:29 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/09 08:40:31 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:32:18 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,16 @@ char	*consume_whitespace(char *head_token)
 }
 
 // Detect multi-char operators
-static t_token *lex_operator(char *s)
+static t_token	*lex_operator(char *s)
 {
 	size_t	op_len;
-	t_token *token;
+	t_token	*token;
 
 	op_len = 1;
-
-	if ((*s == '|' && *(s+1) == '|') || 
-			(*s == '&' && *(s+1) == '&') ||
-			(*s == '>' && *(s+1) == '>') ||
-			(*s == '<' && *(s+1) == '<'))
+	if ((*s == '|' && *(s + 1) == '|') 
+		|| (*s == '&' && *(s + 1) == '&') 
+		|| (*s == '>' && *(s + 1) == '>') 
+		|| (*s == '<' && *(s + 1) == '<'))
 		op_len = 2;
 	token = extract_token(s, op_len);
 	if (!token)
@@ -53,23 +52,7 @@ t_token	*lex(char *s, char delim)
 	if (*s == '\'' || *s == '"')
 		return (lex_quoted(s + 1, *s));
 	else if (is_operator_char(*s))
-        return lex_operator(s);
-	// {
-		// op_len = 1;
-		// // Detect multi-char operators
-		// if ((*s == '|' && *(s+1) == '|') || 
-		// 		(*s == '&' && *(s+1) == '&') ||
-		// 		(*s == '>' && *(s+1) == '>') ||
-		// 		(*s == '<' && *(s+1) == '<'))
-		// 	op_len = 2;
-
-		// t_token *token = extract_token(s, op_len);
-		// if (!token)
-		// 	return (NULL);
-		// token->type = token_type(token->txt);
-		// token->next = lex(consume_whitespace(s + op_len), ' ');
-		// return (token);
-	// }
+		return (lex_operator(s));
 	else
 		return (lex_unquoted(s));
 }
