@@ -72,3 +72,17 @@ int	is_operator_token(t_token *token)
 		return (1);
 	return (0);
 }
+
+t_token	*skip_redirs(t_token *tok)
+{
+	if (!tok)
+		return (NULL);
+	if (tok->type == REDIR_IN || tok->type == REDIR_OUT
+		|| tok->type == APPEND || tok->type == HEREDOC)
+	{
+		if (tok->next)
+			return (tok->next->next);
+		return (tok->next);
+	}
+	return (tok);
+}

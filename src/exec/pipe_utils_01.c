@@ -25,38 +25,14 @@ void	close_all_pipes(int (*pipes)[2], int n)
 	}
 }
 
-void	child_process_pipe(t_node *node, int i, int n_cmds, int (*pipes)[2],
-		t_program *prog)
+void	child_process_pipe(t_node *node, t_pipe_ctx *ctx, t_program *prog)
 {
 	t_cmd_data	*cmd;
-	int			j;
 
-	j = 0;
 	cmd = &node->u_data.cmd;
-	cmd->pipefd[0] = -1;
-	cmd->pipefd[1] = -1;
-	if (i > 0 && !has_redir_in(cmd->redir))
-		cmd->pipefd[0] = pipes[i - 1][0];
-	if (i < n_cmds - 1 && !has_redir_out(cmd->redir))
-		cmd->pipefd[1] = pipes[i][1];
-	if (pipes)
-	{
-		while (j < n_cmds - 1)
-		{
-			if (cmd->pipefd[0] != pipes[j][0])
-				close(pipes[j][0]);
-			if (cmd->pipefd[1] != pipes[j][1])
-				close(pipes[j][1]);
-			j++;
-		}
-	}
-	if (cmd->redir && process_redir(cmd, prog) != 0)
-		exit(1);
-	set_final_fds(cmd);
-	if (is_builtin(node->u_data.cmd.argv[0]))
-		exit(execute_builtin(prog, node, true));
-	exec_cmd_inchild(node);
-	exit(EXIT_FAILURE);
+	init_cmd_pipefds(cmd, ctx->idx, ctx->n_cmds, ctx->pipes);
+	close_unused_pipes(cmd, ctx->n_cmds, ctx->pipes);
+	perform_exec(node, prog, cmd);
 }
 
 int	wait_children_pipe(pid_t *pids, int n_cmds)
@@ -99,11 +75,11 @@ t_node	**alloc_cmds(t_node *root, int n_cmds)
 	return (cmds);
 }
 
-int (*alloc_pipes_and_open(int n_pipes))[2]
+int	(*alloc_pipes_and_open(int n_pipes))[2]
 {
-	int(*pipes)[2];
+	int	(*pipes)[2];
 
-	pipes = malloc(sizeof(int[2]) * n_pipes);
+	pipes = malloc (sizeof (int [2]) * n_pipes);
 	if (!pipes)
 		return (NULL);
 	if (open_pipes(pipes, n_pipes) == -1)

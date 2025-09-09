@@ -40,12 +40,16 @@ int	count_pipeline_nodes(t_node *node);
 void	collect_pipeline_nodes(t_node *node, t_node **arr, int *idx);
 int	open_pipes(int (*pipes)[2], int n);
 void	close_all_pipes(int (*pipes)[2], int n);
-void	child_process_pipe(t_node *node, int i, int n_cmds,
-			int (*pipes)[2], t_program *prog);
+void	init_cmd_pipefds(t_cmd_data *cmd, int i, int n_cmds, int (*pipes)[2]);
+void	close_unused_pipes(t_cmd_data *cmd, int n_cmds, int (*pipes)[2]);
+void	perform_exec(t_node *node, t_program *prog, t_cmd_data *cmd);
+void	child_process_pipe(t_node *node, t_pipe_ctx *ctx, t_program *prog);
 int	wait_children_pipe(pid_t *pids, int n_cmds);
 t_node	**alloc_cmds(t_node *root, int n_cmds);
 int	(*alloc_pipes_and_open(int n_pipes))[2]; 
+void	free_resources(t_node **cmds, int (*pipes)[2], pid_t *pids);
 int	execute_pipefile(t_program *program, t_node *node);
+int	is_redir_token(t_token *tok);
 
 
 // --- EXECUTION --- //
@@ -54,6 +58,8 @@ int	execute_pipefile(t_program *program, t_node *node);
 // int		setup_redir(int fd_in, int fd_out, t_fd_dup *dup);
 int	is_operator_token(t_token *token);
 int		ft_count_words(const char *str);
+t_token	*skip_redirs(t_token *tok);
+int	copy_word(char **argv, t_token *tok, int i);
 void		free_partial_arr(char **arr, int allocated_i);
 int		count_tokens(t_token *token);
 int		execution(t_program *program, t_node *node, bool is_pipe_child);

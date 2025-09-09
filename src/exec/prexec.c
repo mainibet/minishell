@@ -12,25 +12,19 @@
 
 #include "minishell.h"
 
-static int	count_cmd_tokens(t_token *token)
+static int	count_cmd_tokens(t_token *tok)
 {
 	int	count;
 
 	count = 0;
-	while (token && !is_operator_token(token))
+	while (tok && !is_operator_token(tok))
 	{
-		if (token->type == REDIR_IN || token->type == REDIR_OUT
-			|| token->type == APPEND || token->type == HEREDOC)
-		{
-			if (token->next)
-				token = token->next->next;
-			else
-				token = token->next;
-		}
+		if (is_redir_token(tok))
+			tok = skip_redirs(tok);
 		else
 		{
 			count++;
-			token = token->next;
+			tok = tok->next;
 		}
 	}
 	return (count);
@@ -38,31 +32,20 @@ static int	count_cmd_tokens(t_token *token)
 
 static int	cpy_token_str(char **argv, t_token *token)
 {
-	t_token	*current_token;
+	t_token	*cur;
 	int		i;
 
-	current_token = token;
+	cur = token;
 	i = 0;
-	while (current_token && !is_operator_token(current_token))
+	while (cur && !is_operator_token(cur))
 	{
-		if (current_token->type == REDIR_IN || current_token->type == REDIR_OUT
-			|| current_token->type == APPEND || current_token->type == HEREDOC)
-		{
-			if (current_token->next)
-				current_token = current_token->next->next;
-			else
-				current_token = current_token->next;
-		}
+		if (is_redir_token(cur))
+			cur = skip_redirs(cur);
 		else
 		{
-			argv[i] = ft_strdup(current_token->txt);
-			if (!argv[i])
-			{
-				perror("Failed ft_strdup token to argv");
-				free_partial_arr(argv, i);
+			if (copy_word(argv, cur, i) != 0)
 				return (1);
-			}
-			current_token = current_token->next;
+			cur = cur->next;
 			i++;
 		}
 	}
