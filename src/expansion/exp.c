@@ -1,18 +1,5 @@
 #include "expansion.h"
 
-// static char	*get_env_value(const char *var)
-// {
-// 	char	*val;
-//
-// 	val = getenv(var);
-// 	if (!val)
-// 		return ft_strdup("");
-// 	return ft_strdup(val);
-// }
-
-
-
-// search for a variable "VAR" in envp_cpy and return its value
 static char *get_env_value(const char *var, char **envp_cpy)
 {
     int i = 0;
