@@ -6,54 +6,92 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 07:27:39 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/09 07:36:02 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/09 08:29:53 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int is_operator_char(char c)
+int	is_operator_char(char c)
 {
-	return (c == '|' || c == '&' || c == '>' || c == '<' || c == ';' || c == '(' || c == ')');
+	return (c == '|' || c == '&'
+		|| c == '>' || c == '<' || c == ';' || c == '(' || c == ')');
 }
 
-enum e_toktype token_type(char *s)
+// Checks multi-character operators
+static enum e_toktype	multi_char_operator(char *s)
 {
-	if (!s || !*s)
-		return WORD; // empty or null string -> treat as WORD
-
-	// Multi-character operators (check length first)
 	if (s[0] == '|' && s[1] && s[1] == '|')
-		return OR;
+		return (OR);
 	if (s[0] == '&' && s[1] && s[1] == '&')
-		return AND;
+		return (AND);
 	if (s[0] == '>' && s[1] && s[1] == '>')
-		return APPEND;
+		return (APPEND);
 	if (s[0] == '<' && s[1] && s[1] == '<')
-		return HEREDOC;
+		return (HEREDOC);
+	return (WORD);
+}
+
+// Checks single-character operators
+static enum e_toktype	single_char_operator(char c)
+{
+	if (c == '|')
+		return (PIPE);
+	if (c == ';')
+		return (SEMICOLON);
+	if (c == '>')
+		return (REDIR_OUT);
+	if (c == '<')
+		return (REDIR_IN);
+	if (c == '(')
+		return (OPEN);
+	if (c == ')')
+		return (CLOSE);
+	return (WORD);
+}
+
+// empty or null string -> treat as WORD
+enum e_toktype	token_type(char *s)
+{
+	enum e_toktype	type;
+
+	if (!s || !*s)
+		return (WORD);
+
+	// if (s[0] == '|' && s[1] && s[1] == '|')
+	// 	return (OR);
+	// if (s[0] == '&' && s[1] && s[1] == '&')
+	// 	return (AND);
+	// if (s[0] == '>' && s[1] && s[1] == '>')
+	// 	return (APPEND);
+	// if (s[0] == '<' && s[1] && s[1] == '<')
+	// 	return (HEREDOC);
 
 	// Single-character operators
-	if (s[0] == '|')
-		return PIPE;
-	if (s[0] == ';')
-		return SEMICOLON;
-	if (s[0] == '>')
-		return REDIR_OUT;
-	if (s[0] == '<')
-		return REDIR_IN;
-	if (s[0] == '(')
-		return OPEN;
-	if (s[0] == ')')
-		return CLOSE;
-
+	// if (s[0] == '|')
+	// 	return PIPE;
+	// if (s[0] == ';')
+	// 	return SEMICOLON;
+	// if (s[0] == '>')
+	// 	return REDIR_OUT;
+	// if (s[0] == '<')
+	// 	return REDIR_IN;
+	// if (s[0] == '(')
+	// 	return OPEN;
+	// if (s[0] == ')')
+	// 	return CLOSE;
+	type = multi_char_operator(s);
+	if (type != WORD)
+		return (type);
+	type = single_char_operator(s[0]);
+	if (type != WORD)
+		return (type);
 	// Quotes
 	if (s[0] == '\'')
-		return SINGLE_Q;
+		return (SINGLE_Q);
 	if (s[0] == '"')
-		return DOUBLE_Q;
-
-	// Default fallback
-	return WORD;
+		return (DOUBLE_Q);
+	return (WORD);
 }
 
 t_token	*extract_token(char *s, size_t size)
