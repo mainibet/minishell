@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:57:29 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/09 16:30:51 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:26:12 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,14 @@ static t_token	*lex_operator(char *s)
 	if (!token)
 		return (NULL);
 	token->type = token_type(token->txt);
-	token->next = lex(consume_whitespace(s + op_len));
+	token->next = lex(consume_whitespace(s + op_len), ' ');
 	return (token);
 }
 
 // Check Quoted string
-t_token	*lex(char *s)
+t_token	*lex(char *s, char *delim)
 {
+	(void) delim;
 	if (!s || !*s)
 		return (NULL);
 	s = consume_whitespace(s);
