@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 09:52:44 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/10 08:31:49 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,13 @@
 //              COMMON MACROS               //
 // -----------------------------------------//
 
-//include them here if needed 
-//#define MAX_ARGS 256 //checkif needed
-#define BUFFER_SIZE 1024//to read from command line, from fd or from here_doc
-                          //check if the buffer size is ok or if we want to chang it
+//to read from command line, from fd or from here_doc
+#define BUFFER_SIZE 1024
 
 // -----------------------------------------//
 //        STANDARD HEADERS (COMMON)         //
 // -----------------------------------------//
-//STDIO.H FOR: printf, perror
-//STDLIB.H FOR: malloc, free, exit, getenv
-//UNISTD.H FOR: read, write, access and others
-//may be here also later: sys/wait, sys/types: size_t, pid_t, strings.h
+
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -48,7 +43,7 @@
 # include "structs.h"
 # include "colors.h"
 # include "debug.h"
-# include "cleanup_fd.h"
+# include "cleanup.h"
 # include "lexer.h"
 # include "parser.h"
 # include "prexec.h"
@@ -68,17 +63,5 @@
 // --- PROGRAM INITIALIZATION --- //
 void	init_program(t_program *program, char **envp);
 
-// --- ERRORS_CLEAN-UP --- //
-int		cleanup_fd(t_node *node, t_nodetype type);
-int		cleanup_cmd_node(t_node *node);
-int		cleanup_operator_fd(t_node *node);
-void	cleanup_program(t_program *program);
-void	free_node(t_node *node);
-void	free_token(t_token *token);
-void	free_redirs(t_redir *redir);
-void	free_cmd_arg(t_node *node);
-void	free_ast_tokens(t_program *program);
 
-// ---PRINT AST TREE --- //
-void	print_ast(t_node *node, int level);
 #endif
