@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleanup_fd.c                                       :+:      :+:    :+:   */
+/*   cleanup_token.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpandya <tpandya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/01 15:42:30 by tpandya           #+#    #+#             */
-/*   Updated: 2025/09/01 15:43:14 by tpandya          ###   ########.fr       */
+/*   Created: 2025/09/10 08:24:19 by albetanc          #+#    #+#             */
+/*   Updated: 2025/09/10 08:29:19 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cleanup_fd.h"
 #include "minishell.h"
 
-void	cleanup_fds(t_cmd_data *cmd)
+void	free_token(t_token *token)
 {
-	fflush(stdout);
-	if (cmd->fd_in != STDIN_FILENO && cmd->fd_in >= 0)
-	{
-		close_fd(&cmd->fd_in);
-	}
-	if (cmd->fd_out != STDOUT_FILENO && cmd->fd_out >= 0)
-	{
-		close_fd(&cmd->fd_out);
-	}
+	if (token->next)
+		free_token(token->next);
+	free(token->txt);
+	free(token);
+}
+
+void	free_token_list(t_program *program)
+{
+	free_token(program->token_list);
+	program->token_list = NULL;
 }
