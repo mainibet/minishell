@@ -1,3 +1,4 @@
+MAKEFLAGS += --no-print-directory -s
 CC = cc
 # -g is to debug
 # -lreadline to link with the readline library
@@ -19,29 +20,25 @@ all: $(NAME)
 
 # Link object files and libft to create the executable
 $(NAME): $(OBJ) $(LIBFT_LIB)
-	$(CC) $(CFLAGS) $(OBJ) -o $@ -L$(LIBFT_DIR) -lft -lreadline
-
-# debug rule
-debug: CFLAGS += -DDEBUG
-debug : $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) -o $@ -L$(LIBFT_DIR) -lft -lreadline
 
 # Rule to build libft if it doesn't exist
 $(LIBFT_LIB): $(LIBFT_DIR)/Makefile
-	$(MAKE) -C $(LIBFT_DIR)
+	@$(MAKE) -C $(LIBFT_DIR)
 
 #The obj dir will be created if it doesn't exist
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@) 
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(MAKE) -C $(LIBFT_DIR) clean
-	rm -rf $(OBJ_DIR)
+	@$(MAKE) -C $(LIBFT_DIR) clean
+	@rm -rf $(OBJ_DIR)
 
 fclean: clean
-	$(MAKE) -C $(LIBFT_DIR) fclean
-	rm -f $(NAME)
-	rm -rf $(OBJ_DIR)
+	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@rm -f $(NAME)
+	@rm -rf $(OBJ_DIR)
 
 re: fclean all
 
