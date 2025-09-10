@@ -15,18 +15,17 @@
 
 # include "minishell.h"
 
-extern	sig_atomic_t g_signal_value;
+extern sig_atomic_t	g_signal_value;
 
 // Public signal handler functions
-void	sigint_prompt(int signum);
-void	sigint_prompt_heredoc(int signum);
-void	sigint_heredoc(int signum);
+void				sigint_prompt(int signum);
+void				sigint_prompt_heredoc(int signum);
+void				sigint_heredoc(int signum);
 
 // Public signal control functions
-void	set_signal_handler(int signum, void (*handler)(int));
-void	set_signal_prompt(int in_heredoc);
-void	set_signal_child_process(void);
-void	set_signal_heredoc(void);
-
+void				set_signal_handler(int signum, void (*handler)(int));
+void				set_signal_prompt(int in_heredoc);
+void				set_signal_child_process(void);
+void				set_signal_heredoc(void);
 
 #endif

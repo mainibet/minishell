@@ -17,23 +17,23 @@
 //              COMMON MACROS               //
 // -----------------------------------------//
 
-//to read from command line, from fd or from here_doc
-#define BUFFER_SIZE 1024
+// to read from command line, from fd or from here_doc
+# define BUFFER_SIZE 1024
 
 // -----------------------------------------//
 //        STANDARD HEADERS (COMMON)         //
 // -----------------------------------------//
 
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <signal.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <unistd.h>
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <signal.h>
 # include <sys/ioctl.h>
+# include <sys/wait.h>
 # include <termios.h>
-# include <stdbool.h>
+# include <unistd.h>
 
 // -----------------------------------------//
 //             MODULE HEADERS               //
@@ -41,20 +41,19 @@
 
 # include "../libft/libft.h"
 # include "structs.h"
-# include "colors.h"
-# include "debug.h"
+# include "builtin.h"
 # include "cleanup.h"
+# include "colors.h"
+# include "exec.h"
+# include "expansion.h"
+# include "export.h"
+# include "heredoc.h"
 # include "lexer.h"
 # include "parser.h"
 # include "prexec.h"
-# include "exec.h"
 # include "redir.h"
-# include "builtin.h"
-# include "expansion.h"
-# include "export.h"
-# include "unset.h"
 # include "signall.h"
-# include "heredoc.h"
+# include "unset.h"
 
 // -----------------------------------------//
 //                PROTOTYPES                //
@@ -62,6 +61,5 @@
 
 // --- PROGRAM INITIALIZATION --- //
 void	init_program(t_program *program, char **envp);
-
 
 #endif

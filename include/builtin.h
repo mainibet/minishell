@@ -15,10 +15,9 @@
 
 # include "minishell.h"
 
-
 typedef enum e_builtin_type
 {
-	BUILTIN_NONE = 0,//default if is not
+	BUILTIN_NONE = 0,
 	BUILTIN_ECHO,
 	BUILTIN_CD,
 	BUILTIN_PWD,
@@ -26,7 +25,7 @@ typedef enum e_builtin_type
 	BUILTIN_UNSET,
 	BUILTIN_ENV,
 	BUILTIN_EXIT,
-}	t_builtin_type;
+}		t_builtin_type;
 
 // -----------------------------------------//
 //                PROTOTYPES                //
@@ -45,8 +44,8 @@ void	update_env_var(t_program *program, const char *key, const char *value);
 int		my_export(t_program *program, t_node *node);
 void	my_exit(t_program *program, t_node *node);
 int		my_cd(t_program *program, t_node *node);
-void	update_free_paths(t_program *program,
-			char *old_pwd, char *new_cwd, char *dest_path);
+void	update_free_paths(t_program *program, char *old_pwd, char *new_cwd,
+			char *dest_path);
 int		handle_env_path(t_program *program, char *key, char **dest_path);
 int		handle_cwd_error(char *dest_path);
 

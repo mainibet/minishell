@@ -20,7 +20,8 @@
 // -----------------------------------------//
 
 t_redir_type	map_type(t_toktype token_type);
-t_redir			*create_redir_node(char *target, enum e_redir_type type, bool quoted);
+t_redir			*create_redir_node(char *target, enum e_redir_type type,
+					bool quoted);
 void			add_redir(t_redir **list, t_redir *new_redir);
 int				open_redir_filename(t_redir *redir);
 int				process_redir(t_cmd_data *cmd, t_program *program);

@@ -26,8 +26,8 @@ int		process_cmd_tokens(t_token *token, t_cmd_data *cmd_data);
 // --- Parse cmd helpers ---//
 int		validate_word_token(t_token *token);
 int		validate_redir_target(t_token *current);
-int		handle_miss_cmd(t_cmd_data *cmd_data,
-			t_token *cmd_tokens, bool has_cmd);
+int		handle_miss_cmd(t_cmd_data *cmd_data, t_token *cmd_tokens,
+			bool has_cmd);
 
 // --- Node creation --- //
 t_node	*parse_command(t_token *token);

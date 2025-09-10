@@ -26,7 +26,6 @@ t_node	*parse_command(t_token *token)
 	if (process_cmd_tokens(token, &node->u_data.cmd) != 0)
 	{
 		free_node(node);
-		DEBUG_ERROR("[ERROR] parse_command: failed to process tokens\n");
 		return (NULL);
 	}
 	return (node);

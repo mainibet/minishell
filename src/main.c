@@ -30,7 +30,6 @@ t_node	*token_parser_input(char *line, t_token **token_out, t_program *program)
 	root = parse(parser_tokens);
 	if (!root)
 	{
-		DEBUG_ERROR("[ERROR] Parsing failed\n");
 		free_token(token_list);
 		*token_out = NULL;
 		return (NULL);
