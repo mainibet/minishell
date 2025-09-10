@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:20:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/10 08:43:20 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/10 08:50:53 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,6 @@ void	free_ast(t_program *program)
 	free_node(program->root);
 	program->root = NULL;
 }
-
-// void	free_token_list(t_program *program)
-// {
-// 	free_token(program->token_list);
-// 	program->token_list = NULL;
-// }
 
 void	free_env_cpy(t_program *program)
 {

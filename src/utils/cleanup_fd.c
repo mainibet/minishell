@@ -6,12 +6,15 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 15:42:30 by tpandya           #+#    #+#             */
-/*   Updated: 2025/09/10 08:47:00 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/10 08:50:58 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//This function is a low-level utility that 
+//closes a command's specific file descriptors,
+//such as those used for redirections.
 void	cleanup_fds(t_cmd_data *cmd)
 {
 	fflush(stdout);
@@ -21,6 +24,9 @@ void	cleanup_fds(t_cmd_data *cmd)
 		close_fd(&cmd->fd_out);
 }
 
+//This is a high-level function that directs
+//the cleanup process based on the node's type
+//in the abstract syntax tree (AST).
 int	cleanup_fd(t_node *node, t_nodetype type)
 {
 	if (!node)
