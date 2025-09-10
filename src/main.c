@@ -58,6 +58,11 @@ static void	process_cmdline(t_program *program, char *line)
 		return ;
 	pre_execution(program, root);
 	program->last_exit_status = execution(program, root, false);
+	if (g_signal_value == SIGINT)
+	{
+		program->last_exit_status = 130;
+		g_signal_value = 0;
+	}
 	free_ast_tokens(program);
 }
 
