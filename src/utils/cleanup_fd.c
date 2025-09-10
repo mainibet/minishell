@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 15:42:30 by tpandya           #+#    #+#             */
-/*   Updated: 2025/09/10 08:38:50 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/10 08:47:00 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,3 @@ int	cleanup_operator_fd(t_node *node)
 		cleanup_cmd_node(node);
 	return (0);
 }
-
