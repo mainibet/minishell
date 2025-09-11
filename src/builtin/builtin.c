@@ -48,7 +48,6 @@ static int	dispatch_builtin(t_program *program,
 		return (my_unset(program, node));
 	else if (type == BUILTIN_EXIT)
 		my_exit(program, node);
-	fprintf(stderr, BOLD RED "Error: unknown builtin\n" RESET);
 	return (1);
 }
 
