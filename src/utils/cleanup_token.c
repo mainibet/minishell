@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 08:24:19 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/10 08:29:19 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/10 16:48:34 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	free_token(t_token *token)
 {
+	if (!token)
+		return ;
 	if (token->next)
 		free_token(token->next);
 	free(token->txt);

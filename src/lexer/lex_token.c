@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 07:27:39 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/09 08:31:08 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/10 16:52:32 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,12 @@
 
 int	is_operator_char(char c)
 {
-	return (c == '|' || c == '&'
-		|| c == '>' || c == '<' || c == ';' || c == '(' || c == ')');
+	return (c == '|' || c == '>' || c == '<');
 }
 
 // Checks multi-character operators
 static enum e_toktype	multi_char_operator(char *s)
 {
-	if (s[0] == '|' && s[1] && s[1] == '|')
-		return (OR);
-	if (s[0] == '&' && s[1] && s[1] == '&')
-		return (AND);
 	if (s[0] == '>' && s[1] && s[1] == '>')
 		return (APPEND);
 	if (s[0] == '<' && s[1] && s[1] == '<')
@@ -37,16 +32,10 @@ static enum e_toktype	single_char_operator(char c)
 {
 	if (c == '|')
 		return (PIPE);
-	if (c == ';')
-		return (SEMICOLON);
 	if (c == '>')
 		return (REDIR_OUT);
 	if (c == '<')
 		return (REDIR_IN);
-	if (c == '(')
-		return (OPEN);
-	if (c == ')')
-		return (CLOSE);
 	return (WORD);
 }
 

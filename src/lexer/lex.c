@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:57:29 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/09 17:28:13 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/10 16:52:39 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,7 @@ static t_token	*lex_operator(char *s)
 	t_token	*token;
 
 	op_len = 1;
-	if ((*s == '|' && *(s + 1) == '|') 
-		|| (*s == '&' && *(s + 1) == '&') 
-		|| (*s == '>' && *(s + 1) == '>') 
+	if ((*s == '>' && *(s + 1) == '>') 
 		|| (*s == '<' && *(s + 1) == '<'))
 		op_len = 2;
 	token = extract_token(s, op_len);
