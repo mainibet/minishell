@@ -41,10 +41,7 @@ char	*create_path(char *dir, char *argv)
 	file_path = ft_strjoin(each_path, argv);
 	free(each_path);
 	if (!file_path)
-	{
-		free(dir);
 		return (NULL);
-	}
 	return (file_path);
 }
 

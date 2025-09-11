@@ -14,12 +14,18 @@
 
 void	free_token(t_token *token)
 {
+	t_token	*next;
+
 	if (!token)
 		return ;
-	if (token->next)
-		free_token(token->next);
-	free(token->txt);
-	free(token);
+	while (token)
+	{
+		next = token->next;
+		if (token->txt)
+			free(token->txt);
+		free(token);
+		token = next;
+	}
 }
 
 void	free_token_list(t_program *program)
