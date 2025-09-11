@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/09 17:23:58 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/11 17:42:45 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ t_node	*token_parser_input(char *line, t_token **token_out, t_program *program)
 
 static void	process_cmdline(t_program *program, char *line)
 {
-	t_token	*token_list;
 	t_node	*root;
 
 	if (!line)

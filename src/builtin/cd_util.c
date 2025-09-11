@@ -6,17 +6,11 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 14:04:53 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/19 16:53:05 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/11 17:43:38 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	free_old_dest(char *old_pwd, char *dest_path)
-{
-	free(old_pwd);
-	free(dest_path);
-}
 
 int	handle_cwd_error(char *dest_path)
 {

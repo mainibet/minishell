@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpandya <tpandya@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:22:09 by tpandya           #+#    #+#             */
-/*   Updated: 2025/09/09 18:22:11 by tpandya          ###   ########.fr       */
+/*   Updated: 2025/09/11 18:03:36 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int	redir_out(int fd)
 {
 	if (fd >= 0)
 	{
-		fflush(stdout);
 		if (dup2(fd, STDOUT_FILENO) == -1)
 		{
 			perror("dup2 redir_out");
@@ -48,8 +47,10 @@ int	redir_out(int fd)
 int	setup_redir(t_cmd_data *cmd)
 {
 	if (cmd->fd_in != STDIN_FILENO && cmd->fd_in >= 0)
+	{
 		if (redir_in(cmd->fd_in) != 0)
 			return (1);
+	}
 	else if (cmd->pipefd[0] >= 0)
 	{
 		if (redir_in(cmd->pipefd[0]) != 0)
@@ -57,8 +58,10 @@ int	setup_redir(t_cmd_data *cmd)
 		close_fd(&cmd->pipefd[0]);
 	}
 	if (cmd->fd_out != STDOUT_FILENO && cmd->fd_out >= 0)
+	{
 		if (redir_out(cmd->fd_out) != 0)
 			return (1);
+	}
 	else if (cmd->pipefd[1] >= 0)
 	{
 		if (redir_out(cmd->pipefd[1]) != 0)
