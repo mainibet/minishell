@@ -54,7 +54,7 @@ void	add_token(t_token **list, t_token *new_token)
 	tmp->next = new_token;
 }
 
-int	process_tokens_loop(t_token *token, t_cmd_data *cmd_data,
+int	process_tokens_loop(t_program *program, t_token *token, t_cmd_data *cmd_data,
 				t_token **cmd_tokens)
 {
 	t_token	*current;
@@ -66,7 +66,7 @@ int	process_tokens_loop(t_token *token, t_cmd_data *cmd_data,
 		if (current->type == REDIR_IN || current->type == REDIR_OUT
 			|| current->type == APPEND || current->type == HEREDOC)
 		{
-			if (split_cmd_arg(&current, cmd_data) != 0)
+			if (split_cmd_arg(program, &current, cmd_data) != 0)
 				return (1);
 			continue ;
 		}
