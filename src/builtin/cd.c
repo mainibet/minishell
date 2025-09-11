@@ -39,7 +39,7 @@ static int	get_old_pwd(char **old_pwd, char *dest_path)
 	if (!*old_pwd)
 	{
 		// fprintf(stderr, RED BOLD "cd: getcwd error to get path\n" RESET);
-		perror(cd);
+		perror("cd");
 		*old_pwd = NULL;
 	}
 	return (0);
