@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:34:47 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 18:46:52 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/11 17:41:28 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,7 @@ int		process_tokens_loop(t_token *token, t_cmd_data *cmd_data,
 
 // --- Arguments --- //
 int		split_cmd_arg(t_token **current, t_cmd_data *cmd_data);
+int		validate_pipe_token(t_token *current, t_token *first);//new
+void	error_split_arg(t_token *current);
 
 #endif
