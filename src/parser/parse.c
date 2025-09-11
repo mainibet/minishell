@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:35:57 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 17:51:46 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/11 08:47:59 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ static int	precedence(t_token *token)
 {
 	if (!token)
 		return (0);
-	if (token->type == SEMICOLON)
-		return (1);
-	if (token->type == AND || token->type == OR)
-		return (2);
+	// if (token->type == SEMICOLON)
+	// 	return (1);
+	// if (token->type == AND || token->type == OR)
+	// 	return (2);
 	if (token->type == PIPE)
 		return (3);
 	return (0);
