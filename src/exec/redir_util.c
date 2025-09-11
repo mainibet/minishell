@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 13:33:32 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/28 17:11:34 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/11 17:42:12 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ void	add_redir(t_redir **list, t_redir *new_redir)
 int	open_redir_filename(t_redir *redir)
 {
 	int		open_flags;
-	char	*dir_path;
 
 	if (redir->type == RED_IN)
 		open_flags = O_RDONLY;
