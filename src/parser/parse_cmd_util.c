@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:11:26 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 18:47:42 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/11 08:50:11 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,7 @@ int	validate_redir_target(t_token *current)
 {
 	if (!current->next)
 	{
-		fprintf(stderr, BOLD RED
-			"Syntax error: Missing redirection target after '%s'\n"
-			RESET, current->txt);
+		error_split_arg(current);
 		return (1);
 	}
 	if (current->next->type == REDIR_IN
@@ -39,9 +37,7 @@ int	validate_redir_target(t_token *current)
 		|| current->next->type == APPEND
 		|| current->next->type == HEREDOC)
 	{
-		fprintf(stderr, BOLD RED
-			"Syntax error: Unexpected redirection operator '%s'"
-			" after '%s'\n" RESET, current->next->txt, current->txt);
+		error_split_arg(current);
 		return (1);
 	}
 	return (0);
