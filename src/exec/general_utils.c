@@ -70,3 +70,9 @@ int	setup_redir(t_cmd_data *cmd)
 	}
 	return (0);
 }
+
+	{
+	if (!msg)
+		return ;
+	write(STDERR_FILENO, msg, ft_strlen(msg));
+}
