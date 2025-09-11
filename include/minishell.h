@@ -61,5 +61,6 @@
 
 // --- PROGRAM INITIALIZATION --- //
 void	init_program(t_program *program, char **envp);
+void	ft_print_error(const char *msg);
 
 #endif
