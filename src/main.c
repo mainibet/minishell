@@ -21,7 +21,6 @@ t_node	*token_parser_input(char *line, t_token **token_out, t_program *program)
 	token_list = lex(line, ' ');
 	if (!token_list)
 	{
-		fprintf(stderr, BOLD RED "Lexing failed or empty imput\n" RESET);
 		*token_out = NULL;
 		return (NULL);
 	}

@@ -71,7 +71,8 @@ int	setup_redir(t_cmd_data *cmd)
 	return (0);
 }
 
-	{
+void	ft_print_error(const char *msg)
+{
 	if (!msg)
 		return ;
 	write(STDERR_FILENO, msg, ft_strlen(msg));

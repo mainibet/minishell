@@ -52,7 +52,8 @@ int	handle_env_path(t_program *program, char *key, char **dest_path)
 	*dest_path = ft_strdup(tmp_path);
 	if (!*dest_path)
 	{
-		fprintf(stderr, RED BOLD "cd: memory error in handl env path\n" RESET);
+		// fprintf(stderr, RED BOLD "cd: memory error in handl env path\n" RESET);
+		perror("cd");
 		return (1);
 	}
 	return (0);
