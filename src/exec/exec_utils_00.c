@@ -16,6 +16,7 @@ int	handle_operator(t_program *program, t_node *node, bool is_pipe_child)
 {
 	int	left_status;
 
+	(void)is_pipe_child;
 	if (node->u_data.op.type == PIPE)
 		return (execute_pipefile(program, node));
 	else if (node->u_data.op.type == AND)
