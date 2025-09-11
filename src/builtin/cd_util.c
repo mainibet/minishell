@@ -14,6 +14,7 @@
 
 int	handle_cwd_error(char *dest_path)
 {
+	(void)dest_path;
 	fprintf(stderr, RED BOLD "cd: getcwd error to get path\n" RESET);
 	return (1);
 }

@@ -17,6 +17,7 @@ int	my_pwd(t_program *program, t_node *node)
 	char	*cwd_path;
 
 	(void)node;
+	(void)program;
 	cwd_path = getcwd(NULL, 0);
 	if (cwd_path)
 	{
