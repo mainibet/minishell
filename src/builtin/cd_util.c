@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 14:04:53 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/11 17:43:38 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 08:02:08 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	handle_cwd_error(char *dest_path)
 {
 	(void)dest_path;
-	fprintf(stderr, RED BOLD "cd: getcwd error to get path\n" RESET);
+	perror("cd");
 	return (1);
 }
 
@@ -44,7 +44,7 @@ int	handle_env_path(t_program *program, char *key, char **dest_path)
 	tmp_path = find_env_value(program->envp_cpy, key);
 	if (!tmp_path)
 	{
-		fprintf(stderr, "cd: %s not set\n", key);
+		ft_fprintf(stderr, "cd: %s not set\n", key);
 		if (*dest_path)
 			free(*dest_path);
 		return (1);
@@ -52,7 +52,6 @@ int	handle_env_path(t_program *program, char *key, char **dest_path)
 	*dest_path = ft_strdup(tmp_path);
 	if (!*dest_path)
 	{
-		// fprintf(stderr, RED BOLD "cd: memory error in handl env path\n" RESET);
 		perror("cd");
 		return (1);
 	}
