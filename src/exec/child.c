@@ -19,14 +19,22 @@ void	child_process(t_program *program, t_node *node)
 
 	cmd = &node->u_data.cmd;
 	if (setup_redir(cmd) != 0)
+	{
+		close_fd(&program->fd_in_orig);
+		close_fd(&program->fd_out_orig);
 		exit(EXIT_FAILURE);
+	}
 	if (is_builtin(cmd->argv[0]))
 	{
 		status = execute_builtin(program, node, true);
+		close_fd(&program->fd_in_orig);
+		close_fd(&program->fd_out_orig);
 		exit(status);
 	}
 	else
 	{
+		close_fd(&program->fd_in_orig);
+		close_fd(&program->fd_out_orig);
 		exec_cmd_inchild(node);
 		perror("milanshell");
 		exit(EXIT_FAILURE);

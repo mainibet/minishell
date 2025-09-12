@@ -14,7 +14,7 @@
 
 static int	is_valid_number(const char *str)
 {
-	int i;
+	int	i;
 
 	if (!str || !*str)
 		return (0);
@@ -24,7 +24,7 @@ static int	is_valid_number(const char *str)
 	if (!str[i])
 		return (0);
 	while (str[i])
-    {
+	{
 		if (!ft_isdigit(str[i]))
 			return (0);
 		i++;
@@ -50,7 +50,7 @@ void	my_exit(t_program *program, t_node *node)
 
 	cmd = &node->u_data.cmd;
 	argc = count_args(cmd->argv);
-	ft_putendl_fd("exit", STDERR_FILENO);	
+	ft_putendl_fd("exit", STDERR_FILENO);
 	if (argc == 1)
 		exit_code = program->last_exit_status;
 	else if (argc == 2)
@@ -73,7 +73,7 @@ void	my_exit(t_program *program, t_node *node)
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
 		program->last_exit_status = 1;
 		return ;
-	}	
+	}
 	cleanup_program(program);
 	exit(exit_code);
 }
