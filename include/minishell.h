@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 07:15:27 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 08:26:24 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,10 @@
 
 // --- PROGRAM INITIALIZATION --- //
 void	init_program(t_program *program, char **envp);
+
+// --- PRINTING --- //
 void	ft_print_error(const char *msg);
 void	ft_print_syntax_error(const char *token);
+void	print_warn_ctrl_d(int line_num, const char *delimiter);
 
 #endif
