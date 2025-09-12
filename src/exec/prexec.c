@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 08:41:11 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 14:23:57 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 07:33:43 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ char	**token_to_argv(t_token *token)
 	if (cpy_token_str(argv, token) != 0)
 	{
 		free(argv);
-		fprintf(stderr, BOLD CYAN "copy_token_strings FAILED\n" RESET);
 		return (NULL);
 	}
 	return (argv);

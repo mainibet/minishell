@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:11:26 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/11 08:50:11 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 08:11:10 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,7 @@ int	validate_word_token(t_program *program, t_token *token)
 	if (token->type == WORD && (ft_strchr(token->txt, '>') != NULL
 			|| ft_strchr(token->txt, '<') != NULL))
 	{
-		fprintf(stderr, BOLD RED
-			"Syntax error: Invalid token '%s' contains "
-			"redirection characters\n" RESET, token->txt);
+		ft_print_syntax_error(token->txt);
 		program->last_exit_status = 258;
 		return (1);
 	}
@@ -46,13 +44,13 @@ int	validate_redir_target(t_program *program, t_token *current)
 	return (0);
 }
 
-int	handle_miss_cmd(t_program *program, t_cmd_data *cmd_data, t_token *cmd_tokens, bool has_cmd)
+int	handle_miss_cmd(t_program *program, t_cmd_data *cmd_data,
+	t_token *cmd_tokens, bool has_cmd)
 {
 	if (!cmd_tokens && !has_cmd)
 	{
-		fprintf(stderr, BOLD RED
-			"Syntax error: Command expected but only redirections found\n"
-			RESET);
+		ft_print_error("syntax error: Command expected "
+			"but only redirections found");
 		cmd_data->tokens = NULL;
 		cmd_data->argv = NULL;
 		program->last_exit_status = 258;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpandya <tpandya@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 22:44:22 by tpandya           #+#    #+#             */
-/*   Updated: 2025/09/09 22:44:25 by tpandya          ###   ########.fr       */
+/*   Updated: 2025/09/12 08:39:09 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	init_fd_origin(const char *err_msg, int orig_fd)
 
 static void	handle_init_error(t_program *program)
 {
-	fprintf(stderr, BOLD RED "Fatal initialization error\n" RESET);
+	ft_print_error("Fatal initialization error\n");
 	cleanup_program(program);
 	exit(1);
 }
