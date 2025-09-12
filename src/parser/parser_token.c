@@ -54,8 +54,8 @@ void	add_token(t_token **list, t_token *new_token)
 	tmp->next = new_token;
 }
 
-int	process_tokens_loop(t_program *program, t_token *token, t_cmd_data *cmd_data,
-				t_token **cmd_tokens)
+int	process_tokens_loop(t_program *program, t_token *token,
+		t_cmd_data *cmd_data, t_token **cmd_tokens)
 {
 	t_token	*current;
 

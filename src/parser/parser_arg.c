@@ -46,7 +46,7 @@ int	split_cmd_arg(t_program *program, t_token **current, t_cmd_data *cmd_data)
 
 	if (check_next_token(*current) != 0)
 	{
-		program->last_exit_status = 258;//check
+		program->last_exit_status = 258;
 		return (1);
 	}
 	quoted = ((*current)->next->type == SINGLE_Q
