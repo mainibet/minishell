@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/11 17:42:45 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 18:48:23 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,10 @@ static void	process_cmdline(t_program *program, char *line)
 	program->root = root;
 	free(line);
 	if (!program->root)
+	{
+		program->last_exit_status = 2;
 		return ;
+	}
 	pre_execution(program, root);
 	program->last_exit_status = execution(program, root, false);
 	if (g_signal_value == SIGINT)
