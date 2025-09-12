@@ -43,7 +43,8 @@ static int	validate_redirections(t_program *program, t_token *token)
 	return (0);
 }
 
-static int	validate_token_syntax(t_program *program, t_token *token, bool *has_command)
+static int	validate_token_syntax(t_program *program, t_token *token,
+		bool *has_command)
 {
 	t_token	*current;
 

@@ -41,11 +41,24 @@ void	close_unused_pipes(t_cmd_data *cmd, int n_cmds, int (*pipes)[2])
 
 void	perform_exec(t_node *node, t_program *prog, t_cmd_data *cmd)
 {
+	int	exit_status;
+
 	if (cmd->redir && process_redir(cmd, prog) != 0)
+	{
+		close_fd(&prog->fd_in_orig);
+		close_fd(&prog->fd_out_orig);
 		exit(1);
+	}
 	set_final_fds(cmd);
 	if (is_builtin(node->u_data.cmd.argv[0]))
-		exit(execute_builtin(prog, node, true));
+	{
+		exit_status = execute_builtin(prog, node, true);
+		close_fd(&prog->fd_in_orig);
+		close_fd(&prog->fd_out_orig);
+		exit(exit_status);
+	}
+	close_fd(&prog->fd_in_orig);
+	close_fd(&prog->fd_out_orig);
 	exec_cmd_inchild(node);
 	exit(EXIT_FAILURE);
 }

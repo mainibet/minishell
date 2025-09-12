@@ -64,4 +64,3 @@ int	setup_redir(t_cmd_data *cmd)
 	}
 	return (0);
 }
-

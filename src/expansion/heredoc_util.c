@@ -50,4 +50,3 @@ void	heredoc_normalize_delimiter(t_redir *redir)
 		redir->target = clean;
 	}
 }
-
