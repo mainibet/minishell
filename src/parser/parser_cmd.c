@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:31:48 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 18:47:30 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 18:30:09 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,10 @@ static int	validate_token_syntax(t_program *program, t_token *token,
 		bool *has_command)
 {
 	t_token	*current;
+	t_token	*first;
 
 	current = token;
+	first = token;
 	*has_command = false;
 	while (current)
 	{
@@ -59,6 +61,8 @@ static int	validate_token_syntax(t_program *program, t_token *token,
 				return (1);
 			*has_command = true;
 		}
+		if (validate_pipe_token(program, current, first))
+			return (1);
 		current = current->next;
 	}
 	if (validate_redirections(program, token))
@@ -86,7 +90,8 @@ int	process_cmd_tokens(t_program *program, t_token *token, t_cmd_data *cmd_data)
 	}
 	if (handle_miss_cmd(program, cmd_data, cmd_tokens, has_cmd))
 	{
-		program->last_exit_status = 258;
+		cmd_data->tokens = NULL;
+		cmd_data->argv = NULL;
 		return (1);
 	}
 	cmd_data->tokens = cmd_tokens;
