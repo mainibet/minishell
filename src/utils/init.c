@@ -6,13 +6,13 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 22:44:22 by tpandya           #+#    #+#             */
-/*   Updated: 2025/09/12 08:39:09 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 17:02:14 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	**ft_dup_env(char **envp)
+static char	**ft_dup_env(t_program *program, char **envp)
 {
 	int		i;
 	char	**envp_cpy;
@@ -39,13 +39,17 @@ static char	**ft_dup_env(char **envp)
 	return (envp_cpy);
 }
 
-static int	init_fd_origin(const char *err_msg, int orig_fd)
+static int	init_fd_origin(t_program *program, int orig_fd, const char *err_msg)
 {
 	int	new_fd;
 
 	new_fd = dup(orig_fd);
 	if (new_fd == -1)
-		perror(err_msg);
+	{
+		ft_print_error(err_msg);
+		ft_print_error("\n");
+		program->last_exit_status = 1; 
+	}
 	return (new_fd);
 }
 
@@ -60,13 +64,13 @@ void	init_program(t_program *program, char **envp)
 {
 	program->line = NULL;
 	program->envp = envp;
-	program->envp_cpy = ft_dup_env(envp);
+	program->envp_cpy = ft_dup_env(program, envp);
 	program->root = NULL;
 	program->token_list = NULL;
-	program->fd_in_orig = init_fd_origin("dup failes for STDIN init",
-			STDIN_FILENO);
-	program->fd_out_orig = init_fd_origin("dup failes for STDOUT init",
-			STDOUT_FILENO);
+	program->fd_in_orig = init_fd_origin(program,
+			STDIN_FILENO, "dup failed for STDIN");
+	program->fd_out_orig = init_fd_origin(program,
+			STDOUT_FILENO, "dup failed for STDOUT");
 	program->last_exit_status = 0;
 	if (!program->envp_cpy)
 		malloc_error();
@@ -74,5 +78,9 @@ void	init_program(t_program *program, char **envp)
 		|| program->fd_out_orig == -1)
 		handle_init_error(program);
 	if (tcgetattr(STDIN_FILENO, &program->orig_termios) == -1)
+	{
+		program->last_exit_status = 1;
 		perror("tcgetattr");
+		handle_init_error(program);
+	}
 }
