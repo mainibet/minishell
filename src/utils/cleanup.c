@@ -6,25 +6,11 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:20:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 07:31:12 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 07:40:41 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_print_syntax_error(const char *token)
-{
-	if (token)
-	{
-		write(STDERR_FILENO,
-			"minishell: syntax error near unexpected token `", 47);
-		write(STDERR_FILENO, token, strlen(token));
-		write(STDERR_FILENO, "`\n", 2);
-	}
-	else
-		write(STDERR_FILENO,
-			"minishell: syntax error near unexpected token `newline'\n", 56);
-}
 
 //Cleaning after each cmd in cmd line
 //free tmp resources per each cmd like root and token list
