@@ -6,13 +6,13 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 22:44:22 by tpandya           #+#    #+#             */
-/*   Updated: 2025/09/12 17:02:14 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 17:07:09 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	**ft_dup_env(t_program *program, char **envp)
+static char	**ft_dup_env(char **envp)
 {
 	int		i;
 	char	**envp_cpy;
@@ -64,7 +64,7 @@ void	init_program(t_program *program, char **envp)
 {
 	program->line = NULL;
 	program->envp = envp;
-	program->envp_cpy = ft_dup_env(program, envp);
+	program->envp_cpy = ft_dup_env(envp);
 	program->root = NULL;
 	program->token_list = NULL;
 	program->fd_in_orig = init_fd_origin(program,
