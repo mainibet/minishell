@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:07:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/26 15:32:08 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 14:32:12 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	child_process(t_program *program, t_node *node)
 	else
 	{
 		exec_cmd_inchild(node);
-		perror(BOLD RED "Exec/Builtin failed" RESET);
+		perror("milanshell");
 		exit(EXIT_FAILURE);
 	}
 }
