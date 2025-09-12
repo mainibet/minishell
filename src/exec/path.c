@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:13:58 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/20 14:58:51 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 15:18:15 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@ char	**get_path(void)
 
 	path = getenv("PATH");
 	if (!path)
-	{
-		perror(BOLD RED "Error PATH: cmd not found" RESET);
 		return (NULL);
-	}
 	dir = ft_split(path, ':');
 	return (dir);
 }
