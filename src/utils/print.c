@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 07:40:52 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 07:44:17 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 07:46:33 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	ft_print_syntax_error(const char *token)
 		write(STDERR_FILENO,
 			"minishell: syntax error near unexpected token `newline'\n", 56);
 }
-
 
 void	ft_print_error(const char *msg)
 {
