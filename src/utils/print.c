@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 07:40:52 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 08:25:59 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 08:36:09 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 
 void	print_warn_ctrl_d(int line_num, const char *delimiter)
 {
-	write(STDERR_FILENO,
-		"minishell: warning: here-document delimited by end-of-file ",
-		66);
+	const char	*msg;
+
+	msg = "warning: here-document at line ";
+	write(STDERR_FILENO, msg, ft_strlen(msg));
 	ft_putnbr_fd_un((unsigned long)line_num, STDERR_FILENO);
-	write(STDERR_FILENO, " (wanted `", 10);
+	write(STDERR_FILENO, " delimited by end-of-file (wanted `", 36);
 	write(STDERR_FILENO, delimiter, ft_strlen(delimiter));
 	write(STDERR_FILENO, "')\n", 3);
 }
