@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prexec_utils_02.c                                  :+:      :+:    :+:   */
+/*   pipe_utils_02.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpandya <tpandya@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 17:44:27 by tpandya           #+#    #+#             */
-/*   Updated: 2025/09/09 17:44:28 by tpandya          ###   ########.fr       */
+/*   Updated: 2025/09/12 15:21:17 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ int	copy_word(char **argv, t_token *tok, int i)
 	argv[i] = ft_strdup(tok->txt);
 	if (!argv[i])
 	{
-		perror("Failed ft_strdup token to argv");
 		free_partial_arr(argv, i);
 		return (-1);
 	}
