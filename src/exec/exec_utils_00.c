@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 22:57:51 by tpandya           #+#    #+#             */
-/*   Updated: 2025/09/12 07:10:00 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 14:39:27 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,7 @@ void	set_pipe_input(t_cmd_data *cmd)
 	if (cmd->fd_in == STDIN_FILENO && cmd->pipefd[0] >= 0)
 	{
 		if (dup2(cmd->pipefd[0], STDIN_FILENO) == -1)
-		{
-			perror("dup2 failed for pipe input");
 			exit(1);
-		}
 		close_fd(&cmd->pipefd[0]);
 	}
 }
@@ -47,10 +44,7 @@ void	set_input_redir(t_cmd_data *cmd)
 	if (cmd->fd_in >= 0 && cmd->fd_in != STDIN_FILENO)
 	{
 		if (dup2(cmd->fd_in, STDIN_FILENO) == -1)
-		{
-			perror("dup2 failed for input redirection");
 			exit(1);
-		}
 		close_fd(&cmd->fd_in);
 	}
 }
@@ -60,10 +54,7 @@ void	set_pipe_output(t_cmd_data *cmd)
 	if (cmd->fd_out == STDOUT_FILENO && cmd->pipefd[1] >= 0)
 	{
 		if (dup2(cmd->pipefd[1], STDOUT_FILENO) == -1)
-		{
-			perror("dup2 failed for pipe output");
 			exit(1);
-		}
 		close_fd(&cmd->pipefd[1]);
 	}
 }
@@ -73,10 +64,7 @@ void	set_output_redir(t_cmd_data *cmd)
 	if (cmd->fd_out >= 0 && cmd->fd_out != STDOUT_FILENO)
 	{
 		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
-		{
-			perror("dup2 failed for output redirection");
 			exit(1);
-		}
 		close_fd(&cmd->fd_out);
 	}
 }
