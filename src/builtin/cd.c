@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 14:04:46 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/11 17:44:37 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 08:04:36 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ static int	get_dest_path(t_program *program, t_node *node, char **dest_path)
 		*dest_path = ft_strdup(node->u_data.cmd.argv[1]);
 		if (!*dest_path)
 		{
-			// fprintf(stderr, "cd: memory allocation error\n");
 			perror ("cd");
 			return (1);
 		}
@@ -38,7 +37,6 @@ static int	get_old_pwd(char **old_pwd, char *dest_path)
 	*old_pwd = getcwd(NULL, 0);
 	if (!*old_pwd)
 	{
-		// fprintf(stderr, RED BOLD "cd: getcwd error to get path\n" RESET);
 		perror("cd");
 		*old_pwd = NULL;
 	}
