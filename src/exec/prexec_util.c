@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 10:27:01 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/25 10:56:46 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 07:27:01 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ char	*exp_redir(t_redir *redir, char **envp_cpy, int last_exit)
 	expand = expand_token_text(redir->target, envp_cpy, last_exit);
 	if (!expand || expand[0] == '\0')
 	{
-		fprintf(stderr, BOLD RED "ambiguous redirect: '%s'\n" RESET,
-			redir->target);
+		ft_print_error("syntax error: ambiguous redirect");
 		free(expand);
 		return (NULL);
 	}
@@ -54,11 +53,11 @@ char	*clean_target(t_redir *redir, char **expand)
 {
 	char	*clean;
 
+	(void)redir;
 	clean = remove_quotes(*expand);
 	if (!clean || clean[0] == '\0')
 	{
-		fprintf(stderr, BOLD RED "ambiguous redirect: '%s'\n" RESET,
-			redir->target);
+		ft_print_error("syntax error: ambiguous redirect");
 		free(clean);
 		return (NULL);
 	}
@@ -81,7 +80,7 @@ int	clean_redir_target(t_redir *redir, char **envp_cpy, int last_exit)
 		return (1);
 	if (ft_count_words(clean) > 1)
 	{
-		fprintf(stderr, BOLD RED "ambiguous redirect: '%s'\n" RESET, clean);
+		ft_print_error("syntax error: ambiguous redirect");
 		free(clean);
 		return (1);
 	}

@@ -25,7 +25,7 @@ void	init_cmd_node(t_token *token, t_node *node)
 	node->u_data.cmd.pipefd[1] = -1;
 }
 
-static int	validate_redirections(t_token *token)
+static int	validate_redirections(t_program *program, t_token *token)
 {
 	t_token	*current;
 
@@ -35,7 +35,7 @@ static int	validate_redirections(t_token *token)
 		if (current->type == REDIR_IN || current->type == REDIR_OUT
 			|| current->type == APPEND || current->type == HEREDOC)
 		{
-			if (validate_redir_target(current))
+			if (validate_redir_target(program, current))
 				return (1);
 		}
 		current = current->next;
@@ -43,7 +43,7 @@ static int	validate_redirections(t_token *token)
 	return (0);
 }
 
-static int	validate_token_syntax(t_token *token, bool *has_command)
+static int	validate_token_syntax(t_program *program, t_token *token, bool *has_command)
 {
 	t_token	*current;
 
@@ -54,37 +54,40 @@ static int	validate_token_syntax(t_token *token, bool *has_command)
 		if (current->type == WORD || current->type == SINGLE_Q
 			|| current->type == DOUBLE_Q)
 		{
-			if (validate_word_token(current))
+			if (validate_word_token(program, current))
 				return (1);
 			*has_command = true;
 		}
 		current = current->next;
 	}
-	if (validate_redirections(token))
+	if (validate_redirections(program, token))
 		return (1);
 	return (0);
 }
 
-int	process_cmd_tokens(t_token *token, t_cmd_data *cmd_data)
+int	process_cmd_tokens(t_program *program, t_token *token, t_cmd_data *cmd_data)
 {
 	t_token	*cmd_tokens;
 	bool	has_cmd;
 
-	if (validate_token_syntax(token, &has_cmd) != 0)
+	if (validate_token_syntax(program, token, &has_cmd) != 0)
 	{
 		cmd_data->tokens = NULL;
 		cmd_data->argv = NULL;
 		return (1);
 	}
-	if (process_tokens_loop(token, cmd_data, &cmd_tokens) != 0)
+	if (process_tokens_loop(program, token, cmd_data, &cmd_tokens) != 0)
 	{
 		free_token(cmd_tokens);
 		cmd_data->tokens = NULL;
 		cmd_data->argv = NULL;
 		return (1);
 	}
-	if (handle_miss_cmd(cmd_data, cmd_tokens, has_cmd))
+	if (handle_miss_cmd(program, cmd_data, cmd_tokens, has_cmd))
+	{
+		program->last_exit_status = 258;
 		return (1);
+	}
 	cmd_data->tokens = cmd_tokens;
 	cmd_data->argv = NULL;
 	return (0);

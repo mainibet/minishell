@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 22:57:51 by tpandya           #+#    #+#             */
-/*   Updated: 2025/09/11 17:46:20 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 07:10:00 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	handle_operator(t_program *program, t_node *node, bool is_pipe_child)
 			return (execution(program, node->u_data.op.right, true));
 		return (left_status);
 	}
-	fprintf(stderr, BOLD RED "Error: unknow type operand for execution\n" RESET);
 	return (1);
 }
 
@@ -36,7 +35,7 @@ void	set_pipe_input(t_cmd_data *cmd)
 	{
 		if (dup2(cmd->pipefd[0], STDIN_FILENO) == -1)
 		{
-			perror("Error: dup2 failed for pipe input");
+			perror("dup2 failed for pipe input");
 			exit(1);
 		}
 		close_fd(&cmd->pipefd[0]);
@@ -49,7 +48,7 @@ void	set_input_redir(t_cmd_data *cmd)
 	{
 		if (dup2(cmd->fd_in, STDIN_FILENO) == -1)
 		{
-			perror("Error: dup2 failed for input redirection");
+			perror("dup2 failed for input redirection");
 			exit(1);
 		}
 		close_fd(&cmd->fd_in);
@@ -62,7 +61,7 @@ void	set_pipe_output(t_cmd_data *cmd)
 	{
 		if (dup2(cmd->pipefd[1], STDOUT_FILENO) == -1)
 		{
-			perror("Error: dup2 failed for pipe output");
+			perror("dup2 failed for pipe output");
 			exit(1);
 		}
 		close_fd(&cmd->pipefd[1]);
@@ -75,7 +74,7 @@ void	set_output_redir(t_cmd_data *cmd)
 	{
 		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
 		{
-			perror("Error: dup2 failed for output redirection");
+			perror("dup2 failed for output redirection");
 			exit(1);
 		}
 		close_fd(&cmd->fd_out);

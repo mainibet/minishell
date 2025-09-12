@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_node	*parse_command(t_token *token)
+t_node	*parse_command(t_program *program, t_token *token)
 {
 	t_node	*node;
 
@@ -23,7 +23,7 @@ t_node	*parse_command(t_token *token)
 		return (NULL);
 	ft_memset(node, 0, sizeof(t_node));
 	init_cmd_node(NULL, node);
-	if (process_cmd_tokens(token, &node->u_data.cmd) != 0)
+	if (process_cmd_tokens(program, token, &node->u_data.cmd) != 0)
 	{
 		free_node(node);
 		return (NULL);

@@ -26,7 +26,7 @@ t_node	*token_parser_input(char *line, t_token **token_out, t_program *program)
 	}
 	expand(token_list, program->envp_cpy, program->last_exit_status);
 	parser_tokens = token_list;
-	root = parse(parser_tokens);
+	root = parse(program, parser_tokens);
 	if (!root)
 	{
 		free_token(token_list);

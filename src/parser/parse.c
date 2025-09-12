@@ -61,14 +61,14 @@ static t_token	*cut_left_list(t_token *token_list, t_token *op_token)
 
 // Recursively parse left and right
 //creae operator node
-static t_node	*parse_sides(t_token *op_token,
+static t_node	*parse_sides(t_program *program, t_token *op_token,
 	t_token *left_list, t_token *right_list)
 {
 	t_node	*left;
 	t_node	*right;
 
-	left = parse(left_list);
-	right = parse(right_list);
+	left = parse(program, left_list);
+	right = parse(program, right_list);
 	if (!left || !right)
 	{
 		free_node(left);
@@ -81,7 +81,7 @@ static t_node	*parse_sides(t_token *op_token,
 // Find operator of lowest precedence (leftmost for left-associativity)
 // No operator -> just a command node
 // Split tokens into left and right lists
-t_node	*parse(t_token *token_list)
+t_node	*parse(t_program *program, t_token *token_list)
 {
 	t_token	*op_token;
 	t_token	*left_list;
@@ -91,8 +91,8 @@ t_node	*parse(t_token *token_list)
 		return (NULL);
 	op_token = find_lowest_operator(token_list);
 	if (!op_token)
-		return (parse_command(token_list));
+		return (parse_command(program, token_list));
 	left_list = cut_left_list(token_list, op_token);
 	right_list = op_token->next;
-	return (parse_sides(op_token, left_list, right_list));
+	return (parse_sides(program, op_token, left_list, right_list));
 }

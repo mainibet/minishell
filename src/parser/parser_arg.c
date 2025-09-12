@@ -41,14 +41,17 @@ static int	check_next_token(t_token *current)
 	return (0);
 }
 
-int	split_cmd_arg(t_token **current, t_cmd_data *cmd_data)
+int	split_cmd_arg(t_program *program, t_token **current, t_cmd_data *cmd_data)
 {
 	t_redir	*tmp_redir;
 	bool	quoted;
 	int		redir_count;
 
 	if (check_next_token(*current) != 0)
+	{
+		program->last_exit_status = 258;//check
 		return (1);
+	}
 	quoted = ((*current)->next->type == SINGLE_Q
 			|| (*current)->next->type == DOUBLE_Q);
 	add_redir(&cmd_data->redir,
