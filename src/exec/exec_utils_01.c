@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils_01.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpandya <tpandya@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 22:58:27 by tpandya           #+#    #+#             */
-/*   Updated: 2025/09/07 22:58:31 by tpandya          ###   ########.fr       */
+/*   Updated: 2025/09/12 14:42:43 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	child_exec_flow(t_program *program, t_node *node, t_cmd_data *cmd)
 	if (is_builtin(cmd->argv[0]))
 		exit(execute_builtin(program, node, true));
 	exec_cmd_inchild(node);
-	perror("Error executing command in pipe");
 	exit(EXIT_FAILURE);
 }
 
