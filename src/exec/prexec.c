@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 08:41:11 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 07:33:43 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 15:30:06 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ void	setup_cmd_arg(t_program *program, t_node *node)
 	node->u_data.cmd.argv = token_to_argv(node->u_data.cmd.tokens);
 	if (!node->u_data.cmd.argv)
 	{
-		perror("Failed to create token args");
 		cleanup_program(program);
 		exit(EXIT_FAILURE);
 	}
