@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 13:53:41 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/10 08:55:10 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 14:12:55 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,7 @@ int	close_fd(int *fd)
 		|| *fd == STDOUT_FILENO || *fd == STDERR_FILENO)
 		return (0); 
 	if (close(*fd) == -1)
-	{
-		perror ("Error closing fd");
 		return (1);
-	}
 	*fd = -1;
 	return (0);
 }

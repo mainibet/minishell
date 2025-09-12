@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 14:04:46 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 08:04:36 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 14:20:00 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ static int	change_dir(char *dest_path)
 {
 	if (chdir(dest_path) == -1)
 	{
-		perror("Builtin error: cd");
+		ft_putstr_fd("cd: ", STDERR_FILENO);
+		ft_putstr_fd(dest_path, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		perror("");
 		return (1);
 	}
 	return (0);
