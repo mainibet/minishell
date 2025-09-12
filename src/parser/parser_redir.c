@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:31:58 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 15:30:45 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 16:41:11 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ char	**copy_token_strings(t_token *cmd_tokens, char **argv)
 		if (!argv[i])
 		{
 			free_array(argv);
-			perror("Failed ft_strdup for argv");
 			return (NULL);
 		}
 		i++;
@@ -56,7 +55,6 @@ char	**build_argv_from_tokens(t_token *cmd_tokens)
 	if (!argv)
 	{
 		free_token(cmd_tokens);
-		perror("Failed to allocate argv");
 		return (NULL);
 	}
 	argv = copy_token_strings(cmd_tokens, argv);
