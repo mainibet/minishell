@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 07:20:24 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 14:49:33 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,15 @@ void	exec_cmd_inchild(t_node *node)
 	cmd_path = find_path(node->u_data.cmd.argv[0]);
 	if (!cmd_path)
 	{
-		perror(BOLD RED "command_path not found" RESET);
-		exit(EXIT_FAILURE);
+		ft_print_error(node->u_data.cmd.argv[0]);
+		ft_print_error(": command not found\n");
+		exit(127);
 	}
 	execve(cmd_path, node->u_data.cmd.argv, node->u_data.cmd.env);
-	perror("Error: execve failed");
+	ft_print_error(node->u_data.cmd.argv[0]);
+	ft_print_error(": cannot execute\n"); 
 	free(cmd_path);
-	exit(EXIT_FAILURE);
+	exit(126);
 }
 
 int	is_operator_str(const char *str)
