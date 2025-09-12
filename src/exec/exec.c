@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:32:13 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/29 14:27:33 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 07:20:24 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,7 @@ int	handle_cmd_exec(t_program *program, t_node *node, bool is_pipe_child)
 	name = cmd->argv[0];
 	if (is_operator_str(name))
 	{
-		fprintf(stderr, RED BOLD "Syntax error near unexpected token ");
-		fprintf(stderr, "`%s'\n" RESET, name);
+		ft_print_syntax_error(name);
 		return (2);
 	}
 	if (is_pipe_child)
@@ -93,11 +92,7 @@ int	execution(t_program *program, t_node *node, bool is_pipe_child)
 	else if (node->type == OPERATOR)
 		status = handle_operator(program, node, is_pipe_child);
 	else
-	{
-		fprintf(stderr,
-			BOLD RED "Error: unknow type node for execution\n" RESET);
 		status = 1;
-	}
 	program->last_exit_status = status;
 	return (status);
 }
