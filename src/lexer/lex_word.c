@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 07:28:43 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/09 17:24:44 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 08:07:45 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,7 @@ static int	check_redir_syntax(t_token	*token)
 		if ((token->txt[i] == '>' || token->txt[i] == '<')
 			&& i > 0 && token->txt[i - 1] != ' ') 
 		{
-			fprintf(stderr, BOLD RED
-				"Syntax error: Invalid redirection syntax in '%s'\n"
-				RESET, token->txt);
+			ft_print_syntax_error(token->txt);
 			free_token(token);
 			return (0);
 		}

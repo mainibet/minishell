@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 16:37:46 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/07 18:26:31 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 08:29:57 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,5 @@ void			init_hd(t_heredoc *hd, t_redir *redir, t_program *program,
 void			free_hd(t_heredoc *hd);
 char			*strip_outer_quotes(const char *s);
 void			expand_heredoc(t_program *program, char **buf);
-char			*set_warn_ctrl_d(void);
+
 #endif

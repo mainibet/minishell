@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:30:08 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/07 18:41:25 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 08:29:51 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,3 @@ void	heredoc_normalize_delimiter(t_redir *redir)
 	}
 }
 
-char	*set_warn_ctrl_d(void)
-{
-	return ("warning: here-document at line %d "
-		"delimited by end-of-file (wanted `%s')\n");
-}

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 13:33:32 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/11 17:42:12 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 07:45:12 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,15 +88,13 @@ int	open_redir_filename(t_redir *redir)
 		return (1);
 	if (redir->type == RED_IN && access(redir->target, F_OK) != 0)
 	{
-		fprintf(stderr, "Error: No such file or directory: %s\n",
-			redir->target);
+		perror(redir->target);
 		return (1);
 	}
 	redir->fd = open(redir->target, open_flags, 0644);
 	if (redir->fd < 0)
 	{
-		fprintf(stderr, "Error opening file '%s': %s\n", redir->target,
-			strerror(errno));
+		perror(redir->target);
 		return (1);
 	}
 	return (0);

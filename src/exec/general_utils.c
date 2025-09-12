@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:22:09 by tpandya           #+#    #+#             */
-/*   Updated: 2025/09/11 18:03:36 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/12 07:41:20 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,3 @@ int	setup_redir(t_cmd_data *cmd)
 	return (0);
 }
 
-void	ft_print_error(const char *msg)
-{
-	if (!msg)
-		return ;
-	write(STDERR_FILENO, msg, ft_strlen(msg));
-}
