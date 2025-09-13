@@ -18,7 +18,7 @@ t_node	*token_parser_input(char *line, t_token **token_out, t_program *program)
 	t_token	*parser_tokens;
 	t_node	*root;
 
-	token_list = lex(line, ' ');
+	token_list = lex(line, program);
 	if (!token_list)
 	{
 		*token_out = NULL;

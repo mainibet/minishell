@@ -54,14 +54,14 @@ static int	check_redir_syntax(t_token	*token)
 }
 
 // Process adjacent token without space
-static t_token	*handle_adj_token(t_token *token, char *rest)
+static t_token	*handle_adj_token(t_program *program, t_token *token, char *rest)
 {
 	t_token	*next;
 
 	if (*rest == '\'' || *rest == '"')
-		next = lex_quoted(rest + 1, *rest);
+		next = lex_quoted(program, rest + 1, *rest);
 	else
-		next = lex_unquoted(rest);
+		next = lex_unquoted(program, rest);
 	if (!next)
 	{
 		free_token(token);
@@ -74,7 +74,7 @@ static t_token	*handle_adj_token(t_token *token, char *rest)
 // If the word contains redirection chars, check if they're at positions where
 // they'd form valid redirection syntax (beginning of word or after space)
 // Check for adjacent token without whitespace
-t_token	*lex_unquoted(char *s)
+t_token	*lex_unquoted(t_program *program, char *s)
 {
 	char	*start;
 	char	*end;
@@ -87,6 +87,7 @@ t_token	*lex_unquoted(char *s)
 	if (!token)
 		return (NULL);
 	token->type = WORD;
+	add_token(&program->token_list, token);
 	if (strchr(token->txt, '>') != NULL || strchr(token->txt, '<') != NULL)
 	{
 		if (!check_redir_syntax(token))
@@ -94,8 +95,8 @@ t_token	*lex_unquoted(char *s)
 	}
 	rest = end;
 	if (*rest && !ft_isspace(*rest) && !is_operator_char(*rest))
-		return (handle_adj_token(token, rest));
-	else
-		token->next = lex(consume_whitespace(rest), ' ');
+		return (handle_adj_token(program, token, rest));
+	// else
+	// 	token->next = lex(consume_whitespace(rest), program);
 	return (token);
 }

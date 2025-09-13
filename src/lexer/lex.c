@@ -20,7 +20,7 @@ char	*consume_whitespace(char *head_token)
 }
 
 // Detect multi-char operators
-static t_token	*lex_operator(char *s)
+static t_token	*lex_operator(t_program *program, char *s)
 {
 	size_t	op_len;
 	t_token	*token;
@@ -32,24 +32,24 @@ static t_token	*lex_operator(char *s)
 	token = extract_token(s, op_len);
 	if (!token)
 		return (NULL);
+	add_token(&program->token_list, token);
 	token->type = token_type(token->txt);
-	token->next = lex(consume_whitespace(s + op_len), ' ');
+	// token->next = lex(consume_whitespace(s + op_len), program);
 	return (token);
 }
 
 // Check Quoted string
-t_token	*lex(char *s, int delim)
+t_token	*lex(char *s, t_program *program)
 {
-	(void) delim;
 	if (!s || !*s)
 		return (NULL);
 	s = consume_whitespace(s);
 	if (!*s) 
 		return (NULL);
 	if (*s == '\'' || *s == '"')
-		return (lex_quoted(s + 1, *s));
+		return (lex_quoted(program, s + 1, *s));
 	else if (is_operator_char(*s))
-		return (lex_operator(s));
+		return (lex_operator(program, s));
 	else
-		return (lex_unquoted(s));
+		return (lex_unquoted(program, s));
 }
