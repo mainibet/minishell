@@ -24,6 +24,7 @@ static t_token	*lex_operator(t_program *program, char *s)
 {
 	size_t	op_len;
 	t_token	*token;
+	t_token	*rest_tokens;//new
 
 	op_len = 1;
 	if ((*s == '>' && *(s + 1) == '>') 
@@ -34,7 +35,8 @@ static t_token	*lex_operator(t_program *program, char *s)
 		return (NULL);
 	add_token(&program->token_list, token);
 	token->type = token_type(token->txt);
-	// token->next = lex(consume_whitespace(s + op_len), program);
+	rest_tokens = lex(consume_whitespace(s + op_len), program);
+	token->next = rest_tokens;
 	return (token);
 }
 

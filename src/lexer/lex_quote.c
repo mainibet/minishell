@@ -59,7 +59,7 @@ static char	*find_quote_end(char *start, char quote)
 }
 
 //processes adjacent token without spaces and joins it to the current token
-static t_token	*handle_adj_token(t_program *program, t_token *token, char *rest)
+t_token	*handle_adj_token(t_program *program, t_token *token, char *rest)
 {
 	t_token	*next;
 
@@ -76,8 +76,8 @@ static t_token	*handle_adj_token(t_program *program, t_token *token, char *rest)
 		}
 		token = join_tokens(token, next);
 	}
-	// else
-	// 	token->next = lex(consume_whitespace(rest), program);
+	else
+		token->next = lex(consume_whitespace(rest), program);
 	return (token);
 }
 
@@ -101,7 +101,6 @@ t_token	*lex_quoted(t_program *program, char *s, char quote)
 		token->type = SINGLE_Q;
 	else
 		token->type = DOUBLE_Q;
-	add_token(&program->token_list, token);//new
 	rest = end + 1;
 	return (handle_adj_token(program, token, rest));
 }

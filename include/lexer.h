@@ -27,6 +27,7 @@ t_token			*join_tokens(t_token *a, t_token *b);
 t_token			*lex_quoted(t_program *program, char *s, char quote);
 t_token			*lex_unquoted(t_program *program, char *s);
 t_token			*extract_token(char *s, size_t size);
+t_token			*handle_adj_token(t_program *program, t_token *token, char *rest);
 
 // --- Helpers --- //
 int				ft_isspace(char c);

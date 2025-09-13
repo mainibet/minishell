@@ -16,6 +16,7 @@ void	free_token(t_token *token)
 {
 	t_token	*next;
 
+	next = NULL;
 	if (!token)
 		return ;
 	while (token)

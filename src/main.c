@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-t_node	*token_parser_input(char *line, t_token **token_out, t_program *program)
+// t_node	*token_parser_input(char *line, t_token **token_out, t_program *program)
+t_node	*token_parser_input(char *line, t_program *program)
 {
 	t_token	*token_list;
 	t_token	*parser_tokens;
@@ -21,19 +22,21 @@ t_node	*token_parser_input(char *line, t_token **token_out, t_program *program)
 	token_list = lex(line, program);
 	if (!token_list)
 	{
-		*token_out = NULL;
+		program->token_list = NULL;
 		return (NULL);
 	}
 	expand(token_list, program->envp_cpy, program->last_exit_status);
 	parser_tokens = token_list;
 	root = parse(program, parser_tokens);
+	// root = parse(program, token_list);
 	if (!root)
 	{
 		free_token(token_list);
-		*token_out = NULL;
+		program->token_list = NULL;
 		return (NULL);
 	}
-	*token_out = token_list;
+	free_token_list(program);
+	// *token_out = token_list;
 	return (root);
 }
 
@@ -49,7 +52,8 @@ static void	process_cmdline(t_program *program, char *line)
 		return ;
 	}
 	add_history(line);
-	root = token_parser_input(line, &program->token_list, program);
+	// root = token_parser_input(line, &program->token_list, program);
+	root = token_parser_input(line, program);
 	program->root = root;
 	free(line);
 	if (!program->root)
@@ -65,6 +69,7 @@ static void	process_cmdline(t_program *program, char *line)
 		g_signal_value = 0;
 	}
 	free_ast_tokens(program);
+	free_token_list(program);
 }
 
 int	main(int argc, char **argv, char **envp)
