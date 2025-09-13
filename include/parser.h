@@ -37,6 +37,7 @@ t_node	*parse_operator(t_token *op, t_node *left, t_node *right);
 // --- Tokens --- //
 int		process_tokens_loop(t_program *program, t_token *token,
 			t_cmd_data *cmd_data, t_token **cmd_tokens);
+void	add_token(t_token **list, t_token *new_token);
 
 // --- Arguments --- //
 int		split_cmd_arg(t_program *program, t_token **current,

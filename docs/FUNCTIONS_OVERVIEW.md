@@ -60,7 +60,7 @@ Wrapper for lex and parse functions. Converts raw input into a token list and bu
 ---
 
 ## lex
-`t_token *lex(char *s, char delim)`
+`t_token *lex(char *s, t_program *program)`
 
 Lexical analyzer. Tokenizes a string into meaningful units based on a delimiter.
 

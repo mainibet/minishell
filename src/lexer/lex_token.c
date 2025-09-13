@@ -75,5 +75,6 @@ t_token	*extract_token(char *s, size_t size)
 	strncpy(token->txt, s, size);
 	token->txt[size] = 0;
 	token->type = token_type(token->txt);
+	token->next = NULL;//new
 	return (token);
 }

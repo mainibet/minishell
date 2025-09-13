@@ -90,6 +90,7 @@ int	process_cmd_tokens(t_program *program, t_token *token, t_cmd_data *cmd_data)
 	}
 	if (handle_miss_cmd(program, cmd_data, cmd_tokens, has_cmd))
 	{
+		free_token(cmd_tokens);//new
 		cmd_data->tokens = NULL;
 		cmd_data->argv = NULL;
 		return (1);

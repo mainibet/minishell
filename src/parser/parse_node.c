@@ -45,6 +45,8 @@ t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
 	ft_memset(node, 0, sizeof(t_node));
 	node->type = OPERATOR;
 	node->u_data.op.type = op->type;
+	free(op->txt);//new
+	free(op);//new
 	node->u_data.op.left = left;
 	node->u_data.op.right = right;
 	return (node);
