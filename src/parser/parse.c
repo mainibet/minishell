@@ -92,7 +92,7 @@ t_node	*parse(t_program *program, t_token *token_list)
 	op_token = find_lowest_operator(token_list);
 	if (!op_token)
 		return (parse_command(program, token_list));
-	left_list = cut_left_list(token_list, op_token);
 	right_list = op_token->next;
+	left_list = cut_left_list(token_list, op_token);
 	return (parse_sides(program, op_token, left_list, right_list));
 }
