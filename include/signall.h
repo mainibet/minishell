@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 11:39:00 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 08:42:28 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 07:04:36 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,6 @@ void				set_signal_handler(int signum, void (*handler)(int));
 void				set_signal_prompt(int in_heredoc);
 void				set_signal_child_process(void);
 void				set_signal_heredoc(void);
+void				sigint_parent_waiting(int signum);//new
 
 #endif
