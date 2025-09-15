@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 16:46:54 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/08 17:51:51 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 06:35:41 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ t_node	*parse_operator(t_token *op, t_node *left, t_node *right)
 	node->type = OPERATOR;
 	node->u_data.op.type = op->type;
 	free(op->txt);
-	free_token(op->next);  // Free the recursive tokens
+	free_token(op->next);
 	free(op);
 	node->u_data.op.left = left;
 	node->u_data.op.right = right;
