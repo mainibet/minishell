@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/15 07:12:40 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 07:23:25 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,18 @@ t_node	*token_parser_input(char *line, t_program *program)
 	return (root);
 }
 
+static int	execute_with_signal(t_program *program, t_node *root)
+{
+	set_signal_handler(SIGINT, sigint_parent_waiting);
+	program->last_exit_status = execution(program, root, false);
+	if (g_signal_value == SIGINT)
+	{
+		program->last_exit_status = 130;
+		g_signal_value = 0;
+	}
+	return (program->last_exit_status);
+}
+
 static void	process_cmdline(t_program *program, char *line)
 {
 	t_node	*root;
@@ -58,13 +70,7 @@ static void	process_cmdline(t_program *program, char *line)
 		return ;
 	}
 	pre_execution(program, root);
-	set_signal_handler(SIGINT, sigint_parent_waiting);//new
-	program->last_exit_status = execution(program, root, false);
-	if (g_signal_value == SIGINT)
-	{
-		program->last_exit_status = 130;
-		g_signal_value = 0;
-	}
+	execute_with_signal(program, root);
 	free_ast_tokens(program);
 	free_token_list(program);
 }
@@ -88,7 +94,7 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		}
 		process_cmdline(&program, program.line);
-		set_signal_prompt(0);//new
+		set_signal_prompt(0);
 	}
 	cleanup_program(&program);
 	return (program.last_exit_status);
