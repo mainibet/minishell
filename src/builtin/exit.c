@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 11:52:09 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 15:26:54 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 08:13:37 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,20 @@ static int	count_args(char **argv)
 	return (count);
 }
 
+static int	get_exit_code(char *arg, int last_status)
+{
+	if (!arg)
+		return (last_status);
+	if (!is_valid_number(arg))
+	{
+		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+		ft_putstr_fd(arg, STDERR_FILENO);
+		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
+		return (2);
+	}
+	return ((unsigned char)ft_atoi(arg));
+}
+
 void	my_exit(t_program *program, t_node *node)
 {
 	t_cmd_data	*cmd;
@@ -54,20 +68,7 @@ void	my_exit(t_program *program, t_node *node)
 	if (argc == 1)
 		exit_code = program->last_exit_status;
 	else if (argc == 2)
-	{
-		if (!is_valid_number(cmd->argv[1]))
-		{
-			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-			ft_putstr_fd(cmd->argv[1], STDERR_FILENO);
-			ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-			exit_code = 2;
-		}
-		else
-		{
-			exit_code = ft_atoi(cmd->argv[1]);
-			exit_code = (unsigned char)exit_code;
-		}
-	}
+		exit_code = get_exit_code(cmd->argv[1], program->last_exit_status);
 	else
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);

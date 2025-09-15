@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:11:26 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/15 06:36:03 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 08:04:56 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	validate_word_token(t_program *program, t_token *token)
 			|| ft_strchr(token->txt, '<') != NULL))
 	{
 		ft_print_syntax_error(token->txt);
-		program->last_exit_status = 2;//it was 258 check 258 should be for heredoc only?
+		program->last_exit_status = 2;
 		return (1);
 	}
 	return (0);
