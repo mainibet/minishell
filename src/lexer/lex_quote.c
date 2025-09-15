@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 07:28:27 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 16:35:24 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 06:37:46 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,16 @@ t_token	*join_tokens(t_token *a, t_token *b)
 		return (b);
 	if (!b)
 		return (a);
-	len_a = strlen(a->txt);
-	len_b = strlen(b->txt);
+	len_a = ft_strlen(a->txt);
+	len_b = ft_strlen(b->txt);
 	joined = malloc(len_a + len_b + 1);
 	if (!joined) 
 	{
 		free_token(b);
 		return (a);
 	}
-	strcpy(joined, a->txt);
-	strcat(joined, b->txt);
+	ft_strcpy(joined, a->txt);
+	ft_strcat(joined, b->txt);
 	free(a->txt);
 	a->txt = joined;
 	a->next = b->next;
