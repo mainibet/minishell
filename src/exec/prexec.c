@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 08:41:11 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 15:30:06 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:44:22 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	**token_to_argv(t_token *token)
 	nb_token = count_cmd_tokens(token);
 	argv = malloc(sizeof(char *) * (nb_token + 1));
 	if (!argv)
-		malloc_error();
+		// malloc_error();
 	if (cpy_token_str(argv, token) != 0)
 	{
 		free(argv);
@@ -78,6 +78,12 @@ void	setup_cmd_arg(t_program *program, t_node *node)
 		cleanup_program(program);
 		exit(EXIT_FAILURE);
 	}
+	if (!node->u_data.cmd.argv[0])
+	{
+		free(node->u_data.cmd.argv);
+		node->u_data.cmd.argv = NULL;
+		return ;
+	}
 }
 
 void	pre_execution(t_program *program, t_node *node)
@@ -92,6 +98,8 @@ void	pre_execution(t_program *program, t_node *node)
 	else if (node->type == COMMAND)
 	{
 		setup_cmd_arg(program, node);
+		if (!node->u_data.cmd.argv)//new
+			return ;//new
 		apply_redir(program, node);
 		node->u_data.cmd.env = program->envp;
 		if (node->u_data.cmd.argv[0] && is_builtin(node->u_data.cmd.argv[0]))

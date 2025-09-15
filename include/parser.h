@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:34:47 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 18:49:20 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:16:20 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 
 t_node	*parse(t_program *program, t_token *token_list);
 void	init_cmd_node(t_token *token, t_node *node);
+void	init_argv_to_null(char **argv);
 int		process_cmd_tokens(t_program *program, t_token *token,
 			t_cmd_data *cmd_data);
 

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 13:33:32 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 07:45:12 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 15:39:36 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_redir	*create_redir_node(char *target, enum e_redir_type type, bool quoted)
 	new_redir = malloc(sizeof(t_redir));
 	if (!new_redir)
 	{
-		malloc_error();
+		// malloc_error();
 		return (NULL);
 	}
 	new_redir->target = ft_strdup(target);

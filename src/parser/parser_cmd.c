@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:31:48 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/15 08:03:31 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:23:00 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	init_cmd_node(t_token *token, t_node *node)
 {
+	ft_memset(node, 0, sizeof(t_node));//new
 	node->type = COMMAND;
 	node->u_data.cmd.tokens = token;
 	node->u_data.cmd.redir = NULL;

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 15:07:35 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 08:14:16 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:23:04 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,3 +64,4 @@ int	split_cmd_arg(t_program *program, t_token **current, t_cmd_data *cmd_data)
 	*current = (*current)->next->next;
 	return (0);
 }
+
