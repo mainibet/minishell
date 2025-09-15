@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:20:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 07:40:41 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 15:03:46 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,3 +60,10 @@ void	cleanup_program(t_program *program)
 	if (program->fd_out_orig != -1)
 		close_fd(&program->fd_out_orig);
 }
+
+void	malloc_error(t_program *program)
+{
+	safe_write(STDERR_FILENO, "Error\n", 6);
+	cleanup_program(program); 
+}
+
