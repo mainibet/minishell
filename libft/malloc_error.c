@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   malloc_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rococo <rococo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 13:54:01 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/15 11:44:54 by rococo           ###   ########.fr       */
+/*   Updated: 2025/09/15 14:55:20 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	malloc_error(void)
+void	malloc_error(t_program *program)
 {
 	safe_write(STDERR_FILENO, "Error\n", 6);
-	exit(1);
+	cleanup_program(program); 
 }

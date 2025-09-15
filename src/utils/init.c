@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 22:44:22 by tpandya           #+#    #+#             */
-/*   Updated: 2025/09/12 17:07:09 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 14:56:06 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	init_program(t_program *program, char **envp)
 			STDOUT_FILENO, "dup failed for STDOUT");
 	program->last_exit_status = 0;
 	if (!program->envp_cpy)
-		malloc_error();
+		malloc_error(program);
 	if (!program->envp_cpy || program->fd_in_orig == -1
 		|| program->fd_out_orig == -1)
 		handle_init_error(program);
