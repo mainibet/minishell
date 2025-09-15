@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/15 07:23:25 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 07:55:22 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,21 @@ static int	execute_with_signal(t_program *program, t_node *root)
 	return (program->last_exit_status);
 }
 
+static void	set_exit_succes(t_program *program)
+{
+	program->last_exit_status = 0;
+	return ;
+}
+
 static void	process_cmdline(t_program *program, char *line)
 {
 	t_node	*root;
 
 	if (!line)
-		return ;
+		set_exit_succes(program);
 	if (!*line)
 	{
+		program->last_exit_status = 0;
 		free(line);
 		return ;
 	}
@@ -65,10 +72,7 @@ static void	process_cmdline(t_program *program, char *line)
 	program->root = root;
 	free(line);
 	if (!program->root)
-	{
-		program->last_exit_status = 2;
-		return ;
-	}
+		set_exit_succes(program);
 	pre_execution(program, root);
 	execute_with_signal(program, root);
 	free_ast_tokens(program);

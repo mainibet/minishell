@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:31:48 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 18:30:09 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 08:03:31 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,14 @@ static int	validate_token_syntax(t_program *program, t_token *token,
 	return (0);
 }
 
+static int	free_cmd_tokens_and_fail(t_cmd_data *cmd_data, t_token *cmd_tokens)
+{
+	free_token(cmd_tokens);
+	cmd_data->tokens = NULL;
+	cmd_data->argv = NULL;
+	return (1);
+}
+
 int	process_cmd_tokens(t_program *program, t_token *token, t_cmd_data *cmd_data)
 {
 	t_token	*cmd_tokens;
@@ -82,19 +90,9 @@ int	process_cmd_tokens(t_program *program, t_token *token, t_cmd_data *cmd_data)
 		return (1);
 	}
 	if (process_tokens_loop(program, token, cmd_data, &cmd_tokens) != 0)
-	{
-		free_token(cmd_tokens);
-		cmd_data->tokens = NULL;
-		cmd_data->argv = NULL;
-		return (1);
-	}
+		return (free_cmd_tokens_and_fail(cmd_data, cmd_tokens));
 	if (handle_miss_cmd(program, cmd_data, cmd_tokens, has_cmd))
-	{
-		free_token(cmd_tokens);//new
-		cmd_data->tokens = NULL;
-		cmd_data->argv = NULL;
-		return (1);
-	}
+		return (free_cmd_tokens_and_fail(cmd_data, cmd_tokens));
 	cmd_data->tokens = cmd_tokens;
 	cmd_data->argv = NULL;
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 07:28:43 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/15 06:36:29 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 08:03:54 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ static int	check_redir_syntax(t_token	*token)
 	}
 	return (1);
 }
-
 
 // Check for redirection characters within the word
 // If the word contains redirection chars, check if they're at positions where
