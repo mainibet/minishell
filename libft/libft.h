@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 17:47:06 by albetanc          #+#    #+#             */
-/*   Updated: 2025/08/20 11:38:01 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 06:49:51 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,8 @@ int		close_fd(int *fd);
 void	malloc_error(void);
 void	free_array(char **arr);
 int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strcpy(char *dest, const char *src);
+char	*ft_strcat(char *dest, const char *src);
+char	*ft_strncpy(char *dest, const char *src, size_t n);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:15:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 15:15:03 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 07:17:53 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	exec_cmd_nopipe(t_program *program, t_node *node)
 	}
 	else if (pid == 0)
 	{
+		set_signal_child_process();
 		child_process(program, node);
 		exit(EXIT_FAILURE);
 	}

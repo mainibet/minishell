@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rococo <rococo@student.42.fr>              +#+  +:+       +#+         #
+#    By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/05 17:34:53 by albetanc          #+#    #+#              #
-#    Updated: 2025/08/15 12:47:20 by rococo           ###   ########.fr        #
+#    Updated: 2025/09/15 06:50:27 by albetanc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,8 @@ ft_toupper.c ft_tolower.c ft_strchr.c ft_strrchr.c ft_strncmp.c ft_memchr.c \
 ft_memcmp.c ft_strnstr.c ft_atoi.c ft_calloc.c ft_strdup.c ft_split.c ft_substr.c \
 ft_strjoin.c ft_strtrim.c ft_itoa.c ft_strmapi.c ft_striteri.c ft_putchar_fd.c \
 ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd_sig.c ft_putnbr_fd_un.c \
-ft_putnbr_base_sig.c ft_putnbr_base_un.c safe_write.c
+ft_putnbr_base_sig.c ft_putnbr_base_un.c safe_write.c ft_strncpy.c ft_strcpy.c \
+ft_strcat.c
 
 SRC_PRINTF = $(addprefix $(PRINTF_DIR)/, \
 ft_printf.c ft_printf_char.c ft_printf_str.c ft_printf_int.c \

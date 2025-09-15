@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 07:27:39 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/10 16:52:32 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 06:37:08 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ t_token	*extract_token(char *s, size_t size)
 		free(token);
 		return (NULL);
 	}
-	strncpy(token->txt, s, size);
+	ft_strncpy(token->txt, s, size);
 	token->txt[size] = 0;
 	token->type = token_type(token->txt);
-	token->next = NULL;//new
+	token->next = NULL;
 	return (token);
 }

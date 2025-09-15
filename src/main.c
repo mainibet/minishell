@@ -6,13 +6,12 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 18:48:23 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 07:23:25 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// t_node	*token_parser_input(char *line, t_token **token_out, t_program *program)
 t_node	*token_parser_input(char *line, t_program *program)
 {
 	t_token	*token_list;
@@ -28,7 +27,6 @@ t_node	*token_parser_input(char *line, t_program *program)
 	expand(token_list, program->envp_cpy, program->last_exit_status);
 	parser_tokens = token_list;
 	root = parse(program, parser_tokens);
-	// root = parse(program, token_list);
 	if (!root)
 	{
 		free_token(token_list);
@@ -36,8 +34,19 @@ t_node	*token_parser_input(char *line, t_program *program)
 		return (NULL);
 	}
 	free_token_list(program);
-	// *token_out = token_list;
 	return (root);
+}
+
+static int	execute_with_signal(t_program *program, t_node *root)
+{
+	set_signal_handler(SIGINT, sigint_parent_waiting);
+	program->last_exit_status = execution(program, root, false);
+	if (g_signal_value == SIGINT)
+	{
+		program->last_exit_status = 130;
+		g_signal_value = 0;
+	}
+	return (program->last_exit_status);
 }
 
 static void	process_cmdline(t_program *program, char *line)
@@ -52,7 +61,6 @@ static void	process_cmdline(t_program *program, char *line)
 		return ;
 	}
 	add_history(line);
-	// root = token_parser_input(line, &program->token_list, program);
 	root = token_parser_input(line, program);
 	program->root = root;
 	free(line);
@@ -62,12 +70,7 @@ static void	process_cmdline(t_program *program, char *line)
 		return ;
 	}
 	pre_execution(program, root);
-	program->last_exit_status = execution(program, root, false);
-	if (g_signal_value == SIGINT)
-	{
-		program->last_exit_status = 130;
-		g_signal_value = 0;
-	}
+	execute_with_signal(program, root);
 	free_ast_tokens(program);
 	free_token_list(program);
 }
@@ -91,6 +94,7 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		}
 		process_cmdline(&program, program.line);
+		set_signal_prompt(0);
 	}
 	cleanup_program(&program);
 	return (program.last_exit_status);
