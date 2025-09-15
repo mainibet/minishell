@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 08:17:46 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/15 15:04:11 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:03:41 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 void	malloc_error(t_program *program);
 void	cleanup_program(t_program *program);
 void	free_ast_tokens(t_program *program);
+void	free_envp(char **envp);
 
 // --- Tokens --- //
 void	free_token(t_token *token);

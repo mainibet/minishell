@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 12:20:44 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/15 15:03:46 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:07:50 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,21 @@ void	cleanup_program(t_program *program)
 	if (!program)
 		return ;
 	if (program->root)
+	{
 		free_ast(program);
+		program->root = NULL;
+	}
 	if (program->token_list)
+	{
 		free_token_list(program);
-	if (program->line)
-		program->line = NULL;
+		program->token_list = NULL;
+	}
+	program->line = NULL;
 	if (program->envp_cpy)
+	{
 		free_env_cpy(program);
+		program->envp_cpy = NULL;
+	}
 	if (program->fd_in_orig != -1)
 		close_fd(&program->fd_in_orig);
 	if (program->fd_out_orig != -1)

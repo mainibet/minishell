@@ -6,11 +6,26 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 08:24:38 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/10 08:35:20 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:03:08 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	free_envp(char **envp)
+{
+	int	i;
+
+	i = 0;
+	if (!envp)
+		return ;
+	while (envp[i])
+	{
+		free(envp[i]);
+		i++;
+	}
+	free(envp);
+}
 
 void	free_redirs(t_redir *redir)
 {
