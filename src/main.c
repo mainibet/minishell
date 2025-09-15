@@ -24,6 +24,13 @@ t_node	*token_parser_input(char *line, t_program *program)
 		program->token_list = NULL;
 		return (NULL);
 	}
+	if (token_list->type == PIPE)
+    {
+        ft_print_syntax_error("|");
+        program->last_exit_status = 2;
+        free_token_list(program);
+        return (NULL);
+    }
 	expand(token_list, program->envp_cpy, program->last_exit_status);
 	parser_tokens = token_list;
 	root = parse(program, parser_tokens);
@@ -60,7 +67,10 @@ static void	process_cmdline(t_program *program, char *line)
 	t_node	*root;
 
 	if (!line)
+	{
 		set_exit_succes(program);
+		return ;
+	}
 	if (!*line)
 	{
 		program->last_exit_status = 0;
@@ -71,11 +81,14 @@ static void	process_cmdline(t_program *program, char *line)
 	root = token_parser_input(line, program);
 	program->root = root;
 	free(line);
-	if (!program->root)
-		set_exit_succes(program);
-	pre_execution(program, root);
-	execute_with_signal(program, root);
-	free_ast_tokens(program);
+	// if (!program->root)
+	// 	set_exit_succes(program);
+	if (program->root)
+	{
+		pre_execution(program, root);
+		execute_with_signal(program, root);
+		free_ast_tokens(program);
+	}
 	free_token_list(program);
 }
 

@@ -36,7 +36,7 @@ int	validate_pipe_token(t_program *program, t_token *current, t_token *first)
 			if (!current->next)
 				ft_print_syntax_error(NULL); 
 			else
-				ft_print_syntax_error("|");
+				ft_print_syntax_error(current->txt);
 			program->last_exit_status = 2;
 			return (1);
 		}
@@ -49,7 +49,7 @@ int	validate_redir_target(t_program *program, t_token *current)
 	if (!current->next)
 	{
 		error_split_arg(current);
-		program->last_exit_status = 258;
+		program->last_exit_status = 2;
 		return (1);
 	}
 	if (current->next->type == REDIR_IN
@@ -58,7 +58,7 @@ int	validate_redir_target(t_program *program, t_token *current)
 		|| current->next->type == HEREDOC)
 	{
 		error_split_arg(current);
-		program->last_exit_status = 258;
+		program->last_exit_status = 2;
 		return (1);
 	}
 	return (0);
@@ -78,7 +78,7 @@ int	handle_miss_cmd(t_program *program, t_cmd_data *cmd_data,
 				"but only redirections found");
 			cmd_data->tokens = NULL;
 			cmd_data->argv = NULL;
-			program->last_exit_status = 258;
+			program->last_exit_status = 2;
 			return (1);
 		}
 	}
