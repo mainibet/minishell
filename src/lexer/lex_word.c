@@ -41,7 +41,7 @@ static int	check_redir_syntax(t_token	*token)
 	i = 0;
 	while (token->txt[i])
 	{
-		if ((token->txt[i] == '>' || token->txt[i] == '<')
+		if ((token->txt[i] == '>' || token->txt[i] == '<' || token->txt[i] == '|')
 			&& i > 0 && token->txt[i - 1] != ' ') 
 		{
 			ft_print_syntax_error(token->txt);
@@ -72,7 +72,8 @@ t_token	*lex_unquoted(t_program *program, char *s)
 	token->type = WORD;
 	add_token(&program->token_list, token);
 	if (ft_strchr(token->txt, '>') != NULL
-		|| ft_strchr(token->txt, '<') != NULL)
+		|| ft_strchr(token->txt, '<') != NULL
+		|| ft_strchr(token->txt, '|') != NULL)
 	{
 		if (!check_redir_syntax(token))
 			return (NULL);
