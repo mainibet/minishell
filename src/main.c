@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/15 07:55:22 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/16 07:24:02 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,21 @@ t_node	*token_parser_input(char *line, t_program *program)
 		return (NULL);
 	}
 	if (token_list->type == PIPE)
+	{
+		ft_print_syntax_error("|");
+		program->last_exit_status = 2;
+		free_token_list(program);
+		return (NULL);
+	}
+    t_token *last = token_list;
+    while (last->next)
+        last = last->next;
+    if (last->type == PIPE)
     {
         ft_print_syntax_error("|");
         program->last_exit_status = 2;
         free_token_list(program);
-        return (NULL);
+        return NULL;
     }
 	expand(token_list, program->envp_cpy, program->last_exit_status);
 	parser_tokens = token_list;
@@ -81,8 +91,6 @@ static void	process_cmdline(t_program *program, char *line)
 	root = token_parser_input(line, program);
 	program->root = root;
 	free(line);
-	// if (!program->root)
-	// 	set_exit_succes(program);
 	if (program->root)
 	{
 		pre_execution(program, root);
