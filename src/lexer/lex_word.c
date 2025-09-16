@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 07:28:43 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/15 08:03:54 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/16 07:37:21 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ static int	check_redir_syntax(t_token	*token)
 	i = 0;
 	while (token->txt[i])
 	{
-		if ((token->txt[i] == '>' || token->txt[i] == '<' || token->txt[i] == '|')
+		if ((token->txt[i] == '>' || token->txt[i] == '<'
+				|| token->txt[i] == '|')
 			&& i > 0 && token->txt[i - 1] != ' ') 
 		{
 			ft_print_syntax_error(token->txt);

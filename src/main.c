@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/15 07:55:22 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/16 07:35:11 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,11 @@ t_node	*token_parser_input(char *line, t_program *program)
 	t_node	*root;
 
 	token_list = lex(line, program);
-	if (!token_list)
+	if (!token_list || !validate_pipe_edges(token_list, program))
 	{
 		program->token_list = NULL;
 		return (NULL);
 	}
-	if (token_list->type == PIPE)
-    {
-        ft_print_syntax_error("|");
-        program->last_exit_status = 2;
-        free_token_list(program);
-        return (NULL);
-    }
 	expand(token_list, program->envp_cpy, program->last_exit_status);
 	parser_tokens = token_list;
 	root = parse(program, parser_tokens);
@@ -81,8 +74,6 @@ static void	process_cmdline(t_program *program, char *line)
 	root = token_parser_input(line, program);
 	program->root = root;
 	free(line);
-	// if (!program->root)
-	// 	set_exit_succes(program);
 	if (program->root)
 	{
 		pre_execution(program, root);
