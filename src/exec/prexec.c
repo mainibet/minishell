@@ -61,7 +61,6 @@ char	**token_to_argv(t_token *token)
 	nb_token = count_cmd_tokens(token);
 	argv = malloc(sizeof(char *) * (nb_token + 1));
 	if (!argv)
-		// malloc_error();
 		return (NULL);
 	if (cpy_token_str(argv, token) != 0)
 	{

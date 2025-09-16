@@ -39,10 +39,7 @@ t_redir	*create_redir_node(char *target, enum e_redir_type type, bool quoted)
 
 	new_redir = malloc(sizeof(t_redir));
 	if (!new_redir)
-	{
-		// malloc_error();
 		return (NULL);
-	}
 	new_redir->target = ft_strdup(target);
 	if (!new_redir->target)
 	{

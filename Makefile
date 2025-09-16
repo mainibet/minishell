@@ -1,9 +1,6 @@
 MAKEFLAGS += --no-print-directory -s
 CC = cc
-# -g is to debug
-# -lreadline to link with the readline library
-# -Iinclude to include the header files in the include directory
-CFLAGS = -Wall -Wextra -g -Iinclude #-fsanitize=address -fno-omit-frame-pointer 
+CFLAGS = -Wall -Wextra -g -Iinclude
 
 LIBFT_DIR = ./libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
@@ -11,22 +8,19 @@ SRC_DIR = src
 
 NAME = minishell
 
-SRC = $(shell find $(SRC_DIR) -name "*.c") # NEW -> (tpandya_mac)
+SRC = $(shell find $(SRC_DIR) -name "*.c")
 
 OBJ_DIR = ./obj
-OBJ = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC)) # NEW
+OBJ = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 
 all: $(NAME)
 
-# Link object files and libft to create the executable
 $(NAME): $(OBJ) $(LIBFT_LIB)
 	@$(CC) $(CFLAGS) $(OBJ) -o $@ -L$(LIBFT_DIR) -lft -lreadline
 
-# Rule to build libft if it doesn't exist
 $(LIBFT_LIB): $(LIBFT_DIR)/Makefile
 	@$(MAKE) -C $(LIBFT_DIR)
 
-#The obj dir will be created if it doesn't exist
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@) 
 	@$(CC) $(CFLAGS) -c $< -o $@
