@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 07:28:27 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/15 06:37:46 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/16 07:56:06 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ t_token	*lex_quoted(t_program *program, char *s, char quote)
 	end = find_quote_end(s, quote);
 	if (!*end)
 	{
-		ft_print_error("Syntax error: unclosed quote\n");
+		ft_print_error("Syntax error: unclosed quote");
 		return (NULL);
 	}
 	token = extract_token(s, end - s);
