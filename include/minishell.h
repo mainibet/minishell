@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:47:36 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/15 16:21:23 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/16 07:35:03 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,9 @@
 
 // --- PROGRAM INITIALIZATION --- //
 void	init_program(t_program *program, char **envp);
+
+// --- SYNTAX --- //
+int		validate_pipe_edges(t_token *token_list, t_program *program);
 
 // --- PRINTING --- //
 void	ft_print_error(const char *msg);

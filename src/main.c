@@ -6,35 +6,11 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:42:03 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/16 07:32:36 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/16 07:35:11 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	validate_pipe_edges(t_token *token_list, t_program *program)
-{
-	t_token *last;
-
-	if (token_list->type == PIPE)
-	{
-		ft_print_syntax_error("|");
-		program->last_exit_status = 2;
-		free_token_list(program);
-		return (0);
-	}
-	last = token_list;
-	while (last->next)
-		last = last->next;
-	if (last->type == PIPE)
-	{
-		ft_print_syntax_error("|");
-		program->last_exit_status = 2;
-		free_token_list(program);
-		return (0);
-	}
-	return (1);
-}
 
 t_node	*token_parser_input(char *line, t_program *program)
 {
@@ -43,29 +19,11 @@ t_node	*token_parser_input(char *line, t_program *program)
 	t_node	*root;
 
 	token_list = lex(line, program);
-	// if (!token_list)
-	if (!token_list || !validate_pipe_edges(token_list, program))//new
+	if (!token_list || !validate_pipe_edges(token_list, program))
 	{
 		program->token_list = NULL;
 		return (NULL);
 	}
-	// if (token_list->type == PIPE)
-	// {
-	// 	ft_print_syntax_error("|");
-	// 	program->last_exit_status = 2;
-	// 	free_token_list(program);
-	// 	return (NULL);
-	// }
-    // t_token *last = token_list;
-    // while (last->next)
-    //     last = last->next;
-    // if (last->type == PIPE)
-    // {
-    //     ft_print_syntax_error("|");
-    //     program->last_exit_status = 2;
-    //     free_token_list(program);
-    //     return NULL;
-    // }
 	expand(token_list, program->envp_cpy, program->last_exit_status);
 	parser_tokens = token_list;
 	root = parse(program, parser_tokens);
