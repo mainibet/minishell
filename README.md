@@ -184,5 +184,5 @@ minishell/
 
 👤 Autor
 - Alicia Betancourt ([mainibet](https://github.com/mainibet))
-- Tanmay Pandya ([mainibet](https://github.com/tpandya42))
+- Tanmay Pandya ([Tanmay](https://github.com/tpandya42))
 
