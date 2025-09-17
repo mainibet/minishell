@@ -90,25 +90,28 @@ minishell/
 │   └── ...
 │
 ├── src/
-│   ├── main.c
+│   ├── main.c main_util.c
 │
 │   ├── lexer/               # Lexical analysis: tokenization and quote preservation
-│   │   └── lexer.c
+│   │   └── lexer.c lex_quote.c lex_token.c lex_word.c
 │
 │   ├── parser/              # Parses tokens into commands, handles syntax & structure
-│   │   └── parser.c
+│   │   └── parser.c parse_node.c parse_cmd_util.c parser_arg.c parser_cmd.c parser_token.c
 │
 │   ├── exec/                # Execution logic, redirections, pipes, etc
 │   │   └── exec.c, redir.c, pipe.c
-│
+│   │
 │   ├── builtins/            # Built-in command implementations
-│   │   └── cd.c, echo.c, env.c, export.c, exit.c, unset.c, pwd.c
-│
+│   │   └── cd.c, cd_util.c echo.c, env.c, env_util.c export.c, exit.c, export_util.c export_util_01.c export_util_02.c export_util_03.c unset.c, pwd.c
+│   │
+│   ├── expansion/
+│   │   └── exp.c, exp_util.c heredoc.c heredoc_init.c heredoc_io.c heredoc_util.c
+│   │
 │   ├── signals/             # Signal handling (Ctrl+C, Ctrl+D, etc.)
-│   │   └── signals.c
+│   │   └── signal.c signal_util.c
 │
 │   └── utils/               # Helper functions
-│       └── cleanup.c
+│       └── cleanup.c cleanup_fd.c cleanup_node.c cleanup_token.c init.c print.c
 │
 └── tests/                   # Optional: Shell test scripts or CI/CD when push
     ├── run_all_test.sh      #executes all listed scripts when 'make debug'
@@ -119,5 +122,5 @@ minishell/
 
 👤 Autor
 - Alicia Betancourt ([mainibet](https://github.com/mainibet))
-- Tanmay Pandya
+- Tanmay Pandya ([mainibet](https://github.com/tpandya42))
 

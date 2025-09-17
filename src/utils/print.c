@@ -6,7 +6,7 @@
 /*   By: albetanc <albetanc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 07:40:52 by albetanc          #+#    #+#             */
-/*   Updated: 2025/09/12 08:36:09 by albetanc         ###   ########.fr       */
+/*   Updated: 2025/09/17 08:23:32 by albetanc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_print_syntax_error(const char *token)
 	{
 		write(STDERR_FILENO,
 			"minishell: syntax error near unexpected token `", 47);
-		write(STDERR_FILENO, token, strlen(token));
+		write(STDERR_FILENO, token, ft_strlen(token));
 		write(STDERR_FILENO, "`\n", 2);
 	}
 	else
